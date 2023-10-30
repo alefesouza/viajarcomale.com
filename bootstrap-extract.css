@@ -1,0 +1,88 @@
+body {
+  margin: 0;
+  font-family: system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue","Noto Sans","Liberation Sans",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #212529;
+  background-color: #ffffff;
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+
+*, ::after, ::before {
+  box-sizing: border-box;
+}
+
+.container {
+  width: 100%;
+  padding-right: calc(1.5rem * .5);
+  padding-left: calc(1.5rem * .5);
+  margin-right: auto;
+  margin-left: auto;
+}
+
+@media (min-width: 576px) {
+  .container {
+    max-width: 540px;
+  }
+}
+
+@media (min-width: 768px) {
+  .container {
+    max-width: 720px;
+  }
+}
+
+@media (min-width: 992px) {
+  .container {
+    max-width: 960px;
+  }
+}
+
+.list-group {
+  margin-top: 32px;
+  width: 100%;
+  text-align: center;
+}
+
+.list-group {
+  display: flex;
+  flex-direction: column;
+  padding-left: 0;
+  margin-bottom: 0;
+  border-radius: var(--bs-list-group-border-radius);
+}
+
+.list-group-item {
+  margin-bottom: 16px;
+  border-radius: 4px;
+  padding: 16px 20px;
+  box-shadow: rgba(10, 11, 13, 0.08) 0px 2px 4px 0px;
+  font-size: 16px;
+  color: #000000;
+  position: relative;
+  outline: none;
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
+.list-group-item {
+  position: relative;
+  display: block;
+  text-decoration: none;
+}
+
+.list-group-item-action {
+  width: 100%;
+  text-align: inherit;
+}
+
+.list-group-item+.list-group-item {
+  border-top-width: 0;
+}
+
+.list-group-item-action:focus, .list-group-item-action:hover {
+  z-index: 1;
+  text-decoration: none;
+  background-color: #f8f9fa;
+}

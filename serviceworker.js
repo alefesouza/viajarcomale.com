@@ -10,6 +10,7 @@ self.addEventListener('install', (event) => {
     addResourcesToCache([
       '/',
       '/index.html',
+      '/bootstrap-extract.css',
       '/favicon.ico',
       '/app.js',
       '/manifest.json',
