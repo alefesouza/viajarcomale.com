@@ -1,3 +1,29 @@
+let deferredPrompt;
+const addToHomeBtn = document.querySelector('#add-to-home');
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  deferredPrompt = e;
+  
+  addToHomeBtn.style.display = 'block';
+
+  addToHomeBtn.addEventListener('click', (event) => {
+    event.preventDefault();
+      
+    addToHomeBtn.style.display = 'none';
+    
+    deferredPrompt.prompt();
+    
+    deferredPrompt.userChoice.then((choiceResult) => {
+      if (choiceResult.outcome === 'accepted') {
+        console.log('User accepted to install Viajar com Alê');
+      } else {
+        console.log('User dismissed to install Viajar com Alê');
+      }
+      deferredPrompt = null;
+    });
+  });
+});
+
 const registerServiceWorker = async () => {
   if ('serviceWorker' in navigator) {
     try {

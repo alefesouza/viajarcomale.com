@@ -48,6 +48,10 @@ self.addEventListener('install', (event) => {
 self.addEventListener('fetch', (e) => {
   e.respondWith(
     (async () => {
+      if (!e.request.url.includes('viajarcomale.com')) {
+        return null;
+      }
+
       const r = await caches.match(e.request);
       console.log(`[Service Worker] Fetching resource: ${e.request.url}`);
       if (r) {
