@@ -57,7 +57,7 @@
   google.charts.setOnLoadCallback(drawRegionsMap);
 
   function drawRegionsMap() {
-    var data = google.visualization.arrayToDataTable([
+    const data = google.visualization.arrayToDataTable([
       ['Country'],
       ['Brazil'],
       ['United States'],
@@ -74,13 +74,37 @@
       ['Argentina'],
     ]);
 
-    var options = {
+    const options = {
       backgroundColor: 'transparent',
       defaultColor: '#2096cc',
     };
 
-    var chart = new google.visualization.GeoChart(document.getElementById('visited-countries'));
+    const visitedCountries = document.querySelector('#visited-countries');
+    const visitedCountriesModal = document.querySelector('#visited-countries-modal');
+
+    const chart = new google.visualization.GeoChart(visitedCountries);
 
     chart.draw(data, options);
+
+    function openVisitedCountriesModal() {
+      visitedCountriesModal.classList.add('open');
+  
+      const modalChart = new google.visualization.GeoChart(document.querySelector('#visited-countries-in-modal'));
+  
+      modalChart.draw(data, options);
+    }
+
+    function closeVisistedCountriesModal( e ) {
+      if (e.target.id !== 'visited-countries-modal' && e.target.id !== 'visited-countries-modal-close') {
+        return;
+      }
+
+      visitedCountriesModal.classList.remove('open');
+    }
+  
+    visitedCountries.addEventListener('click', openVisitedCountriesModal);
+    document.querySelector('.branding').addEventListener('click', openVisitedCountriesModal);
+
+    document.querySelector('#visited-countries-modal').addEventListener('click', closeVisistedCountriesModal);
   }
 })();
