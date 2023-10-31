@@ -86,3 +86,62 @@ body {
   text-decoration: none;
   background-color: #f8f9fa;
 }
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  html {
+    color-scheme: dark;
+  }
+}
+
+.container {
+  max-width: 680px;
+}
+
+.background {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0px;
+  z-index: -1;
+  background-image: url(https://viajarcomale.com/profile-photo.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+  opacity: 0.25;
+  filter: blur(50px);
+}
+
+.list-group {
+  margin-top: 32px;
+  width: 100%;
+  text-align: center;
+}
+
+.list-group-item {
+  margin-bottom: 16px;
+  border-radius: 4px;
+  padding: 16px 20px;
+  box-shadow: rgba(10, 11, 13, 0.08) 0px 2px 4px 0px;
+  font-size: 16px;
+  color: #000000;
+  position: relative;
+  outline: none;
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
+.list-group-item img {
+  position: absolute;
+  left: 4px;
+  top: 4px;
+  border-radius: 4px;
+}
+
+.list-group-item:hover {
+  transition: all 0.2s ease-in-out;
+  transform: scale(1.02);
+}

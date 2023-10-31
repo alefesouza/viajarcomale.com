@@ -5,3 +5,5 @@ This repository contains the code for my travel account Viajar com Alê website 
 * Full `manifest.json`
 * Service worker
 * Offline access
+
+The website is built using Next.js and hosted on Firebase.
