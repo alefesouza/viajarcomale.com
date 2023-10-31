@@ -9,8 +9,6 @@ import VisitedCountries from './components/visited-countries';
 import styles from './page.module.css';
 
 export default async function Home({ searchParams }) {
-    const showModal = searchParams?.visited_countries;
-
     return <main className="container">
         <div className={styles.profile}>
             <Image src={ getURL('profile-photo.jpg') } width={96} height={96} alt="Profile photo" className={styles.profile_picture} />
@@ -42,18 +40,10 @@ export default async function Home({ searchParams }) {
         </div>
 
         <div className={styles.branding}>
-            <Link href="/?visited_countries=true">
-                <Image src={ getURL('icons/144x144.png') } width={144} height={144} alt="Viajar com Alê Icon" />
-            </Link>
-            <Link href="/?visited_countries=true">
-                <Image src={ getURL('images/asexplore.png') } width={144} height={144} alt="ASExplore Icon" />
-            </Link>
+            <Image src={ getURL('icons/144x144.png') } width={144} height={144} alt="Viajar com Alê Icon" />
+            <Image src={ getURL('images/asexplore.png') } width={144} height={144} alt="ASExplore Icon" />
         </div>
 
-        <Link href="/?visited_countries=true">
-            <VisitedCountries />
-        </Link>
-
-        { showModal && <VisitedCountriesModal /> }
+        <VisitedCountries />
     </main>
 }
