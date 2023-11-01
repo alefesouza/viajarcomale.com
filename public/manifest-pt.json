@@ -86,19 +86,19 @@
     {
       "src": "https://viajarcomale.com.br/screenshots/4-pt.jpg",
       "type": "image/jpg",
-      "sizes": "1240x800",
+      "sizes": "1280x800",
       "form_factor": "wide"
     },
     {
       "src": "https://viajarcomale.com.br/screenshots/5-pt.jpg",
       "type": "image/jpg",
-      "sizes": "1240x800",
+      "sizes": "1280x800",
       "form_factor": "wide"
     },
     {
       "src": "https://viajarcomale.com.br/screenshots/6-pt.jpg",
       "type": "image/jpg",
-      "sizes": "1240x800",
+      "sizes": "1280x800",
       "form_factor": "wide"
     }
   ]
