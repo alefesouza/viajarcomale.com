@@ -18,7 +18,7 @@ export default async function Home() {
             <span className={styles.profile_name}>Viajar com Alê</span>
 
             <span className={styles.profile_description}>
-              {countries.map(c => c.flag)}{i18n('en')}
+              {countries.map(c => c.flag)}
             </span>
         </div>
 
