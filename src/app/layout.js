@@ -71,10 +71,6 @@ export default function RootLayout({ children }) {
         <div className="background"></div>
 
         <main className="container">
-          <div style={{position: 'relative'}}>
-            <a href={isBR ? 'https://viajarcomale.com' : 'https://viajarcomale.com.br' } className="language">{ isBR ? 'English' : 'Português' }</a>
-          </div>
-
           <div className="profile">
               <Image src={ host('profile-photo.jpg') } width={96} height={96} alt="Profile photo" className="profile_picture" />
 
@@ -86,6 +82,10 @@ export default function RootLayout({ children }) {
           </div>
 
           {children}
+
+          <div style={{textAlign: 'center', marginBottom: 100}}>
+            <a href={isBR ? 'https://viajarcomale.com' : 'https://viajarcomale.com.br' } className="language">{ isBR ? 'English' : 'Português' }</a>
+          </div>
         </main>
 
         <Script async src={ host('app.js') } />
