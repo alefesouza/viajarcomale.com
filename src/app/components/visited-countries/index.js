@@ -10,7 +10,7 @@ export default function VisitedCountries({ isModal }) {
 
   return <div>
     {isModalOpen && <VisitedCountriesModal onClose={() => setIsModalOpen(false)} />}
-    <div onClick={() => !isModal && setIsModalOpen(true)} style={{ cursor: 'pointer', marginBottom: 100 }}>
+    <div onClick={() => !isModal && setIsModalOpen(true)} style={{ cursor: 'pointer', marginBottom: isModal ? 20 : 100 }}>
       <Chart
         chartType="GeoChart"
         data={[['Country'], ...countries.map(c => [c.name])]}
