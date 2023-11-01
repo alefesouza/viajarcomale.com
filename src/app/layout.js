@@ -8,7 +8,7 @@ import countries from './utils/countries';
 export default function RootLayout({ children }) {
   const host = useHost();
   const i18n = useI18n();
-  const isBR = false;
+  const isBR = host().includes('viajarcomale.com.br');
 
   return (
     <html lang={ i18n('en') }>
