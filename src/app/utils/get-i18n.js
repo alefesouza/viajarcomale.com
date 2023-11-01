@@ -12,7 +12,7 @@ const dictionaries = {
 }
 
 export const getI18n = (headers, string) => {
-  const isBR = headers.get('x-host') && headers.get('x-host').includes('alefesouza.com.br');
+  const isBR = headers.get('x-forwarded-host') && headers.get('x-forwarded-host') === 'viajarcomale.com.br';
   
   return isBR && dictionaries['pt-BR'][string] ? dictionaries['pt-BR'][string] : string;
 };

@@ -13,7 +13,7 @@ export default async function Home() {
 
     return <main className="container">
         <div className={styles.profile}>
-            <Image src={ getURL('profile-photo.jpg') } width={96} height={96} alt="Profile photo" className={styles.profile_picture} />
+            <Image src={ getURL(headersList, 'profile-photo.jpg') } width={96} height={96} alt="Profile photo" className={styles.profile_picture} />
 
             <span className={styles.profile_name}>Viajar com Alê</span>
 
@@ -30,20 +30,20 @@ export default async function Home() {
 
         <div className={styles.bottom_links}>
             <a href="https://instagram.com/viajarcomale" target="_blank">
-                <Image src={ getURL('logos/instagram.png') } width={32} height={32} alt="Instagram Icon" />
+                <Image src={ getURL(headersList, 'logos/instagram.png') } width={32} height={32} alt="Instagram Icon" />
             </a>
             <a href="https://tiktok.com/@viajarcomale" target="_blank">
-                <Image src={ getURL('logos/tiktok.png') } width={32} height={32} alt="TikTok Icon" />
+                <Image src={ getURL(headersList, 'logos/tiktok.png') } width={32} height={32} alt="TikTok Icon" />
             </a>
             <a href="https://youtube.com/c/alefesouza" target="_blank">
-                <Image src={ getURL('logos/youtube.png') } width={32} height={22} alt="YouTube Icon" />
+                <Image src={ getURL(headersList, 'logos/youtube.png') } width={32} height={22} alt="YouTube Icon" />
             </a>
             <a href="mailto:contato@viajarcomale.com" target="_blank" className={styles.email_icon}>@</a>
         </div>
 
         <div className={styles.stickers}>
-            <Image src={ getURL('icons/144x144.png') } width={144} height={144} alt="Viajar com Alê Icon" />
-            <Image src={ getURL('images/asexplore.png') } width={144} height={144} alt="ASExplore Icon" />
+            <Image src={ getURL(headersList, 'icons/144x144.png') } width={144} height={144} alt="Viajar com Alê Icon" />
+            <Image src={ getURL(headersList, 'images/asexplore.png') } width={144} height={144} alt="ASExplore Icon" />
         </div>
 
         <VisitedCountries />
