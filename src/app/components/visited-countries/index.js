@@ -5,12 +5,12 @@ import { useState } from 'react';
 import Chart from 'react-google-charts';
 import VisitedCountriesModal from '../visited-countries-modal';
 
-export default function VisitedCountries() {
+export default function VisitedCountries({ isModal }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return <div>
     {isModalOpen && <VisitedCountriesModal onClose={() => setIsModalOpen(false)} />}
-    <div onClick={() => setIsModalOpen(true)} style={{ cursor: 'pointer' }}>
+    <div onClick={() => !isModal && setIsModalOpen(true)} style={{ cursor: 'pointer', marginBottom: 100 }}>
       <Chart
         chartType="GeoChart"
         data={[['Country'], ...countries.map(c => [c.name])]}
