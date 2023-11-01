@@ -72,7 +72,7 @@ export default function RootLayout({ children }) {
 
         <main className="container">
           <div style={{position: 'relative'}}>
-            <a href={isBR ? 'https://alefesouza.com' : 'https://alefesouza.com.br' } className="language">{ isBR ? 'English' : 'Português' }</a>
+            <a href={isBR ? 'https://viajarcomale.com' : 'https://viajarcomale.com.br' } className="language">{ isBR ? 'English' : 'Português' }</a>
           </div>
 
           <div className="profile">
