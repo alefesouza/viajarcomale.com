@@ -23,7 +23,7 @@ export default async function Home() {
         </div>
 
         <div className="list-group">
-            {links.map(l => <HomeButton key={l.text} text={l.translate ? getI18n(headersList, l.text) : l.text} url={l.url} image={l.image} />)}
+            {links.map(l => <HomeButton key={l.text} text={l.translate ? getI18n(headersList, l.text) : l.text} url={l.url} image={l.image ? getURL(headersList, l.image) : null} />)}
             <a href="#" id="add-to-home"
                 className="list-group-item list-group-item-action" style={{ display: 'none' }}>{getI18n(headersList, 'Add to Home Screen')}</a>
         </div>

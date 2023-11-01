@@ -108,7 +108,7 @@ a {
   height: 100%;
   top: 0px;
   z-index: -1;
-  background-image: url(https://viajarcomale.com/profile-photo.jpg);
+  background-image: url(/profile-photo.jpg);
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center center;

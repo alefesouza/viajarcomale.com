@@ -2,7 +2,7 @@ const links = [
   {
       text: 'TikTok',
       url: 'https://tiktok.com/@viajarcomale',
-      image: 'https://viajarcomale.com/profile-photo.jpg',
+      image: 'profile-photo.jpg',
   },
   {
       text: 'Instagram',
@@ -19,7 +19,7 @@ const links = [
   {
       text: '360 Photos',
       url: 'https://photos.app.goo.gl/SBX7s3qeSp3824Eg9',
-      image: 'https://viajarcomale.com/images/360.jpeg',
+      image: 'images/360.jpeg',
       translate: true
   },
   {
@@ -33,7 +33,7 @@ const links = [
   {
       text: 'Twitch',
       url: 'https://twitch.tv/viajarcomale',
-      image: 'https://viajarcomale.com/images/twitch.png',
+      image: 'images/twitch.png',
   },
 ];
 
