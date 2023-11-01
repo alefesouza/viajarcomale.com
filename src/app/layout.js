@@ -2,10 +2,13 @@ import './globals.css';
 import Script from 'next/script';
 import useHost from './hooks/use-host';
 import useI18n from './hooks/use-i18n';
+import Image from 'next/image';
+import countries from './utils/countries';
 
 export default function RootLayout({ children }) {
   const host = useHost();
   const i18n = useI18n();
+  const isBR = false;
 
   return (
     <html lang={ i18n('en') }>
@@ -66,8 +69,24 @@ export default function RootLayout({ children }) {
         <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KG98M7XG" height="0" width="0" style={{ display: 'none', visibility: 'hidden'}}></iframe></noscript>
 
         <div className="background"></div>
-        
-        {children}
+
+        <main className="container">
+          <div style={{position: 'relative'}}>
+            <a href={isBR ? 'https://alefesouza.com' : 'https://alefesouza.com.br' } className="language">{ isBR ? 'English' : 'Português' }</a>
+          </div>
+
+          <div className="profile">
+              <Image src={ host('profile-photo.jpg') } width={96} height={96} alt="Profile photo" className="profile_picture" />
+
+              <span className="profile_name">Viajar com Alê</span>
+
+              <span className="profile_description">
+                {countries.map(c => c.flag)}
+              </span>
+          </div>
+
+          {children}
+        </main>
 
         <Script async src={ host('app.js') } />
 

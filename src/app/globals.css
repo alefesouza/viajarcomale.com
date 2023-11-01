@@ -145,3 +145,45 @@ a {
   transition: all 0.2s ease-in-out;
   transform: scale(1.02);
 }
+
+.profile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 64px;
+}
+
+.profile_picture {
+  width: 96px;
+  height: 96px;
+  border-radius: 48px;
+  margin-bottom: 16px;
+}
+
+.profile_name {
+  margin: 0px;
+  color: rgb(0, 0, 0);
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 1.5;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.profile_description {
+  margin-top: 4px;
+}
+
+.language {
+  position: absolute;
+  right: 0;
+  padding: 8px;
+  border: 1px solid #000000;
+  border-radius: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  top: 20px;
+}
