@@ -1,7 +1,7 @@
 {
   "name": "Viajar com Alê",
   "short_name": "Viajar com Alê",
-  "description": "Links to Viajar com Alê social networks.",
+  "description": "Links das redes sociais do Viajar com Alê.",
   "icons": [
     {
       "src": "https://viajarcomale.com/icons/36x36.png",
@@ -48,21 +48,21 @@
     {
       "name": "YouTube",
       "short_name": "YouTube",
-      "description": "Access Viajar com Alê YouTube channel",
+      "description": "Acessar o YouTube do Viajar com Alê",
       "url": "/youtube?source=pwa",
       "icons": [{ "src": "https://viajarcomale.com/logos/youtube96.png", "sizes": "96x96" }]
     },
     {
       "name": "Instagram",
       "short_name": "Instagram",
-      "description": "Access Viajar com Alê Instagram",
+      "description": "Acessar o Instagram do Viajar com Alê",
       "url": "/instagram",
       "icons": [{ "src": "https://viajarcomale.com/logos/instagram96.png", "sizes": "96x96" }]
     },
     {
       "name": "TikTok",
       "short_name": "TikTok",
-      "description": "Access Viajar com Alê TikTok",
+      "description": "Acessar o TikTok do Viajar com Alê",
       "url": "/tiktok",
       "icons": [{ "src": "https://viajarcomale.com/logos/tiktok96.png", "sizes": "96x96" }]
     }

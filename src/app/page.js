@@ -3,12 +3,14 @@ import links from './utils/links';
 import countries from './utils/countries';
 import HomeButton from './components/home-button';
 import getURL from './utils/get-url';
-import VisitedCountriesModal from './components/visited-countries-modal';
-import Link from 'next/link';
 import VisitedCountries from './components/visited-countries';
 import styles from './page.module.css';
+import { headers } from 'next/headers'
+import { getI18n } from './utils/get-i18n';
 
-export default async function Home({ searchParams }) {
+export default async function Home() {
+    const headersList = headers();
+
     return <main className="container">
         <div className={styles.profile}>
             <Image src={ getURL('profile-photo.jpg') } width={96} height={96} alt="Profile photo" className={styles.profile_picture} />
@@ -21,9 +23,9 @@ export default async function Home({ searchParams }) {
         </div>
 
         <div className="list-group">
-            {links.map(l => <HomeButton key={l.text} text={l.text} url={l.url} image={l.image} />)}
+            {links.map(l => <HomeButton key={l.text} text={l.translate ? getI18n(headersList, l.text) : l.text} url={l.url} image={l.image} />)}
             <a href="#" id="add-to-home"
-                className="list-group-item list-group-item-action" style={{ display: 'none' }}>Adicionar à tela inicial</a>
+                className="list-group-item list-group-item-action" style={{ display: 'none' }}>{getI18n(headersList, 'Add to Home Screen')}</a>
         </div>
 
         <div className={styles.bottom_links}>

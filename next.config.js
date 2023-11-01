@@ -15,6 +15,12 @@ const nextConfig =  withPWA({
         port: '',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'viajarcomale.com.br',
+        port: '',
+        pathname: '/**',
+      },
     ],
   }
 });

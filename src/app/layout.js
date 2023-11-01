@@ -1,13 +1,14 @@
 import './globals.css';
 import Script from 'next/script';
 import getURL from './utils/get-url';
-import { getAnalytics, isSupported } from 'firebase/analytics';
+import { headers } from 'next/headers'
+import { getI18n } from './utils/get-i18n';
 
 export default function RootLayout({ children }) {
-  isSupported().then(yes => yes ? getAnalytics(app)() : null);
+  const headersList = headers();
 
   return (
-    <html lang="en">
+    <html lang={ getI18n(headersList, 'en') }>
 
       <meta name="viewport" content="width=device-width, initial-scale=1" />
       <title>Viajar com Alê</title>
@@ -17,9 +18,12 @@ export default function RootLayout({ children }) {
 
       <meta name="theme-color" content="#2096cc" />
 
+      <link rel="alternate" hrefLang="pt-BR" href="https://viajarcomale.com.br/" />
+      <link rel="alternate" hrefLang="x-default" href="https://viajarcomale.com/" />
+
       <link rel="shortcut icon" href={ getURL('favicon.ico') } />
 
-      <link rel="manifest" href={ getURL('manifest.json') } />
+      <link rel="manifest" href={ getURL(getI18n(headersList, 'manifest.json')) } />
 
       <meta name="apple-mobile-web-app-title" content="Viajar com Alê" />
       <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -31,15 +35,15 @@ export default function RootLayout({ children }) {
       <link rel="apple-touch-icon" sizes="167x167" href={ getURL('icons/167x167.jpg') } />
       <link rel="apple-touch-icon" sizes="180x180" href={ getURL('icons/180x180.jpg') } />
 
-      <Script id="ld-website" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({"@context":"http:\/\/schema.org","@type":"WebSite","url":"https:\/\/viajarcomale.com","author":"Alefe Souza","name":"Viajar com Alê","alternateName":"Viajar com Alê","description":"Links das redes sociais do Viajar com Alê.","potentialAction":{"@type":"SearchAction","target":"https:\/\/viajarcomale.com?s={search_term_string}","query-input":"required name=search_term_string"}}) }}></Script>
-      <Script id="ld-person" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({"@context":"http:\/\/schema.org","@type":"Person","url":"https:\/\/viajarcomale.com","name":"Viajar com Alê","image":"https:\/\/viajarcomale.com\/profile-photo","email":"mailto:contato@viajarcomale.com","jobTitle":"Traveler","worksFor":"Viajar com Alê","nationality":"Brazilian","sameAs":["https:\/\/instagram.com\/viajarcomale","https:\/\/tiktok.com\/@viajarcomale","https:\/\/youtube.com\/@viajarcomale","https:\/\/twitter.com\/viajarcomale"]}) }}></Script>
+      <Script id="ld-website" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({"@context":"http://schema.org","@type":"WebSite","url":"https://viajarcomale.com","author":"Alefe Souza","name":"Viajar com Alê","alternateName":"Viajar com Alê","description":getI18n(headersList, 'Links to Viajar com Alê social networks.'),"potentialAction":{"@type":"SearchAction","target":"https://viajarcomale.com?s={search_term_string}","query-input":"required name=search_term_string"}}) }}></Script>
+      <Script id="ld-person" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({"@context":"http://schema.org","@type":"Person","url":"https://viajarcomale.com","name":"Viajar com Alê","image":"https://viajarcomale.com/profile-photo","email":"mailto:contato@viajarcomale.com","jobTitle":"Traveler","worksFor":"Viajar com Alê","nationality":"Brazilian","sameAs":["https://instagram.com/viajarcomale","https://tiktok.com/@viajarcomale","https://youtube.com/@viajarcomale","https://twitter.com/viajarcomale"]}) }}></Script>
 
-      <meta name="description" content="Links das redes sociais do Viajar com Alê." />
+      <meta name="description" content={getI18n(headersList, 'Links to Viajar com Alê social networks.')} />
       <link rel="canonical" href={ getURL('') } />
-      <meta property="og:locale" content="pt_BR" />
+      <meta property="og:locale" content={getI18n(headersList, 'en_US')} />
       <meta property="og:type" content="website" />
       <meta property="og:title" content="Viajar com Alê" />
-      <meta property="og:description" content="Links das redes sociais do Viajar com Alê." />
+      <meta property="og:description" content={getI18n(headersList, 'Links to Viajar com Alê social networks.')} />
       <meta property="og:url" content={ getURL('') } />
       <meta property="og:site_name" content="Viajar com Alê" />
       <meta property='article:author' content='https://www.facebook.com/viajarcomale' />

@@ -17,9 +17,10 @@ const links = [
       url: 'https://www.google.com/maps/contrib/101361157875821775334/',
   },
   {
-      text: 'Fotos 360',
+      text: '360 Photos',
       url: 'https://photos.app.goo.gl/SBX7s3qeSp3824Eg9',
       image: 'https://viajarcomale.com/images/360.jpeg',
+      translate: true
   },
   {
       text: 'Kwai',
