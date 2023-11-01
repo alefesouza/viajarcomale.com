@@ -25,7 +25,8 @@
 .header {
   display: flex;
   justify-content: flex-end;
-  padding-left: 10px;
+  padding-top: 6px;
+  padding-bottom: 6px;
 }
 
 .close {
@@ -38,7 +39,12 @@
   cursor: pointer;
   height: 72px;
   width: 72px;
-  padding-top: 6px;
+}
+
+.header_stickers {
+  flex: 1;
+  display: flex;
+  justify-content: center;
 }
 
 .visited_countries {

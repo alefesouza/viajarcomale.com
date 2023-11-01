@@ -17,7 +17,7 @@ export default function VisitedCountriesModal({ onClose: handleClose }) {
   return <div id="visited-countries-modal" className={styles.modal} onClick={onBackdropClick}>
     <div className={styles.dialog}>
       <div className={styles.header}>
-          <div style={{ flex: 1, paddingTop: 6 }}>
+          <div className={ styles.header_stickers }>
             <Image src={ getURL('icons/144x144.png') } width={72} height={72} alt="Viajar com Alê Icon" />
             <Image src={ getURL('images/asexplore.png') } width={72} height={72} alt="ASExplore Icon" />
           </div>

@@ -71,23 +71,34 @@
     {
       "src": "https://viajarcomale.com/screenshots/1.png",
       "type": "image/png",
-      "sizes": "678x1482"
+      "sizes": "390x884"
     },
     {
       "src": "https://viajarcomale.com/screenshots/2.png",
       "type": "image/png",
-      "sizes": "678x1482"
+      "sizes": "390x884"
     },
     {
       "src": "https://viajarcomale.com/screenshots/3.png",
-      "type": "image/jpg",
-      "sizes": "2560x1440",
-      "form_factor": "wide"
+      "type": "image/png",
+      "sizes": "390x884"
     },
     {
       "src": "https://viajarcomale.com/screenshots/4.png",
       "type": "image/jpg",
-      "sizes": "2560x1440",
+      "sizes": "1240x800",
+      "form_factor": "wide"
+    },
+    {
+      "src": "https://viajarcomale.com/screenshots/5.png",
+      "type": "image/jpg",
+      "sizes": "1240x800",
+      "form_factor": "wide"
+    },
+    {
+      "src": "https://viajarcomale.com/screenshots/6.png",
+      "type": "image/jpg",
+      "sizes": "1240x800",
       "form_factor": "wide"
     }
   ]

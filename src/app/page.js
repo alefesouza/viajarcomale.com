@@ -39,7 +39,7 @@ export default async function Home({ searchParams }) {
             <a href="mailto:contato@viajarcomale.com" target="_blank" className={styles.email_icon}>@</a>
         </div>
 
-        <div className={styles.branding}>
+        <div className={styles.stickers}>
             <Image src={ getURL('icons/144x144.png') } width={144} height={144} alt="Viajar com Alê Icon" />
             <Image src={ getURL('images/asexplore.png') } width={144} height={144} alt="ASExplore Icon" />
         </div>
