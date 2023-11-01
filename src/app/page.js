@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import links from './utils/links';
 import HomeButton from './components/home-button';
 import VisitedCountries from './components/visited-countries';
@@ -19,20 +18,20 @@ export default async function Home() {
 
         <div className={styles.bottom_links}>
             <a href="https://instagram.com/viajarcomale" target="_blank">
-                <Image src={ host('logos/instagram.png') } width={32} height={32} alt="Instagram Icon" />
+                <img src={ host('logos/instagram.png') } width={32} height={32} alt="Instagram Icon" />
             </a>
             <a href="https://tiktok.com/@viajarcomale" target="_blank">
-                <Image src={ host('logos/tiktok.png') } width={32} height={32} alt="TikTok Icon" />
+                <img src={ host('logos/tiktok.png') } width={32} height={32} alt="TikTok Icon" />
             </a>
             <a href="https://youtube.com/c/alefesouza" target="_blank">
-                <Image src={ host('logos/youtube.png') } width={32} height={22} alt="YouTube Icon" />
+                <img src={ host('logos/youtube.png') } width={32} height={22} alt="YouTube Icon" />
             </a>
             <a href="mailto:contato@viajarcomale.com" target="_blank" className={styles.email_icon}>@</a>
         </div>
 
         <div className={styles.stickers}>
-            <Image src={ host('icons/144x144.png') } width={144} height={144} alt="Viajar com Alê Icon" />
-            <Image src={ host('images/asexplore.png') } width={144} height={144} alt="ASExplore Icon" />
+            <img src={ host('icons/144x144.png') } srcSet={ host('icons/288x288.png') + ' 2x' } width={144} height={144} alt="Viajar com Alê Icon" />
+            <img src={ host('images/asexplore-144.png') } srcSet={ host('images/asexplore-288.png') + ' 2x' } width={144} height={144} alt="ASExplore Icon" />
         </div>
 
         <VisitedCountries />

@@ -2,7 +2,6 @@ import './globals.css';
 import Script from 'next/script';
 import useHost from './hooks/use-host';
 import useI18n from './hooks/use-i18n';
-import Image from 'next/image';
 import countries from './utils/countries';
 
 export default function RootLayout({ children }) {
@@ -72,7 +71,7 @@ export default function RootLayout({ children }) {
 
         <main className="container">
           <div className="profile">
-              <Image src={ host('profile-photo.jpg') } width={96} height={96} alt="Profile photo" className="profile_picture" />
+              <img src={ host('profile-photo.jpg') } srcSet={ host('profile-photo-2x.jpg') + ' 2x' } width={96} height={96} alt="Profile photo" className="profile_picture" />
 
               <span className="profile_name">Viajar com Alê</span>
 
