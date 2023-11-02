@@ -2,6 +2,13 @@
   "name": "Viajar com Alê",
   "short_name": "Viajar com Alê",
   "description": "Links to Viajar com Alê social networks.",
+  "lang": "en-US",
+  "start_url": "/?source=web_app_manifest",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#2096cc",
+  "theme_color": "#2096cc",
+  "edge_side_panel": {},
   "icons": [
     {
       "src": "https://viajarcomale.com/icons/36x36.png",
@@ -44,32 +51,42 @@
       "type": "image/png"
     }
   ],
-  "start_url": "/?source=web_app_manifest",
-  "display": "standalone",
-  "orientation": "any",
-  "background_color": "#2096cc",
-  "theme_color": "#2096cc",
   "shortcuts": [
     {
       "name": "YouTube",
       "short_name": "YouTube",
       "description": "Access Viajar com Alê YouTube channel",
       "url": "/youtube?source=pwa",
-      "icons": [{ "src": "https://viajarcomale.com/logos/youtube96.png", "sizes": "96x96" }]
+      "icons": [
+        {
+          "src": "https://viajarcomale.com/logos/youtube96.png",
+          "sizes": "96x96"
+        }
+      ]
     },
     {
       "name": "Instagram",
       "short_name": "Instagram",
       "description": "Access Viajar com Alê Instagram",
       "url": "/instagram",
-      "icons": [{ "src": "https://viajarcomale.com/logos/instagram96.png", "sizes": "96x96" }]
+      "icons": [
+        {
+          "src": "https://viajarcomale.com/logos/instagram96.png",
+          "sizes": "96x96"
+        }
+      ]
     },
     {
       "name": "TikTok",
       "short_name": "TikTok",
       "description": "Access Viajar com Alê TikTok",
       "url": "/tiktok",
-      "icons": [{ "src": "https://viajarcomale.com/logos/tiktok96.png", "sizes": "96x96" }]
+      "icons": [
+        {
+          "src": "https://viajarcomale.com/logos/tiktok96.png",
+          "sizes": "96x96"
+        }
+      ]
     }
   ],
   "screenshots": [
@@ -105,6 +122,16 @@
       "type": "image/jpg",
       "sizes": "1280x800",
       "form_factor": "wide"
+    }
+  ],
+  "protocol_handlers": [
+    {
+      "protocol": "web+viajarcomale",
+      "url": "/link?url=%s"
+    },
+    {
+      "protocol": "web+vca",
+      "url": "/link?url=%s"
     }
   ]
 }
