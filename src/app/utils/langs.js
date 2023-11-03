@@ -6,6 +6,7 @@ const langs = {
 
     // Meta
     'Links to Viajar com Alê social networks.': 'Links das redes sociais do Viajar com Alê.',
+    'Travel with Alefe': 'Viajar com Alefe',
 
     // Countries
     'Brazil': 'Brasil',
