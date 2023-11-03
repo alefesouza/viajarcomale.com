@@ -20,10 +20,12 @@ export default function RootLayout({ children }) {
 
       <meta name="theme-color" content="#2096cc" />
 
+      <link rel="alternate" hrefLang="en-US" href="https://viajarcomale.com/" />
       <link rel="alternate" hrefLang="pt-BR" href="https://viajarcomale.com.br/" />
       <link rel="alternate" hrefLang="x-default" href="https://viajarcomale.com/" />
 
       <link rel="shortcut icon" href={ host('favicon.ico') } />
+      <link rel="canonical" href={ host('') } />
 
       <link rel="manifest" href={ host(i18n('manifest.json')) } />
 
@@ -37,11 +39,12 @@ export default function RootLayout({ children }) {
       <link rel="apple-touch-icon" sizes="167x167" href={ host('icons/167x167.jpg') } />
       <link rel="apple-touch-icon" sizes="180x180" href={ host('icons/180x180.jpg') } />
 
-      <Script id="ld-website" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({"@context":"http://schema.org","@type":"WebSite","url":host(''),"author":"Alefe Souza","name":"Viajar com Alê","alternateName":["Viajar com Alê", "@ViajarComAlê", "viajarcomale", "VCA", i18n('Travel with Alefe')],"description":i18n('Links to Viajar com Alê social networks.'),"potentialAction":{"@type":"SearchAction","target":host('') + "?s={search_term_string}","query-input":"required name=search_term_string"}}) }}></Script>
-      <Script id="ld-person" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({"@context":"http://schema.org","@type":"Person","url":host(''),"name":"Viajar com Alê","image":"https://viajarcomale.com/profile-photo","email":"mailto:contato@viajarcomale.com","jobTitle":"Traveler","worksFor":"Viajar com Alê","nationality":"Brazilian","sameAs":["https://instagram.com/viajarcomale","https://tiktok.com/@viajarcomale","https://youtube.com/@viajarcomale","https://twitter.com/viajarcomale"]}) }}></Script>
+      <Script id="ld-website" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({"@context":"http://schema.org","@type":"WebSite","url":host(''),"author":"Alefe Souza","name":"Viajar com Alê","alternateName":["Viajar com Alê", "@ViajarComAlê", "viajarcomale", "VCA", i18n('Travel with Alefe')],"description":i18n('Links to Viajar com Alê social networks.'),"potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":host('') + "?s={search_term_string}"},"query-input":"required name=search_term_string"}}) }}></Script>
+      <Script id="ld-organization" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({"@context":"http://schema.org","@type":"Organization","url":host(''),"logo":host('/icons/512x512.png'),"email":"mailto:contato@viajarcomale.com","sameAs":["https://instagram.com/viajarcomale","https://tiktok.com/@viajarcomale","https://youtube.com/@viajarcomale","https://twitter.com/viajarcomale"]}) }}></Script>
 
+      <meta name="title" content="Viajar com Alê" />
       <meta name="description" content={i18n('Links to Viajar com Alê social networks.')} />
-      <link rel="canonical" href={ host('') } />
+      <meta name="image" content={ host('cover.jpg') }/>
       <meta property="og:locale" content={i18n('en_US')} />
       <meta property="og:type" content="website" />
       <meta property="og:title" content="Viajar com Alê" />
