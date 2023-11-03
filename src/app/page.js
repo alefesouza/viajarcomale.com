@@ -30,7 +30,7 @@ export default async function Home() {
         </div>
 
         <div className={styles.stickers}>
-            <img src={ host('icons/144x144.png') } srcSet={ host('icons/288x288.png') + ' 2x' } width={144} height={144} alt="Viajar com Alê Icon" />
+            <img src={ host('icons/144x144.png') } srcSet={ host('icons/any.svg') } width={144} height={144} alt="Viajar com Alê Icon" />
             <img src={ host('images/asexplore-144.png') } srcSet={ host('images/asexplore-288.png') + ' 2x' } width={144} height={144} alt="ASExplore Icon" />
         </div>
 
