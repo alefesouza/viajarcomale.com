@@ -26,7 +26,7 @@ export default async function Home() {
             <a href="https://youtube.com/c/alefesouza" target="_blank">
                 <img src={ host('logos/youtube.png') } width={32} height={22} alt="YouTube Icon" />
             </a>
-            <a href="mailto:contato@viajarcomale.com" target="_blank" className={styles.email_icon}>@</a>
+            <a href="mailto:contato@viajarcomale.com" className={styles.email_icon}>@</a>
         </div>
 
         <div className={styles.stickers}>
