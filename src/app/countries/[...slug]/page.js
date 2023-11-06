@@ -128,9 +128,9 @@ export default async function Country({ params: { slug }, searchParams }) {
     <h3>{i18n(country.name)}</h3>
 
     <ul className="nav nav-tabs">
-      <Link className={ `nav-link${!city ? ' active' : ''}` } aria-current="page" href={ `/countries/${country}` }>{i18n('All')}</Link>
+      <Link className={ `nav-link${!city ? ' active' : ''}` } aria-current="page" href={ `/countries/${country}${expandGalleries ? '/expand' : ''}` + (order !== 'asc' ? '?order=' + order : '') }>{i18n('All')}</Link>
       {countryData.cities.map(c => <li key={c.slug} className="nav-item">
-        <Link className={ `nav-link${city === c.slug ? ' active' : ''}` } aria-current="page" href={ `/countries/${country}/cities/${c.slug}` }>{c.name}</Link>
+        <Link className={ `nav-link${city === c.slug ? ' active' : ''}` } aria-current="page" href={ `/countries/${country}/cities/${c.slug}${expandGalleries ? '/expand' : ''}` + (order !== 'asc' ? '?order=' + order : '') }>{isBR && c.name_pt ? c.name_pt : c.name}</Link>
       </li>)}
     </ul>
 
