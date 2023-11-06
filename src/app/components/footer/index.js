@@ -1,9 +1,11 @@
 import useHost from '@/app/hooks/use-host';
+import { headers } from 'next/headers';
 import VisitedCountries from '../visited-countries';
 
 export default function Footer() {
   const host = useHost();
   const isBR = host().includes('viajarcomale.com.br');
+  const headersList = headers();
 
   return <>
     <div className="bottom_links">
@@ -27,7 +29,7 @@ export default function Footer() {
     <VisitedCountries />
 
     <div style={{textAlign: 'center', marginBottom: 100}}>
-      <a href={isBR ? 'https://viajarcomale.com' : 'https://viajarcomale.com.br' } className="language">{ isBR ? 'English' : 'Português' }</a>
+      <a href={ (isBR ? 'https://viajarcomale.com' : 'https://viajarcomale.com.br') + headersList.get('x-pathname') } className="language">{ isBR ? 'English' : 'Português' }</a>
     </div>
   </>
 }
