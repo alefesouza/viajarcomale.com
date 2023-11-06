@@ -5,6 +5,10 @@
   window.addEventListener('beforeinstallprompt', (e) => {
     deferredPrompt = e;
     
+    if (!addToHomeBtn) {
+      return;
+    }
+
     addToHomeBtn.style.display = 'block';
 
     addToHomeBtn.addEventListener('click', (event) => {

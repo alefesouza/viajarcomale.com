@@ -1,0 +1,101 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+
+<body>
+  <script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-analytics.js";
+    import { getStorage, ref, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-storage.js";
+
+    import { getFirestore, collection, getDocs, doc, writeBatch, addDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.5.2/firebase-firestore.js';
+
+    // Your web app's Firebase configuration
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    const firebaseConfig = {
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+
+    const images = [];
+
+    const db = getFirestore(app);
+    const storage = getStorage();
+
+    const theBatch = writeBatch(db);
+
+    // const hashtags = new Set(images.flatMap(i => i.hashtags));
+
+    // [...hashtags].forEach((d) => {
+    //   const docRef = doc(db, 'hashtags', d);
+
+    //   theBatch.set(docRef, { name: d });
+
+    const theImages = images.reverse().filter(i => i.hashtags.includes('seoul') && ! i.id.includes('CxvTCEtONa4'));
+
+    let counter = 0;
+
+    const country = 'south-korea';
+    const city = 'seoul';
+
+    theImages.forEach( async (d, i) => {
+      const docRef = doc(db, 'countries', country, 'medias', d.id);
+
+      d.order = i + 1;
+      d.createdAt = serverTimestamp();
+      console.log(i)
+
+      const theFile = '/medias/' + country + '/' + city + '/' + d.id + '.jpg';
+
+      const url = await getURL(theFile);
+
+        console.log(url)
+        console.log(counter, theImages.length)
+        d.image = url;
+        d.file = theFile;
+        d.city = city;
+
+    d.gallery = d.gallery.filter(gallery => !gallery.file.includes('-1.jpg')).map((gallery) => {
+        gallery.file = gallery.file
+        return gallery;
+    });
+
+    const images = await Promise.all(d.gallery.map(e => getURL(e.file)))
+    
+    d.gallery = d.gallery.map((e, i) => {
+        e.image = images[i]
+        return e;
+    });
+    console.log(d.gallery)
+
+        theBatch.set(docRef, d);
+
+        counter++;
+
+        if (counter == theImages.length) {
+            console.log(d)
+            theBatch.commit();
+        }
+    });
+
+    async function getURL(url) {
+        try {
+            const resultUrl = await getDownloadURL(ref(storage, url));
+
+            return resultUrl;
+        } catch(error) {
+            console.log(error)
+        };
+    }
+  </script>
+</body>
+
+</html>

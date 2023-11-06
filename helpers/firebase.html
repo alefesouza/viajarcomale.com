@@ -1,0 +1,567 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+
+<body>
+  <script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-analytics.js";
+    import { getStorage, ref, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-storage.js";
+
+    import { getFirestore, collection, getDocs, doc, writeBatch, addDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.5.2/firebase-firestore.js';
+
+    // Your web app's Firebase configuration
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    const firebaseConfig = {
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+
+    const countries = [
+      {
+        flag: '🇧🇷',
+        name: 'Brazil',
+        slug: 'brazil',
+        order: 1,
+        createdAt: serverTimestamp(),
+        cities: [{
+          slug: 'campos-do-jordao',
+          name: 'Campos do Jordão',
+          start: '2023-04-07',
+          end: '2023-04-09',
+        }, {
+          slug: 'holambra',
+          name: 'Holambra',
+          start: '2023-05-01',
+          end: '2023-05-01',
+        }, {
+          slug: 'foz-do-iguacu',
+          name: 'Foz do Iguaçu',
+          start: '2023-08-05',
+          end: '2023-08-13',
+        }],
+        photos: [{
+          city: 'campos-do-jordao',
+          type: 'instagram-highlight',
+          link: 'https://www.instagram.com/stories/highlights/17948112542558186/',
+          file: '/medias/brazil/campos-do-jordao/instagram-highlight.jpg',
+          mode: 'portrait',
+          id: 'instagram-highlight-17948112542558186',
+          createdAt: serverTimestamp(),
+        }, {
+          city: 'holambra',
+          type: 'instagram-highlight',
+          link: 'https://www.instagram.com/stories/highlights/17948112542558186/',
+          file: '/medias/brazil/holambra/instagram-highlight.jpg',
+          mode: 'portrait',
+          id: 'instagram-highlight-17948112542558186-2',
+          createdAt: serverTimestamp(),
+        }, {
+          city: 'foz-do-iguacu',
+          type: 'instagram-highlight',
+          link: 'https://www.instagram.com/stories/highlights/18004849480777157/',
+          file: '/medias/brazil/foz-do-iguacu/instagram-highlight.jpg',
+          mode: 'portrait',
+          id: 'instagram-highlight-18004849480777157',
+          createdAt: serverTimestamp(),
+        }]
+      },
+      {
+        flag: '🇺🇸',
+        name: 'United States',
+        slug: 'united-states',
+        order: 2,
+        createdAt: serverTimestamp(),
+        cities: [{
+          slug: 'orlando',
+          name: 'Orlando',
+          start: '2022-07-10',
+          end: '2022-07-16',
+        }, {
+          slug: 'new-york',
+          name: 'New York',
+          name_pt: 'Nova York',
+          start: '2022-07-16',
+          end: '2022-07-22',
+        }, {
+          slug: 'san-francisco',
+          name: 'San Francisco',
+          name_pt: 'São Francisco',
+          start: '2022-09-30',
+          end: '2022-10-07',
+        }, {
+          slug: 'seattle',
+          name: 'Seattle',
+          start: '2023-05-14',
+          end: '2023-05-19',
+        }, {
+          slug: 'road-trip-sea-las',
+          name: 'Road Trip Seattle - Las Vegas',
+          start: '2023-05-19',
+          end: '2023-05-24',
+        }, {
+          slug: 'death-valley',
+          name: 'Death Valley',
+          start: '2023-05-24',
+          end: '2023-05-24',
+        }, {
+          slug: 'las-vegas',
+          name: 'Las Vegas',
+          start: '2023-05-24',
+          end: '2023-05-27',
+        }],
+        photos: [{
+          city: 'orlando',
+          type: 'instagram-highlight',
+          link: 'https://www.instagram.com/stories/highlights/17952975592978935/',
+          file: '/medias/united-states/orlando/instagram-highlight.jpg',
+          mode: 'portrait',
+          id: 'instagram-highlight-17952975592978935',
+          createdAt: serverTimestamp(),
+        }, {
+          city: 'new-york',
+          type: 'instagram-highlight',
+          link: 'https://www.instagram.com/stories/highlights/18176430187211121/',
+          file: '/medias/united-states/new-york/instagram-highlight.jpg',
+          mode: 'portrait',
+          id: 'instagram-highlight-18176430187211121',
+          createdAt: serverTimestamp(),
+        }, {
+          city: 'san-francisco',
+          type: 'instagram-highlight',
+          link: 'https://www.instagram.com/stories/highlights/17854015142798161/',
+          file: '/medias/united-states/san-francisco/instagram-highlight.jpg',
+          mode: 'portrait',
+          id: 'instagram-highlight-17854015142798161',
+          createdAt: serverTimestamp(),
+        }, {
+          city: 'seattle',
+          type: 'instagram-highlight',
+          link: 'https://www.instagram.com/stories/highlights/18009119032653865/',
+          file: '/medias/united-states/seattle/instagram-highlight.jpg',
+          mode: 'portrait',
+          id: 'instagram-highlight-18009119032653865',
+          createdAt: serverTimestamp(),
+        }, {
+          city: 'road-trip-sea-las',
+          type: 'instagram-highlight',
+          link: 'https://www.instagram.com/stories/highlights/18009779992715828/',
+          file: '/medias/united-states/road-trip-sea-las/instagram-highlight.jpg',
+          mode: 'portrait',
+          id: 'instagram-highlight-18009779992715828',
+          createdAt: serverTimestamp(),
+        }, {
+          city: 'death-valley',
+          type: 'instagram-highlight',
+          link: 'https://www.instagram.com/stories/highlights/18285703003137254/',
+          file: '/medias/united-states/death-valley/instagram-highlight.jpg',
+          mode: 'portrait',
+          id: 'instagram-highlight-18285703003137254',
+          createdAt: serverTimestamp(),
+        }, {
+          city: 'las-vegas',
+          type: 'instagram-highlight',
+          link: 'https://www.instagram.com/stories/highlights/18003648580769048/',
+          file: '/medias/united-states/las-vegas/instagram-highlight.jpg',
+          mode: 'portrait',
+          id: 'instagram-highlight-18003648580769048',
+          createdAt: serverTimestamp(),
+        }]
+      },
+      {
+        flag: '🇰🇷',
+        name: 'South Korea',
+        slug: 'south-korea',
+        order: 3,
+        createdAt: serverTimestamp(),
+        cities: [{
+          slug: 'seoul',
+          name: 'Seoul',
+          name_pt: 'Seul',
+          start: '2022-10-12',
+          end: '2022-10-20',
+        }],
+        photos: [{
+          city: 'seoul',
+          type: 'instagram-highlight',
+          link: 'https://www.instagram.com/stories/highlights/17896374209690042/',
+          file: '/medias/south-korea/seoul/instagram-highlight.jpg',
+          mode: 'portrait',
+          id: 'instagram-highlight-17896374209690042',
+          createdAt: serverTimestamp(),
+        }]
+      },
+      {
+        flag: '🇯🇵',
+        name: 'Japan',
+        slug: 'japan',
+        order: 4,
+        createdAt: serverTimestamp(),
+        cities: [{
+          slug: 'osaka',
+          name: 'Osaka',
+          start: '2022-10-19',
+          end: '2022-10-24',
+        }, {
+          slug: 'kyoto',
+          name: 'Kyoto',
+          name_pt: 'Quioto',
+          start: '2022-10-24',
+          end: '2022-10-29',
+        }, {
+          slug: 'tokyo',
+          name: 'Tokyo',
+          name_pt: 'Tóquio',
+          start: '2022-10-29',
+          end: '2022-11-04',
+        }],
+        photos: [{
+          city: 'osaka',
+          type: 'instagram-highlight',
+          link: 'https://www.instagram.com/stories/highlights/17886543788726335/',
+          file: '/medias/japan/osaka/instagram-highlight.jpg',
+          mode: 'portrait',
+          id: 'instagram-highlight-17886543788726335',
+          createdAt: serverTimestamp(),
+        }, {
+          city: 'kyoto',
+          type: 'instagram-highlight',
+          link: 'https://www.instagram.com/stories/highlights/17968097359902300/',
+          file: '/medias/japan/kyoto/instagram-highlight.jpg',
+          mode: 'portrait',
+          id: 'instagram-highlight-17968097359902300',
+          createdAt: serverTimestamp(),
+        }, {
+          city: 'tokyo',
+          type: 'instagram-highlight',
+          link: 'https://www.instagram.com/stories/highlights/18235573465144420/',
+          file: '/medias/japan/tokyo/instagram-highlight.jpg',
+          mode: 'portrait',
+          id: 'instagram-highlight-18235573465144420',
+          createdAt: serverTimestamp(),
+        }]
+      },
+      {
+        flag: '🇦🇹',
+        name: 'Austria',
+        slug: 'austria',
+        order: 5,
+        createdAt: serverTimestamp(),
+        cities: [{
+          slug: 'vienna',
+          name: 'Vienna',
+          name_pt: 'Viena',
+          start: '2023-02-05',
+          end: '2023-02-12',
+        }, {
+          slug: 'salzburg',
+          name: 'Salzburg',
+          name_pt: 'Salzburgo',
+          start: '2023-02-12',
+          end: '2023-02-14',
+        }],
+        photos: [{
+          city: 'vienna',
+          type: 'instagram-highlight',
+          link: 'https://www.instagram.com/stories/highlights/17999849920565358/',
+          file: '/medias/austria/vienna/instagram-highlight.jpg',
+          mode: 'portrait',
+          id: 'instagram-highlight-17999849920565358',
+          createdAt: serverTimestamp(),
+        }, {
+          city: 'salzburg',
+          type: 'instagram-highlight',
+          link: 'https://www.instagram.com/stories/highlights/17963369033255162/',
+          file: '/medias/austria/salzburg/instagram-highlight.jpg',
+          mode: 'portrait',
+          id: 'instagram-highlight-17963369033255162',
+          createdAt: serverTimestamp(),
+        }]
+      },
+      {
+        flag: '🇩🇪',
+        name: 'Germany',
+        slug: 'germany',
+        order: 6,
+        createdAt: serverTimestamp(),
+        cities: [{
+          slug: 'munich',
+          name: 'Munich',
+          name_pt: 'Munique',
+          start: '2023-02-14',
+          end: '2023-02-16',
+        }],
+        photos: [{
+          city: 'munich',
+          type: 'instagram-highlight',
+          link: 'https://www.instagram.com/stories/highlights/17942291972554314/',
+          file: '/medias/germany/munich/instagram-highlight.jpg',
+          mode: 'portrait',
+          id: 'instagram-highlight-17942291972554314',
+          createdAt: serverTimestamp(),
+        }]
+      },
+      {
+        flag: '🇨🇭',
+        name: 'Switzerland',
+        slug: 'switzerland',
+        order: 7,
+        createdAt: serverTimestamp(),
+        cities: [{
+          slug: 'zurich',
+          name: 'Zurich',
+          name_pt: 'Zurique',
+          start: '2023-02-16',
+          end: '2023-02-20',
+        }],
+        photos: [{
+          city: 'zurich',
+          type: 'instagram-highlight',
+          link: 'https://www.instagram.com/stories/highlights/17884429829749009/',
+          file: '/medias/switzerland/zurich/instagram-highlight.jpg',
+          mode: 'portrait',
+          id: 'instagram-highlight-17884429829749009',
+          createdAt: serverTimestamp(),
+        }]
+      },
+      {
+        flag: '🇳🇱',
+        name: 'Netherlands',
+        slug: 'netherlands',
+        order: 8,
+        createdAt: serverTimestamp(),
+        cities: [{
+          slug: 'amsterdam',
+          name: 'Amsterdam',
+          name_pt: 'Amesterdã',
+          start: '2023-02-20',
+          end: '2023-02-25',
+        }],
+        photos: [{
+          city: 'amsterdam',
+          type: 'instagram-highlight',
+          link: 'https://www.instagram.com/stories/highlights/17990942773753878/',
+          file: '/medias/netherlands/amsterdam/instagram-highlight.jpg',
+          mode: 'portrait',
+          id: 'instagram-highlight-17990942773753878',
+          createdAt: serverTimestamp(),
+        }]
+      },
+      {
+        flag: '🇵🇹',
+        name: 'Portugal',
+        slug: 'portugal',
+        order: 9,
+        createdAt: serverTimestamp(),
+        cities: [{
+          slug: 'lisbon',
+          name: 'Lisbon',
+          name_pt: 'Lisboa',
+          start: '2023-02-25',
+          end: '2023-03-02',
+        }],
+        photos: [{
+          city: 'lisbon',
+          type: 'instagram-highlight',
+          link: 'https://www.instagram.com/stories/highlights/17891855975715086/',
+          file: '/medias/portugal/lisbon/instagram-highlight.jpg',
+          mode: 'portrait',
+          id: 'instagram-highlight-17891855975715086',
+          createdAt: serverTimestamp(),
+        }]
+      },
+      {
+        flag: '🇲🇽',
+        name: 'Mexico',
+        slug: 'mexico',
+        order: 10,
+        createdAt: serverTimestamp(),
+        cities: [{
+          slug: 'mexico-city',
+          name: 'Mexico City',
+          name_pt: 'Cidade do México',
+          start: '2023-05-27',
+          end: '2023-06-01',
+        }],
+        photos: [{
+          city: 'mexico-city',
+          type: 'instagram-highlight',
+          link: 'https://www.instagram.com/stories/highlights/17859685121916057/',
+          file: '/medias/mexico/mexico-city/instagram-highlight.jpg',
+          mode: 'portrait',
+          id: 'instagram-highlight-17859685121916057',
+          createdAt: serverTimestamp(),
+        }]
+      },
+      {
+        flag: '🇨🇦',
+        name: 'Canada',
+        slug: 'canada',
+        order: 11,
+        createdAt: serverTimestamp(),
+        cities: [{
+          slug: 'Toronto',
+          name: 'toronto',
+          start: '2023-06-01',
+          end: '2023-06-04',
+        }],
+        photos: [{
+          city: 'toronto',
+          type: 'instagram-highlight',
+          link: 'https://www.instagram.com/stories/highlights/17968109018395918/',
+          file: '/medias/canada/toronto/instagram-highlight.jpg',
+          mode: 'portrait',
+          id: 'instagram-highlight-17968109018395918',
+          createdAt: serverTimestamp(),
+        }]
+      },
+      {
+        flag: '🇵🇾',
+        name: 'Paraguay',
+        slug: 'paraguay',
+        order: 12,
+        createdAt: serverTimestamp(),
+        cities: [{
+          slug: 'ciudad-del-este',
+          name: 'Ciudad del Este',
+          start: '2023-08-05',
+          end: '2023-08-05',
+        }],
+        photos: [{
+          city: 'ciudad-del-este',
+          type: 'instagram-highlight',
+          link: 'https://www.instagram.com/stories/highlights/18004849480777157/',
+          file: '/medias/paraguay/ciudad-del-este/instagram-highlight.jpg',
+          mode: 'portrait',
+          id: 'instagram-highlight-18004849480777157-2',
+          createdAt: serverTimestamp(),
+        }]
+      },
+      {
+        flag: '🇦🇷',
+        name: 'Argentina',
+        slug: 'argentina',
+        order: 13,
+        createdAt: serverTimestamp(),
+        cities: [{
+          slug: 'puerto-iguazu',
+          name: 'Puerto Iguazú',
+          start: '2023-08-06',
+          end: '2023-08-11',
+        }, {
+          slug: 'salta',
+          name: 'Salta',
+          start: '2023-10-07',
+          end: '2023-10-14',
+        }, {
+          slug: 'buenos-aires',
+          name: 'Buenos Aires',
+          start: '2023-10-12',
+          end: '2023-10-14',
+        }, {
+          slug: 'ushuaia',
+          name: 'Ushuaia',
+          start: '2023-10-14',
+          end: '2023-10-17',
+        }],
+        photos: [{
+          city: 'puerto-iguazu',
+          type: 'instagram-highlight',
+          link: 'https://www.instagram.com/stories/highlights/18004849480777157/',
+          file: '/medias/argentina/puerto-iguazu/instagram-highlight.jpg',
+          mode: 'portrait',
+          id: 'instagram-highlight-18004849480777157-3',
+          createdAt: serverTimestamp(),
+        }, {
+          city: 'salta',
+          type: 'instagram-highlight',
+          link: 'https://www.instagram.com/stories/highlights/18018071734841575/',
+          file: '/medias/argentina/salta/instagram-highlight.jpg',
+          mode: 'portrait',
+          id: 'instagram-highlight-18018071734841575',
+          createdAt: serverTimestamp(),
+        }, {
+          city: 'buenos-aires',
+          type: 'instagram-highlight',
+          link: 'https://www.instagram.com/stories/highlights/18018071734841575/',
+          file: '/medias/argentina/buenos-aires/instagram-highlight.jpg',
+          mode: 'portrait',
+          id: 'instagram-highlight-18018071734841575-2',
+          createdAt: serverTimestamp(),
+        }, {
+          city: 'ushuaia',
+          type: 'instagram-highlight',
+          link: 'https://www.instagram.com/stories/highlights/18029171710598476/',
+          file: '/medias/argentina/ushuaia/instagram-highlight.jpg',
+          mode: 'portrait',
+          id: 'instagram-highlight-18029171710598476',
+          createdAt: serverTimestamp(),
+        }]
+      },
+    ];
+
+    const db = getFirestore(app);
+    const storage = getStorage();
+
+    const theBatch = writeBatch(db);
+
+    countries.forEach((d) => {
+      const docRef = doc(db, 'countries', d.slug);
+
+      const photos = [...d.photos];
+
+      delete d.photos;
+
+      theBatch.set(docRef, d);
+
+      const batch = writeBatch(db);
+      let counter = 0;
+
+      photos.forEach((e, i) => {
+
+        const docRef = doc(db, 'countries', d.slug, 'medias', e.id);
+
+        if (d.slug == 'austria') {
+          console.log(docRef)
+        }
+        getDownloadURL(ref(storage, e.file))
+          .then((url) => {
+            console.log(url)
+            e.image = url;
+            e.height = 1920;
+            e.width = 1080;
+            e.order = i + 1;
+
+            batch.set(docRef, e);
+        if (d.slug == 'austria') {
+          console.log('countries', d.slug, 'medias', e.id)
+        }
+
+            counter++;
+            
+            if (counter == photos.length) {
+              batch.commit();
+              
+
+            }
+          })
+          .catch((error) => {
+            // Handle any errors
+          });
+
+      })
+    });
+
+    theBatch.commit();
+  </script>
+</body>
+
+</html>
