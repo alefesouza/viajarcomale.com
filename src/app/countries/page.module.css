@@ -20,7 +20,8 @@
 .country_selector {
   display: grid;
   gap: 10px;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  text-align: center;
 }
 
 .instagram_highlights {
