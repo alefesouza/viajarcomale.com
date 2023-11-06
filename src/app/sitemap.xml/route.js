@@ -33,18 +33,27 @@ export async function GET() {
       loc: host('/countries'),
       lastmod,
     },
-    ...countries.map(c => ({
+    ...countries.flatMap(c => [{
       loc: host('/countries/' + c.slug),
       lastmod,
-    })),
-    ...countries.flatMap(c => c.cities.map(city => ({
+    }, {
+      loc: host('/countries/' + c.slug + '/expand'),
+      lastmod,
+    }]),
+    ...countries.map(c => c.cities.map(city => [{
       loc: host('/countries/' + c.slug + '/cities/' + city.slug),
       lastmod,
-    }))),
-    ...hashtags.map(h => ({
+    }, {
+      loc: host('/countries/' + c.slug + '/cities/' + city.slug + '/expand'),
+      lastmod,
+    }])).flat(2),
+    ...hashtags.flatMap(h => [{
       loc: host('/hashtags/') + decodeURIComponent(h.name),
       lastmod,
-    })),]
+    }, {
+      loc: host('/hashtags/') + decodeURIComponent(h.name) + '/expand',
+      lastmod,
+    }]),]
   };
 
   return new Response(`<?xml version="1.0" encoding="UTF-8" ?>${parse('urlset', obj)}`);
