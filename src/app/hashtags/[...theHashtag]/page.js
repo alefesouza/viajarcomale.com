@@ -22,11 +22,16 @@ export default async function Country({ params: { theHashtag }, searchParams }) 
   const [hashtag, expand] = theHashtag;
 
   const expandGalleries = expand;
-  let order = searchParams.order && ['asc', 'desc', 'random'].includes(searchParams.order) && searchParams.order || 'asc';
+  let sort = searchParams.sort && ['asc', 'desc', 'random'].includes(searchParams.sort) && searchParams.sort || 'desc';
+
+  let isRandom = sort === 'random';
+
+  if (isRandom) {
+    sort = 'desc';
+  }
 
   const db = getFirestore(app);
-  const photosSnapshot = await getDocs(query(collectionGroup(db, 'medias'), where('hashtags', 'array-contains', decodeURIComponent(hashtag)), orderBy('order', order)));
-  let isRandom = order === 'random';
+  const photosSnapshot = await getDocs(query(collectionGroup(db, 'medias'), where('hashtags', 'array-contains', decodeURIComponent(hashtag)), orderBy('order', sort)));
 
   let photos = [];
 
@@ -44,13 +49,13 @@ export default async function Country({ params: { theHashtag }, searchParams }) 
     photos = photos.map(value => ({ value, sort: Math.random() }))
       .sort((a, b) => a.sort - b.sort)
       .map(({ value }) => value);
-    order = 'random';
+      sort = 'random';
   }
 
-  const orderPicker = <div className={ styles.order_picker }>
+  const sortPicker = <div className={ styles.sort_picker }>
     <span>{i18n('Sorting')}:</span>
 
-    {[{name: 'Latest', value: 'asc'}, {name: 'Oldest', value: 'desc'}, {name: 'Random', value: 'random'}].map((o) => <Link key={o} href={ '?order=' + o.value } scroll={false}><label><input type="radio" name="order" value={o.value} checked={order === o.value} readOnly />{i18n(o.name)}</label></Link>)}
+    {[{name: 'Latest', value: 'desc'}, {name: 'Oldest', value: 'asc'}, {name: 'Random', value: 'random'}].map((o) => <Link key={o} href={ '?sort=' + o.value } scroll={false}><label><input type="radio" name="sort" value={o.value} checked={sort === o.value} readOnly />{i18n(o.name)}</label></Link>)}
   </div>
 
   const instagramPhotos = photos.filter(p => p.type === 'instagram' || p.type === 'instagram-gallery');
@@ -63,12 +68,12 @@ export default async function Country({ params: { theHashtag }, searchParams }) 
     <h3>#{decodeURIComponent(hashtag)}</h3>
 
     <div className={ styles.galleries }>
-      { instagramPhotos.length > 1 && orderPicker }
+      { instagramPhotos.length > 1 && sortPicker }
 
       { instagramPhotos.length > 0 && <div className={ styles.instagram_photos }>
         <div className={ styles.instagram_photos_title }>
           <h4>{i18n('Instagram Photos')}</h4>
-          { !expandGalleries ? <Link href={ `/hashtags/${hashtag}/expand` + (order !== 'asc' ? '?order=' + order : '')} scroll={false}>{i18n('Expand Galleries')}</Link> : <Link href={ `/hashtags/${hashtag}` + (order !== 'asc' ? '?order=' + order : '')} scroll={false}>{i18n('Minimize Galleries')}</Link> }
+          { !expandGalleries ? <Link href={ `/hashtags/${hashtag}/expand` + (sort !== 'desc' ? '?sort=' + sort : '')} scroll={false}>{i18n('Expand Galleries')}</Link> : <Link href={ `/hashtags/${hashtag}` + (sort !== 'desc' ? '?sort=' + sort : '')} scroll={false}>{i18n('Minimize Galleries')}</Link> }
         </div>
         
         <div className={ styles.instagram_highlights_items }>
