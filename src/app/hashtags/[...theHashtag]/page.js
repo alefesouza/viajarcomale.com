@@ -6,7 +6,7 @@ import { getFirestore, getDocs, collectionGroup, query, where, orderBy } from 'f
 import styles from './page.module.css';
 import Top from '@/app/components/top';
 import Footer from '@/app/components/footer';
-import { SITE_NAME } from '@/app/utils/constants';
+import { FILE_DOMAIN, SITE_NAME } from '@/app/utils/constants';
 
 export async function generateMetadata({ params: { theHashtag } }) {
   return {
@@ -74,7 +74,7 @@ export default async function Country({ params: { theHashtag }, searchParams }) 
         <div className={ styles.instagram_highlights_items }>
           {instagramPhotos.map(p => <div key={ p.file } className={ styles.gallery_item + (p.gallery && p.gallery.length && ! expandGalleries ? ' ' + styles.is_gallery : '' ) }>
             <a href={p.link} target="_blank">
-              {p.file_type === 'video' ? <video src={p.image} controls /> : <img src={p.image} alt={p.id} />}
+              {p.file_type === 'video' ? <video src={FILE_DOMAIN + p.file} controls /> : <img src={FILE_DOMAIN + p.file} alt={p.id} />}
             </a>
 
             <div className={ styles.item_description }>
