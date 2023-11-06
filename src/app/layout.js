@@ -29,7 +29,7 @@ export default function RootLayout({ children }) {
         <link rel="shortcut icon" href={ host('favicon.ico') } />
         <link rel="canonical" href={ host('') } />
 
-        <link rel="manifest" href={ host(i18n('manifest.json')) } />
+        <link rel="manifest" href={ host('manifest.json') } />
 
         <meta name="apple-mobile-web-app-title" content="Viajar com Alê" />
         <meta name="apple-mobile-web-app-capable" content="yes" />

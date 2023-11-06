@@ -34,10 +34,15 @@ const langs = {
     'Canada': 'Canadá',
     'Paraguay': 'Paraguai',
 
+    // Manifest
+    'Access Viajar com Alê YouTube channel': 'Acessar o YouTube do Viajar com Alê',
+    'Access Viajar com Alê Instagram': 'Acessar o Instagram do Viajar com Alê',
+    'Access Viajar com Alê TikTok': 'Acessar o TikTok do Viajar com Alê',
+
     // Code
-    'manifest.json': 'manifest-pt.json',
     'en': 'pt',
     'en_US': 'pt_BR',
+    'en-US': 'pt-BR',
   }
 }
 
