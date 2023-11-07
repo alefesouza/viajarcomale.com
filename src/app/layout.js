@@ -30,7 +30,7 @@ export default function RootLayout({ children }) {
         <link rel="alternate" hrefLang="x-default" href="https://viajarcomale.com/" />
 
         <link rel="shortcut icon" href={ host('favicon.ico') } />
-        <link rel="canonical" href={ host(headersList.get('x-pathname')) } />
+        <link rel="canonical" href={ new URL(headersList.get('x-pathname'), host().includes('viajarcomale.com.br') ? 'https://viajarcomale.com.br' : 'https://viajarcomale.com').toString() } />
 
         <link rel="manifest" href={ host('manifest.json') } />
 
