@@ -79,7 +79,7 @@ export default async function Country({ params: { theHashtag }, searchParams }) 
         <div className={ styles.instagram_highlights_items }>
           {instagramPhotos.map(p => <div key={ p.file } className={ styles.gallery_item + (p.gallery && p.gallery.length && ! expandGalleries ? ' ' + styles.is_gallery : '' ) }>
             <a href={p.link} target="_blank">
-              {p.file_type === 'video' ? <video src={FILE_DOMAIN + p.file} controls /> : <img src={FILE_DOMAIN + p.file} srcset={ `${FILE_DOMAIN_500 + p.file} 500w` } alt={p.id} />}
+              {p.file_type === 'video' ? <video src={FILE_DOMAIN + p.file} controls /> : <img src={FILE_DOMAIN + p.file} srcSet={ `${FILE_DOMAIN_500 + p.file} 500w` } alt={p.id} />}
             </a>
 
             <div className={ styles.item_description }>

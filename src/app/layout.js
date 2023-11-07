@@ -3,6 +3,7 @@ import Script from 'next/script';
 import useHost from './hooks/use-host';
 import useI18n from './hooks/use-i18n';
 import { SITE_NAME } from './utils/constants';
+import { headers } from 'next/headers';
 
 export const metadata = {
   title: SITE_NAME,
@@ -11,6 +12,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   const host = useHost();
   const i18n = useI18n();
+  const headersList = headers();
 
   return (
     <html lang={ i18n('en') }>
@@ -28,7 +30,7 @@ export default function RootLayout({ children }) {
         <link rel="alternate" hrefLang="x-default" href="https://viajarcomale.com/" />
 
         <link rel="shortcut icon" href={ host('favicon.ico') } />
-        <link rel="canonical" href={ host('') } />
+        <link rel="canonical" href={ host(headersList.get('x-pathname')) } />
 
         <link rel="manifest" href={ host('manifest.json') } />
 
