@@ -46,14 +46,14 @@ export async function GET() {
       lastmod,
     })),
     ...Array.from({ length: Math.ceil((c?.totals?.expanded_instagram_photos / ITEMS_PER_PAGE) - 1) }, (_, i) => ({
-      loc: host('/countries/' + c.slug + '/page/' + (i + 2) + '/expand'),
+      loc: host('/countries/' + c.slug + '/expand/page/' + (i + 2)),
       lastmod,
     }))]),
     ...countries.map(c => c.cities.map(city => [{
       loc: host('/countries/' + c.slug + '/cities/' + city.slug),
       lastmod,
     }, {
-      loc: host('/countries/' + c.slug + '/cities/' + city.slug + '/expand'),
+      loc: host('/countries/' + c.slug + '/expand/cities/' + city.slug),
       lastmod,
     },
     ...Array.from({ length: Math.ceil((city?.totals?.instagram_photos / ITEMS_PER_PAGE) - 1) }, (_, i) => ({
@@ -61,7 +61,7 @@ export async function GET() {
       lastmod,
     })),
     ...Array.from({ length: Math.ceil((city?.totals?.expanded_instagram_photos / ITEMS_PER_PAGE) - 1) }, (_, i) => ({
-      loc: host('/countries/' + c.slug + '/cities/' + city.slug + '/page/' + (i + 2) + '/expand'),
+      loc: host('/countries/' + c.slug + '/expand/cities/' + city.slug + '/page/' + (i + 2)),
       lastmod,
     }))])).flat(2),
     ...hashtags.flatMap(h => [{

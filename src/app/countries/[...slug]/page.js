@@ -14,12 +14,12 @@ import Pagination from '@/app/components/pagination';
 function getDataFromRoute(slug, searchParams) {
   const [country, path1, path2, path3, path4, path5] = slug;
   // {country}
-  // {country}/expand
   // {country}/page/{page}
-  // {country}/page/{page}/expand
+  // {country}/expand
+  // {country}/expand/page/{page}
   // {country}/cities/{city}
   // {country}/cities/{city}/page/{page}
-  // {country}/cities/{city}/page/{page}/expand
+  // {country}/cities/{city}/expand/page/{page}
 
   let city = null;
 
@@ -27,8 +27,8 @@ function getDataFromRoute(slug, searchParams) {
     city = path2;
   }
 
-  const page = path1 === 'page' ? path2 : path3 === 'page' ? path4 : null;
-  const expandGalleries = path1 === 'expand' || path3 === 'expand' || path5 === 'expand';
+  const page = path1 === 'page' ? path2 : path2 === 'page' ? path3 : path3 === 'page' ? path4 : path4 === 'page' ? path5 : null;
+  const expandGalleries = path1 === 'expand' || path3 === 'expand';
   let sort = searchParams.sort && ['asc', 'desc', 'random'].includes(searchParams.sort) && searchParams.sort || 'desc';
 
   return {
@@ -41,7 +41,7 @@ function getDataFromRoute(slug, searchParams) {
 }
 
 async function getCountry(db, slug, searchParams) {
-  let { country, city, page, sort, expandGalleries } = getDataFromRoute(slug, searchParams);
+  let { country, city } = getDataFromRoute(slug, searchParams);
 
   const countryDoc = await getDoc(doc(db, 'countries', country));
   const countryData = countryDoc.data();
@@ -56,6 +56,9 @@ async function getCountry(db, slug, searchParams) {
 export async function generateMetadata({ params: { slug }, searchParams }) {
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const i18n = useI18n();
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const host = useHost();
+  const isBR = host().includes('viajarcomale.com.br');
 
   const db = getFirestore(app);
   const countryData = await getCountry(db, slug, searchParams);
@@ -64,7 +67,7 @@ export async function generateMetadata({ params: { slug }, searchParams }) {
     return {};
   }
 
-  const [country, path, city, expand] = slug;
+  let { city } = getDataFromRoute(slug, searchParams);
   let theCity = null;
 
   if (city) {
@@ -72,7 +75,7 @@ export async function generateMetadata({ params: { slug }, searchParams }) {
   }
  
   return {
-    title: (theCity ? theCity.name + ' - ' : '') + countryData.name + ' - ' + i18n('Albums') + ' - ' + SITE_NAME,
+    title: (theCity ? isBR && theCity.name_pt ? theCity.name_pt + ' - ' : theCity.name + ' - ' : '') + i18n(countryData.name) + ' - ' + i18n('Albums') + ' - ' + SITE_NAME,
   }
 }
 
@@ -155,7 +158,11 @@ export default async function Country({ params: { slug }, searchParams }) {
   }
 
   if (expandGalleries) {
-    paginationBase += '/expand';
+    if (city) {
+      paginationBase = `/countries/${country}/cities/${city}/expand/page/{page}`;
+    } else {
+      paginationBase = `/countries/${country}/expand/page/{page}`;
+    }
   }
 
   paginationBase += (sort !== 'desc' ? '?sort=' + sort : '');
