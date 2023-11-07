@@ -6,7 +6,7 @@ import { ITEMS_PER_PAGE } from '../utils/constants';
 
 export async function GET() {
   const host = useHost();
-  const lastmod = '2023-11-06';
+  const lastmod = '2023-11-07';
 
   const db = getFirestore(app);
   const countriesSnapshot = await getDocs(query(collection(db, 'countries')));
