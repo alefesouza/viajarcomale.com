@@ -2,9 +2,10 @@ import './globals.css';
 import Script from 'next/script';
 import useHost from './hooks/use-host';
 import useI18n from './hooks/use-i18n';
+import { SITE_NAME } from './utils/constants';
 
 export const metadata = {
-  title: 'Viajar com Alê',
+  title: SITE_NAME,
 }
 
 export default function RootLayout({ children }) {
@@ -31,7 +32,7 @@ export default function RootLayout({ children }) {
 
         <link rel="manifest" href={ host('manifest.json') } />
 
-        <meta name="apple-mobile-web-app-title" content="Viajar com Alê" />
+        <meta name="apple-mobile-web-app-title" content={SITE_NAME} />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <link rel="apple-touch-icon" sizes="60x60" href={ host('icons/60x60.jpg') } />
@@ -41,18 +42,18 @@ export default function RootLayout({ children }) {
         <link rel="apple-touch-icon" sizes="167x167" href={ host('icons/167x167.jpg') } />
         <link rel="apple-touch-icon" sizes="180x180" href={ host('icons/180x180.jpg') } />
 
-        <Script id="ld-website" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({"@context":"http://schema.org","@type":"WebSite","url":host(''),"author":"Alefe Souza","name":"Viajar com Alê","alternateName":["Viajar com Alê", "@ViajarComAlê", "viajarcomale", "VCA", i18n('Travel with Alefe')],"description":i18n('Links to Viajar com Alê social networks.'),"potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":host('') + "?s={search_term_string}"},"query-input":"required name=search_term_string"}}) }}></Script>
+        <Script id="ld-website" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({"@context":"http://schema.org","@type":"WebSite","url":host(''),"author":"Alefe Souza","name":SITE_NAME,"alternateName":[SITE_NAME, "@ViajarComAlê", "viajarcomale", "VCA", i18n('Travel with Alefe')],"description":i18n('Travel photos and links to Viajar com Alê social networks.'),"potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":host('') + "?s={search_term_string}"},"query-input":"required name=search_term_string"}}) }}></Script>
         <Script id="ld-organization" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({"@context":"http://schema.org","@type":"Organization","url":host(''),"logo":host('/icons/512x512.png'),"email":"mailto:contato@viajarcomale.com","sameAs":["https://instagram.com/viajarcomale","https://tiktok.com/@viajarcomale","https://youtube.com/@viajarcomale","https://twitter.com/viajarcomale"]}) }}></Script>
 
-        <meta name="title" content="Viajar com Alê" />
-        <meta name="description" content={i18n('Links to Viajar com Alê social networks.')} />
+        <meta name="title" content={SITE_NAME} />
+        <meta name="description" content={i18n('Travel photos and links to Viajar com Alê social networks.')} />
         <meta name="image" content={ host('cover.jpg') }/>
         <meta property="og:locale" content={i18n('en_US')} />
         <meta property="og:type" content="website" />
-        <meta property="og:title" content="Viajar com Alê" />
-        <meta property="og:description" content={i18n('Links to Viajar com Alê social networks.')} />
+        <meta property="og:title" content={SITE_NAME} />
+        <meta property="og:description" content={i18n('Travel photos and links to Viajar com Alê social networks.')} />
         <meta property="og:url" content={ host('') } />
-        <meta property="og:site_name" content="Viajar com Alê" />
+        <meta property="og:site_name" content={SITE_NAME} />
         <meta property='article:author' content='https://www.facebook.com/viajarcomale' />
         <meta property='article:publisher' content='https://www.facebook.com/viajarcomale' />
         <meta property="og:image" content={ host('cover.jpg') }/>

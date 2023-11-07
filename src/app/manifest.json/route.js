@@ -11,7 +11,7 @@ export async function GET() {
   const obj = {
     name: SITE_NAME,
     short_name: SITE_NAME,
-    description: i18n('Links to Viajar com Alê social networks.'),
+    description: i18n('Travel photos and links to Viajar com Alê social networks.'),
     lang: i18n('en-US'),
     start_url: '/?source=web_app_manifest',
     display: 'standalone',

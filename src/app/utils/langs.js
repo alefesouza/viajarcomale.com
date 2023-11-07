@@ -18,7 +18,7 @@ const langs = {
     'Minimize Galleries': 'Minimizar galerias',
 
     // Meta
-    'Links to Viajar com Alê social networks.': 'Links das redes sociais do Viajar com Alê.',
+    'Travel photos and links to Viajar com Alê social networks.': 'Fotos de viagens e links para as redes sociais do Viajar com Alê.',
     'Travel with Alefe': 'Viajar com Alefe',
 
     // Countries
