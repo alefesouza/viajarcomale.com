@@ -6,17 +6,9 @@ import { SITE_NAME } from './utils/constants';
 import { headers } from 'next/headers';
 
 export const metadata = {
-  title: {
-    template: '%s - ' + SITE_NAME,
-    default: SITE_NAME,
-  },
+  title: SITE_NAME,
   openGraph: {
-    template: '%s - ' + SITE_NAME,
-    default: SITE_NAME,
-  },
-  custom: {
-    title: '%s - ' + SITE_NAME,
-    default: SITE_NAME,
+    title: SITE_NAME,
   },
 }
 
@@ -24,6 +16,7 @@ export default function RootLayout({ children }) {
   const host = useHost();
   const i18n = useI18n();
   const headersList = headers();
+  const pathname = headersList.get('x-pathname');
 
   return (
     <html lang={ i18n('en') }>
@@ -41,7 +34,7 @@ export default function RootLayout({ children }) {
         <link rel="alternate" hrefLang="x-default" href="https://viajarcomale.com/" />
 
         <link rel="shortcut icon" href={ host('favicon.ico') } />
-        <link rel="canonical" href={ new URL(headersList.get('x-pathname'), host().includes('viajarcomale.com.br') ? 'https://viajarcomale.com.br' : 'https://viajarcomale.com').toString() } />
+        <link rel="canonical" href={ new URL(pathname, host().includes('viajarcomale.com.br') ? 'https://viajarcomale.com.br' : 'https://viajarcomale.com').toString() } />
 
         <link rel="manifest" href={ host('manifest.json') } />
 
@@ -58,6 +51,7 @@ export default function RootLayout({ children }) {
         <Script id="ld-website" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({"@context":"http://schema.org","@type":"WebSite","url":host(''),"author":"Alefe Souza","name":SITE_NAME,"alternateName":[SITE_NAME, "@ViajarComAlê", "viajarcomale", "VCA", i18n('Travel with Alefe')],"description":i18n('Travel photos and links to Viajar com Alê social networks.'),"potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":host('') + "?s={search_term_string}"},"query-input":"required name=search_term_string"}}) }}></Script>
         <Script id="ld-organization" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({"@context":"http://schema.org","@type":"Organization","url":host(''),"logo":host('/icons/512x512.png'),"email":"mailto:contato@viajarcomale.com","sameAs":["https://instagram.com/viajarcomale","https://tiktok.com/@viajarcomale","https://youtube.com/@viajarcomale","https://twitter.com/viajarcomale"]}) }}></Script>
 
+        {pathname === '/' && <meta name="title" content={SITE_NAME} />}
         <meta name="description" content={i18n('Travel photos and links to Viajar com Alê social networks.')} />
         <meta name="image" content={ host('cover.jpg') }/>
         <meta property="og:locale" content={i18n('en_US')} />
