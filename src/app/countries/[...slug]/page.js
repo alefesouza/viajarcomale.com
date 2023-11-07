@@ -180,7 +180,7 @@ export default async function Country({ params: { slug }, searchParams }) {
     name: i18n('Albums'),
     item: host('/countries'),
   }, {
-    name: i18n(country.name),
+    name: i18n(countryData.name),
     item: currentPath,
   }];
 
