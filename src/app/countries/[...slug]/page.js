@@ -193,11 +193,11 @@ export default async function Country({ params: { slug }, searchParams }) {
         <div className={ styles.instagram_highlights_items }>
           {instagramHighLights.map(p => <div key={ p.id } className={ styles.gallery_item }>
             <a href={p.link} target="_blank">
-              <img src={FILE_DOMAIN + p.file} srcSet={ `${FILE_DOMAIN_500 + p.file} 500w` } alt={p.id} />
+              <img src={FILE_DOMAIN + p.file} srcSet={ `${FILE_DOMAIN_500 + p.file} 500w` } alt={i18n(slugName[p.city])} />
             </a>
 
             <div>
-              {slugName[p.city]}
+              {i18n(slugName[p.city])}
             </div>
           </div>)}
         </div>
@@ -216,7 +216,7 @@ export default async function Country({ params: { slug }, searchParams }) {
         <div className={ styles.instagram_highlights_items }>
           {instagramPhotos.map(p => <div key={ p.file } className={ styles.gallery_item + (p.gallery && p.gallery.length && ! expandGalleries ? ' ' + styles.is_gallery : '' ) }>
             <a href={p.link} target="_blank">
-              {p.file_type === 'video' ? <video src={FILE_DOMAIN + p.file} controls /> : <img src={FILE_DOMAIN_500 + p.file} alt={p.id} />}
+              {p.file_type === 'video' ? <video src={FILE_DOMAIN + p.file} controls /> : <img src={FILE_DOMAIN_500 + p.file} alt={isBR ? p.description_pt : p.description} />}
             </a>
 
             <div className={ styles.item_description }>
