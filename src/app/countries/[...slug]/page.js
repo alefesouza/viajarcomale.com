@@ -8,7 +8,7 @@ import { getFirestore, doc, getDoc, getDocs, collection, query, where, orderBy }
 import styles from '../page.module.css';
 import Top from '@/app/components/top';
 import Footer from '@/app/components/footer';
-import { FILE_DOMAIN, SITE_NAME } from '@/app/utils/constants';
+import { FILE_DOMAIN, FILE_DOMAIN_500, SITE_NAME } from '@/app/utils/constants';
 
 async function getCountry(db, slug) {
   const routeCountry = countries.find(c => c.slug === slug[0]);
@@ -143,7 +143,7 @@ export default async function Country({ params: { slug }, searchParams }) {
         <div className={ styles.instagram_highlights_items }>
           {instagramHighLights.map(p => <div key={ p.id } className={ styles.gallery_item }>
             <a href={p.link} target="_blank">
-              <img src={FILE_DOMAIN + p.file} alt={p.id} />
+              <img src={FILE_DOMAIN + p.file} srcset={ `${FILE_DOMAIN_500 + p.file} 500w` } alt={p.id} />
             </a>
 
             <div>
@@ -164,7 +164,7 @@ export default async function Country({ params: { slug }, searchParams }) {
         <div className={ styles.instagram_highlights_items }>
           {instagramPhotos.map(p => <div key={ p.file } className={ styles.gallery_item + (p.gallery && p.gallery.length && ! expandGalleries ? ' ' + styles.is_gallery : '' ) }>
             <a href={p.link} target="_blank">
-              {p.file_type === 'video' ? <video src={FILE_DOMAIN + p.file} controls /> : <img src={FILE_DOMAIN + p.file} alt={p.id} />}
+              {p.file_type === 'video' ? <video src={FILE_DOMAIN + p.file} controls /> : <img src={FILE_DOMAIN_500 + p.file} alt={p.id} />}
             </a>
 
             <div className={ styles.item_description }>
