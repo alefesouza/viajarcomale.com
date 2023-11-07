@@ -20,6 +20,7 @@ const langs = {
     'Previous': 'Anterior',
     'Showing': 'Exibindo',
     'of': 'de',
+    'Page': 'Página',
 
     // Meta
     'Travel photos and links to Viajar com Alê social networks.': 'Fotos de viagens e links para as redes sociais do Viajar com Alê.',

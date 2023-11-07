@@ -11,8 +11,16 @@ export async function generateMetadata() {
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const i18n = useI18n();
  
+  const title = i18n('Albums') + ' - ' + SITE_NAME;
+
   return {
-    title: i18n('Albums') + ' - ' + SITE_NAME,
+    title,
+    openGraph: {
+      title,
+    },
+    other: {
+      title,
+    },
   }
 }
 

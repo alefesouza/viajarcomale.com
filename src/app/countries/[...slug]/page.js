@@ -73,9 +73,17 @@ export async function generateMetadata({ params: { slug }, searchParams }) {
   if (city) {
     theCity = countryData.cities.find(c => c.slug === city);
   }
+
+  const title = (theCity ? isBR && theCity.name_pt ? theCity.name_pt + ' - ' : theCity.name + ' - ' : '') + i18n(countryData.name) + ' - ' + i18n('Albums') + ' - ' + SITE_NAME;
  
   return {
-    title: (theCity ? isBR && theCity.name_pt ? theCity.name_pt + ' - ' : theCity.name + ' - ' : '') + i18n(countryData.name) + ' - ' + i18n('Albums') + ' - ' + SITE_NAME,
+    title,
+    openGraph: {
+      title,
+    },
+    other: {
+      title,
+    },
   }
 }
 
@@ -166,6 +174,31 @@ export default async function Country({ params: { slug }, searchParams }) {
   }
 
   paginationBase += (sort !== 'desc' ? '?sort=' + sort : '');
+  let currentPath = host('/countries/' + countryData.slug);
+
+  const breadcrumbs = [{
+    name: i18n('Albums'),
+    item: host('/countries'),
+  }, {
+    name: i18n(country.name),
+    item: currentPath,
+  }];
+
+  if (city) {
+    currentPath += '/cities/' + city;
+    breadcrumbs.push({ name: i18n(slugName[city]), item: currentPath, });
+  }
+
+  if (expandGalleries) {
+    currentPath += '/expand';
+
+    breadcrumbs.push({ name: i18n('Expand Galleries'), item: currentPath, });
+  }
+
+  if (page) {
+    currentPath += '/page/' + page;
+    breadcrumbs.push({ name: i18n('Page') + ' ' + page, item: currentPath, });
+  }
 
   const sortPicker = <div className={ styles.sort_picker }>
     <span>{i18n('Sorting')}:</span>
@@ -245,5 +278,7 @@ export default async function Country({ params: { slug }, searchParams }) {
     <div className="container">
       <Footer />
     </div>
+
+    <Footer breadcrumbs={breadcrumbs} />
   </main>
 }

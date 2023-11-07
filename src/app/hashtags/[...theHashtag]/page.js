@@ -9,8 +9,16 @@ import Footer from '@/app/components/footer';
 import { FILE_DOMAIN, FILE_DOMAIN_500, SITE_NAME } from '@/app/utils/constants';
 
 export async function generateMetadata({ params: { theHashtag } }) {
+  const title = '#' + decodeURIComponent(theHashtag[0]) + ' - Hashtags' + ' - ' + SITE_NAME;
+
   return {
-    title: '#' + decodeURIComponent(theHashtag[0]) + ' - Hashtags - ' + SITE_NAME,
+    title,
+    openGraph: {
+      title,
+    },
+    other: {
+      title,
+    },
   }
 }
 
