@@ -13,6 +13,14 @@
   padding: 10px 6px;
 }
 
+.mobile_pagination a:first-child {
+  display: inline-flex;
+}
+
+.mobile_pagination a:last-child {
+  display: inline-flex;
+}
+
 .pagination a:first-child {
   border-right-width: 0.5px;
   border-top-left-radius: 5px;

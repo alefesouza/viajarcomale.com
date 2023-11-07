@@ -18,6 +18,8 @@ const langs = {
     'Minimize Galleries': 'Minimizar galerias',
     'Next': 'Próximo',
     'Previous': 'Anterior',
+    'Showing': 'Exibindo',
+    'of': 'de',
 
     // Meta
     'Travel photos and links to Viajar com Alê social networks.': 'Fotos de viagens e links para as redes sociais do Viajar com Alê.',
