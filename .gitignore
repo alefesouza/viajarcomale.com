@@ -45,3 +45,4 @@ firebase-debug.log
 workbox-*
 serviceworker.js*
 /photos
+items.json

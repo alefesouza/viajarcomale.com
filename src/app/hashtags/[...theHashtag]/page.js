@@ -60,13 +60,14 @@ export default async function Country({ params: { theHashtag }, searchParams }) 
       sort = 'random';
   }
 
-  const sortPicker = <div className={ styles.sort_picker }>
+  const sortPicker = (type) => (<div className={ styles.sort_picker }>
     <span>{i18n('Sorting')}:</span>
 
-    {[{name: 'Latest', value: 'desc'}, {name: 'Oldest', value: 'asc'}, {name: 'Random', value: 'random'}].map((o) => <Link key={o} href={ '?sort=' + o.value } scroll={false}><label><input type="radio" name="sort" value={o.value} checked={sort === o.value} readOnly />{i18n(o.name)}</label></Link>)}
-  </div>
+    {[{name: 'Latest', value: 'desc'}, {name: 'Oldest', value: 'asc'}, {name: 'Random', value: 'random'}].map((o) => <Link key={o} href={ '?sort=' + o.value } scroll={false}><label><input type="radio" name={'sort-' + type } value={o.value} checked={sort === o.value} readOnly />{i18n(o.name)}</label></Link>)}
+  </div>);
 
   const instagramPhotos = photos.filter(p => p.type === 'instagram' || p.type === 'instagram-gallery');
+  const shortVideos = photos.filter(p => p.type === 'short-video');
 
   return <main className="container-fluid">
     <div className="container">
@@ -76,7 +77,7 @@ export default async function Country({ params: { theHashtag }, searchParams }) 
     <h3>#{decodeURIComponent(hashtag)}</h3>
 
     <div className={ styles.galleries }>
-      { instagramPhotos.length > 1 && sortPicker }
+      { instagramPhotos.length > 1 && sortPicker('photos') }
 
       { instagramPhotos.length > 0 && <div className={ styles.instagram_photos }>
         <div className={ styles.instagram_photos_title }>
@@ -100,6 +101,28 @@ export default async function Country({ params: { theHashtag }, searchParams }) 
           </div>)}
         </div>
       </div> }
+
+      { shortVideos.length > 1 && sortPicker('short') }
+
+      <div className={ styles.instagram_highlights }>
+        <h4>{i18n('Short Videos')}</h4>
+
+        <div className={ styles.instagram_highlights_items }>
+          {shortVideos.map(p => <div key={ p.id } className={ styles.gallery_item }>
+            <a href={p.tiktok_link} target="_blank">
+              <img src={FILE_DOMAIN + p.file} srcSet={ `${FILE_DOMAIN_500 + p.file} 500w` } alt={isBR ? p.description_pt : p.description} />
+            </a>
+
+            <div>
+              {isBR ? p.description_pt : p.description}
+            </div>
+
+            <div className={ styles.item_hashtags }>
+              Hashtags: {p.hashtags.reverse().map(h => <span key={h}><Link href={`/hashtags/${h}`} key={h}>#{h}</Link> </span>)}
+            </div>
+          </div>)}
+        </div>
+      </div>
     </div>
 
     <div className="container">

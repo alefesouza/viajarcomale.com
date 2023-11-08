@@ -13,7 +13,7 @@ export async function GET() {
     short_name: SITE_NAME,
     description: i18n('Travel photos and links to Viajar com Alê social networks.'),
     lang: i18n('en-US'),
-    start_url: '/?source=web_app_manifest',
+    start_url: '/?source=pwa',
     display: 'standalone',
     orientation: 'any',
     background_color: '#2096cc',
@@ -53,6 +53,42 @@ export async function GET() {
     ],
     shortcuts: [
       {
+        name: i18n('Albums'),
+        short_name: i18n('Albums'),
+        description: i18n('Access Viajar com Alê Albums'),
+        url: '/countries?source=pwa',
+        icons: [
+          {
+            src: host('icons/96x96.png'),
+            sizes: '96x96'
+          }
+        ]
+      },
+      {
+        name: 'Instagram',
+        short_name: 'Instagram',
+        description: i18n('Access Viajar com Alê Instagram'),
+        url: '/instagram?source=pwa',
+        icons: [
+          {
+            src: host('logos/instagram96.png'),
+            sizes: '96x96'
+          }
+        ]
+      },
+      {
+        name: 'TikTok',
+        short_name: 'TikTok',
+        description: i18n('Access Viajar com Alê TikTok'),
+        url: '/tiktok?source=pwa',
+        icons: [
+          {
+            src: host('logos/tiktok96.png'),
+            sizes: '96x96'
+          }
+        ]
+      },
+      {
         name: 'YouTube',
         short_name: 'YouTube',
         description: i18n('Access Viajar com Alê YouTube channel'),
@@ -65,25 +101,13 @@ export async function GET() {
         ]
       },
       {
-        name: 'Instagram',
-        short_name: 'Instagram',
-        description: i18n('Access Viajar com Alê Instagram'),
-        url: '/instagram',
+        name: 'Kwai',
+        short_name: 'kwai',
+        description: i18n('Access Viajar com Alê Kwai'),
+        url: '/kwai?source=pwa',
         icons: [
           {
-            src: host('logos/instagram96.png'),
-            sizes: '96x96'
-          }
-        ]
-      },
-      {
-        name: 'TikTok',
-        short_name: 'TikTok',
-        description: i18n('Access Viajar com Alê TikTok'),
-        url: '/tiktok',
-        icons: [
-          {
-            src: host('logos/tiktok96.png'),
+            src: host('logos/kwai96.png'),
             sizes: '96x96'
           }
         ]

@@ -40,9 +40,11 @@ const langs = {
     'Paraguay': 'Paraguai',
 
     // Manifest
-    'Access Viajar com Alê YouTube channel': 'Acessar o YouTube do Viajar com Alê',
+    'Access Viajar com Alê Albums': 'Acessar os álbuns do Viajar com Alê',
+    'Access Viajar com Alê YouTube channel': 'Acessar o canal do YouTube do Viajar com Alê',
     'Access Viajar com Alê Instagram': 'Acessar o Instagram do Viajar com Alê',
     'Access Viajar com Alê TikTok': 'Acessar o TikTok do Viajar com Alê',
+    'Access Viajar com Alê Kwai': 'Acessar o Kwai do Viajar com Alê',
 
     // Code
     'en': 'pt',

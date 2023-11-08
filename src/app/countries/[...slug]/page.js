@@ -140,6 +140,7 @@ export default async function Country({ params: { slug }, searchParams }) {
   }, {});
 
   const instagramHighLights = photos.filter(p => p.type === 'instagram-highlight');
+  const shortVideos = photos.filter(p => p.type === 'short-video');
   let allInstagramPhotos = photos.filter(p => p.type === 'instagram' || p.type === 'instagram-gallery');
   let instagramPhotos = [];
 
@@ -200,11 +201,11 @@ export default async function Country({ params: { slug }, searchParams }) {
     breadcrumbs.push({ name: i18n('Page') + ' ' + page, item: currentPath, });
   }
 
-  const sortPicker = <div className={ styles.sort_picker }>
+  const sortPicker = (type) => (<div className={ styles.sort_picker }>
     <span>{i18n('Sorting')}:</span>
 
-    {[{name: 'Latest', value: 'desc'}, {name: 'Oldest', value: 'asc'}, {name: 'Random', value: 'random'}].map((o) => <Link key={o} href={ o.value === 'random' ? paginationBase.split('?')[0].replace('/page/{page}', '') + '?sort=random' : '?sort=' + o.value } scroll={false}><label><input type="radio" name="sort" value={o.value} checked={sort === o.value} readOnly />{i18n(o.name)}</label></Link>)}
-  </div>
+    {[{name: 'Latest', value: 'desc'}, {name: 'Oldest', value: 'asc'}, {name: 'Random', value: 'random'}].map((o) => <Link key={o} href={ o.value === 'random' ? paginationBase.split('?')[0].replace('/page/{page}', '') + '?sort=random' : '?sort=' + o.value } scroll={false}><label><input type="radio" name={'sort-' + type } value={o.value} checked={sort === o.value} readOnly />{i18n(o.name)}</label></Link>)}
+  </div>);
 
   return <main className="container-fluid">
     <div className="container">
@@ -224,7 +225,7 @@ export default async function Country({ params: { slug }, searchParams }) {
       </li>)}
     </ul>
 
-    {instagramHighLights.length > 1 && sortPicker}
+    { instagramHighLights.length > 1 && sortPicker('highlights') }
 
     <div className={ styles.galleries }>
       <div className={ styles.instagram_highlights }>
@@ -243,7 +244,7 @@ export default async function Country({ params: { slug }, searchParams }) {
         </div>
       </div>
 
-      { instagramHighLights.length <= 1 && allInstagramPhotos.length > 1 && sortPicker }
+      { allInstagramPhotos.length > 1 && sortPicker('photos') }
 
       { allInstagramPhotos.length > 0 && <div className={ styles.instagram_photos }>
         <div className={ styles.instagram_photos_title }>
@@ -273,6 +274,34 @@ export default async function Country({ params: { slug }, searchParams }) {
           <Pagination base={paginationBase} currentPage={Number(page) || 1} pageNumber={pageNumber} total={allInstagramPhotos.length} textPosition="top" />
         </div> }
       </div> }
+
+      { shortVideos.length > 1 && sortPicker('short') }
+
+      <div className={ styles.instagram_highlights }>
+        <h4>{i18n('Short Videos')}</h4>
+
+        <div className={ styles.instagram_highlights_items }>
+          {shortVideos.map(p => <div key={ p.id } className={ styles.gallery_item }>
+            <a href={p.tiktok_link} target="_blank">
+              <img src={FILE_DOMAIN + p.file} srcSet={ `${FILE_DOMAIN_500 + p.file} 500w` } alt={isBR ? p.description_pt : p.description} />
+            </a>
+
+            <div className={ styles.short_video_links }>
+              {['tiktok', 'instagram', 'youtube', 'kwai'].map((item) => p[item + '_link'] && <a href={p[item + '_link']} target="_blank" key={item}>
+                <img src={host('/logos/' + item + '.png')} alt={item + 'Video'} />
+              </a>)}
+            </div>
+
+            <div>
+              {isBR ? p.description_pt : p.description}
+            </div>
+
+            {p.hashtags && <div className={ styles.item_hashtags }>
+              Hashtags: {p.hashtags.reverse().map(h => <span key={h}><Link href={`/hashtags/${h}`} key={h}>#{h}</Link> </span>)}
+            </div>}
+          </div>)}
+        </div>
+      </div>
     </div>
 
     <div className="container">
