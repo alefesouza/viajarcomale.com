@@ -53,7 +53,7 @@ export default function Scroller() {
 
     setTimeout(() => {
       setupScroller();
-    }, 1000);
+    }, 750);
   `;
 
   if (!document.querySelector('media-scroller')) {
@@ -61,7 +61,7 @@ export default function Scroller() {
   } else {
     setTimeout(() => {
       setupScroller();
-    }, 1000);
+    }, 750);
   }
   
   return null;

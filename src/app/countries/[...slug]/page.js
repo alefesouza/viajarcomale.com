@@ -202,13 +202,15 @@ export default async function Country({ params: { slug }, searchParams }) {
     breadcrumbs.push({ name: i18n('Page') + ' ' + page, item: currentPath, });
   }
 
-  const sortPicker = (type) => (<div className={ styles.sort_picker }>
-    <span>{i18n('Sorting')}:</span>
+  const sortPicker = (type) => (<div className="container-fluid">
+      <div className={ styles.sort_picker }>
+      <span>{i18n('Sorting')}:</span>
 
-    {[{name: 'Latest', value: 'desc'}, {name: 'Oldest', value: 'asc'}, {name: 'Random', value: 'random'}].map((o) => <Link key={o.value} href={ o.value === 'random' ? paginationBase.split('?')[0].replace('/page/{page}', '') + '?sort=random' : '?sort=' + o.value } scroll={false}><label><input type="radio" name={'sort-' + type } value={o.value} checked={sort === o.value} readOnly />{i18n(o.name)}</label></Link>)}
+      {[{name: 'Latest', value: 'desc'}, {name: 'Oldest', value: 'asc'}, {name: 'Random', value: 'random'}].map((o) => <Link key={o.value} href={ o.value === 'random' ? paginationBase.split('?')[0].replace('/page/{page}', '') + '?sort=random' : '?sort=' + o.value } scroll={false}><label><input type="radio" name={'sort-' + type } value={o.value} checked={sort === o.value} readOnly />{i18n(o.name)}</label></Link>)}
+    </div>
   </div>);
 
-  return <main className="container-fluid">
+  return <main>
     <div className="container">
       <Top />
 
@@ -217,20 +219,24 @@ export default async function Country({ params: { slug }, searchParams }) {
       </Link>
     </div>
 
-    <h3>{i18n(country.name)}</h3>
+    <div className="container-fluid">
+      <h3>{i18n(country.name)}</h3>
 
-    <ul className="nav nav-tabs">
-      <Link className={ `nav-link${!city ? ' active' : ''}` } aria-current="page" href={ `/countries/${country}${expandGalleries ? '/expand' : ''}` + (sort !== 'desc' ? '?sort=' + sort : '') }>{i18n('All')}</Link>
-      {countryData.cities.map(c => <li key={c.slug} className="nav-item">
-        <Link className={ `nav-link${city === c.slug ? ' active' : ''}` } aria-current="page" href={ `/countries/${country}/cities/${c.slug}${expandGalleries ? '/expand' : ''}` + (sort !== 'desc' ? '?sort=' + sort : '') }>{isBR && c.name_pt ? c.name_pt : c.name}</Link>
-      </li>)}
-    </ul>
+      <ul className="nav nav-tabs">
+        <Link className={ `nav-link${!city ? ' active' : ''}` } aria-current="page" href={ `/countries/${country}${expandGalleries ? '/expand' : ''}` + (sort !== 'desc' ? '?sort=' + sort : '') }>{i18n('All')}</Link>
+        {countryData.cities.map(c => <li key={c.slug} className="nav-item">
+          <Link className={ `nav-link${city === c.slug ? ' active' : ''}` } aria-current="page" href={ `/countries/${country}/cities/${c.slug}${expandGalleries ? '/expand' : ''}` + (sort !== 'desc' ? '?sort=' + sort : '') }>{isBR && c.name_pt ? c.name_pt : c.name}</Link>
+        </li>)}
+      </ul>
+    </div>
 
     { instagramHighLights.length > 1 && sortPicker('highlights') }
 
     <div className={ styles.galleries }>
       {instagramHighLights.length && <div className={ styles.instagram_highlights }>
-        <h4>{i18n('Instagram Highlights')}</h4>
+        <div className="container-fluid">
+          <h4>{i18n('Instagram Highlights')}</h4>
+        </div>
 
         <div style={{ position: 'relative' }}>
           <div className="scroller_left_arrow">‹</div>
@@ -254,7 +260,9 @@ export default async function Country({ params: { slug }, searchParams }) {
       { shortVideos.length > 1 && sortPicker('short') }
 
       {shortVideos.length > 0 && <div className={ styles.instagram_highlights }>
-        <h4>{i18n('Short Videos')}</h4>
+        <div className="container-fluid">
+          <h4>{i18n('Short Videos')}</h4>
+        </div>
 
         <div style={{ position: 'relative' }}>
           <div className="scroller_left_arrow">‹</div>
@@ -287,33 +295,35 @@ export default async function Country({ params: { slug }, searchParams }) {
 
       { allInstagramPhotos.length > 1 && sortPicker('photos') }
 
-      { allInstagramPhotos.length > 0 && <div className={ styles.instagram_photos }>
-        <div className={ styles.instagram_photos_title }>
-          <h4>{i18n('Instagram Photos')}</h4>
-          { !expandGalleries ? <Link href={ (city ? `/countries/${country}/cities/${city}/expand` : `/countries/${country}/expand`) + (sort !== 'desc' ? '?sort=' + sort : '')} scroll={false}>{i18n('Expand Galleries')}</Link> : <Link href={ (city ? `/countries/${country}/cities/${city}` : `/countries/${country}`) + (sort !== 'desc' ? '?sort=' + sort : '')} scroll={false}>{i18n('Minimize Galleries')}</Link> }
+      { allInstagramPhotos.length > 0 && <div className="container-fluid">
+        <div className={ styles.instagram_photos }>
+          <div className={ styles.instagram_photos_title }>
+            <h4>{i18n('Instagram Photos')}</h4>
+            { !expandGalleries ? <Link href={ (city ? `/countries/${country}/cities/${city}/expand` : `/countries/${country}/expand`) + (sort !== 'desc' ? '?sort=' + sort : '')} scroll={false}>{i18n('Expand Galleries')}</Link> : <Link href={ (city ? `/countries/${country}/cities/${city}` : `/countries/${country}`) + (sort !== 'desc' ? '?sort=' + sort : '')} scroll={false}>{i18n('Minimize Galleries')}</Link> }
+          </div>
+
+          {!isRandom && pageNumber > 1 && <Pagination base={paginationBase} currentPage={Number(page) || 1} pageNumber={pageNumber} total={allInstagramPhotos.length} textPosition="bottom" />}
+          
+          <div className={ styles.instagram_highlights_items }>
+            {instagramPhotos.map(p => <div key={ p.file } className={ styles.gallery_item + (p.gallery && p.gallery.length && ! expandGalleries ? ' ' + styles.is_gallery : '' ) }>
+              <a href={p.link} target="_blank">
+                {p.file_type === 'video' ? <video src={FILE_DOMAIN + p.file} controls /> : <img src={FILE_DOMAIN_500 + p.file} alt={isBR ? p.description_pt : p.description} />}
+              </a>
+
+              <div className={ styles.item_description }>
+                {isBR ? p.description_pt : p.description}
+              </div>
+
+              <div className={ styles.item_hashtags }>
+                Hashtags: {p.hashtags.reverse().map(h => <span key={h}><Link href={`/hashtags/${h}`}>#{h}</Link> </span>)}
+              </div>
+            </div>)}
+          </div>
+
+          { !isRandom && pageNumber > 1 && <div style={{ marginTop: 30 }}>
+            <Pagination base={paginationBase} currentPage={Number(page) || 1} pageNumber={pageNumber} total={allInstagramPhotos.length} textPosition="top" />
+          </div> }
         </div>
-
-        {!isRandom && pageNumber > 1 && <Pagination base={paginationBase} currentPage={Number(page) || 1} pageNumber={pageNumber} total={allInstagramPhotos.length} textPosition="bottom" />}
-        
-        <div className={ styles.instagram_highlights_items }>
-          {instagramPhotos.map(p => <div key={ p.file } className={ styles.gallery_item + (p.gallery && p.gallery.length && ! expandGalleries ? ' ' + styles.is_gallery : '' ) }>
-            <a href={p.link} target="_blank">
-              {p.file_type === 'video' ? <video src={FILE_DOMAIN + p.file} controls /> : <img src={FILE_DOMAIN_500 + p.file} alt={isBR ? p.description_pt : p.description} />}
-            </a>
-
-            <div className={ styles.item_description }>
-              {isBR ? p.description_pt : p.description}
-            </div>
-
-            <div className={ styles.item_hashtags }>
-              Hashtags: {p.hashtags.reverse().map(h => <span key={h}><Link href={`/hashtags/${h}`}>#{h}</Link> </span>)}
-            </div>
-          </div>)}
-        </div>
-
-        { !isRandom && pageNumber > 1 && <div style={{ marginTop: 30 }}>
-          <Pagination base={paginationBase} currentPage={Number(page) || 1} pageNumber={pageNumber} total={allInstagramPhotos.length} textPosition="top" />
-        </div> }
       </div> }
     </div>
 

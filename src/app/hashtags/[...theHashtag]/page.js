@@ -61,27 +61,33 @@ export default async function Country({ params: { theHashtag }, searchParams }) 
       sort = 'random';
   }
 
-  const sortPicker = (type) => (<div className={ styles.sort_picker }>
-    <span>{i18n('Sorting')}:</span>
+  const sortPicker = (type) => (<div className="container-fluid">
+    <div className={ styles.sort_picker }>
+      <span>{i18n('Sorting')}:</span>
 
-    {[{name: 'Latest', value: 'desc'}, {name: 'Oldest', value: 'asc'}, {name: 'Random', value: 'random'}].map((o) => <Link key={o} href={ '?sort=' + o.value } scroll={false}><label><input type="radio" name={'sort-' + type } value={o.value} checked={sort === o.value} readOnly />{i18n(o.name)}</label></Link>)}
+      {[{name: 'Latest', value: 'desc'}, {name: 'Oldest', value: 'asc'}, {name: 'Random', value: 'random'}].map((o) => <Link key={o} href={ '?sort=' + o.value } scroll={false}><label><input type="radio" name={'sort-' + type } value={o.value} checked={sort === o.value} readOnly />{i18n(o.name)}</label></Link>)}
+    </div>
   </div>);
 
   const instagramPhotos = photos.filter(p => p.type === 'instagram' || p.type === 'instagram-gallery');
   const shortVideos = photos.filter(p => p.type === 'short-video');
 
-  return <main className="container-fluid">
+  return <main>
     <div className="container">
       <Top />
     </div>
 
-    <h3>#{decodeURIComponent(hashtag)}</h3>
+    <div className="container-fluid">
+      <h3>#{decodeURIComponent(hashtag)}</h3>
+    </div>
 
     <div className={ styles.galleries }>
       { shortVideos.length > 1 && sortPicker('short') }
 
       {shortVideos.length > 0 && <div className={ styles.instagram_highlights }>
-        <h4>{i18n('Short Videos')}</h4>
+        <div className="container-fluid">
+          <h4>{i18n('Short Videos')}</h4>
+        </div>
 
         <div style={{ position: 'relative' }}>
           <div className="scroller_left_arrow">‹</div>
@@ -114,28 +120,30 @@ export default async function Country({ params: { theHashtag }, searchParams }) 
 
       { instagramPhotos.length > 1 && sortPicker('photos') }
 
-      { instagramPhotos.length > 0 && <div className={ styles.instagram_photos }>
-        <div className={ styles.instagram_photos_title }>
-          <h4>{i18n('Instagram Photos')}</h4>
-          { !expandGalleries ? <Link href={ `/hashtags/${hashtag}/expand` + (sort !== 'desc' ? '?sort=' + sort : '')} scroll={false}>{i18n('Expand Galleries')}</Link> : <Link href={ `/hashtags/${hashtag}` + (sort !== 'desc' ? '?sort=' + sort : '')} scroll={false}>{i18n('Minimize Galleries')}</Link> }
-        </div>
-        
-        <div className={ styles.instagram_highlights_items }>
-          {instagramPhotos.map(p => <div key={ p.file } className={ styles.gallery_item + (p.gallery && p.gallery.length && ! expandGalleries ? ' ' + styles.is_gallery : '' ) }>
-            <a href={p.link} target="_blank">
-              {p.file_type === 'video' ? <video src={FILE_DOMAIN + p.file} controls /> : <img src={FILE_DOMAIN + p.file} srcSet={ `${FILE_DOMAIN_500 + p.file} 500w` } alt={isBR ? p.description_pt : p.description} />}
-            </a>
+      { instagramPhotos.length > 0 && <div className="container-fluid">
+        <div className={ styles.instagram_photos }>
+          <div className={ styles.instagram_photos_title }>
+            <h4>{i18n('Instagram Photos')}</h4>
+            { !expandGalleries ? <Link href={ `/hashtags/${hashtag}/expand` + (sort !== 'desc' ? '?sort=' + sort : '')} scroll={false}>{i18n('Expand Galleries')}</Link> : <Link href={ `/hashtags/${hashtag}` + (sort !== 'desc' ? '?sort=' + sort : '')} scroll={false}>{i18n('Minimize Galleries')}</Link> }
+          </div>
+          
+          <div className={ styles.instagram_highlights_items }>
+            {instagramPhotos.map(p => <div key={ p.file } className={ styles.gallery_item + (p.gallery && p.gallery.length && ! expandGalleries ? ' ' + styles.is_gallery : '' ) }>
+              <a href={p.link} target="_blank">
+                {p.file_type === 'video' ? <video src={FILE_DOMAIN + p.file} controls /> : <img src={FILE_DOMAIN + p.file} srcSet={ `${FILE_DOMAIN_500 + p.file} 500w` } alt={isBR ? p.description_pt : p.description} />}
+              </a>
 
-            <div className={ styles.item_description }>
-              {isBR ? p.description_pt : p.description}
-            </div>
+              <div className={ styles.item_description }>
+                {isBR ? p.description_pt : p.description}
+              </div>
 
-            <div className={ styles.item_hashtags }>
-              Hashtags: {p.hashtags.reverse().map(h => <><Link href={`/hashtags/${h}`} key={h}>#{h}</Link> </>)}
-            </div>
-          </div>)}
+              <div className={ styles.item_hashtags }>
+                Hashtags: {p.hashtags.reverse().map(h => <><Link href={`/hashtags/${h}`} key={h}>#{h}</Link> </>)}
+              </div>
+            </div>)}
+          </div>
         </div>
-      </div> }
+      </div>}
     </div>
 
     <Scroller />

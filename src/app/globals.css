@@ -253,6 +253,10 @@ a {
   width: 100%;
   display: flex;
   padding-bottom: 20px;
+  padding-right: calc(1.5rem * .5);
+  padding-left: calc(1.5rem * .5);
+  margin-right: auto;
+  margin-left: auto;
 }
 
 .scroller_item {
