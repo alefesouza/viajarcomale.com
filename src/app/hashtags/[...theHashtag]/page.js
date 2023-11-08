@@ -7,6 +7,7 @@ import styles from './page.module.css';
 import Top from '@/app/components/top';
 import Footer from '@/app/components/footer';
 import { FILE_DOMAIN, FILE_DOMAIN_500, SITE_NAME } from '@/app/utils/constants';
+import Scroller from '@/app/components/scroller';
 
 export async function generateMetadata({ params: { theHashtag } }) {
   const title = '#' + decodeURIComponent(theHashtag[0]) + ' - Hashtags' + ' - ' + SITE_NAME;
@@ -77,6 +78,40 @@ export default async function Country({ params: { theHashtag }, searchParams }) 
     <h3>#{decodeURIComponent(hashtag)}</h3>
 
     <div className={ styles.galleries }>
+      { shortVideos.length > 1 && sortPicker('short') }
+
+      {shortVideos.length > 0 && <div className={ styles.instagram_highlights }>
+        <h4>{i18n('Short Videos')}</h4>
+
+        <div style={{ position: 'relative' }}>
+          <div className="scroller_left_arrow">‹</div>
+
+          <div className="scroller_items">
+            {shortVideos.map(p => <div key={ p.id } className="scroller_item">
+              <a href={p.tiktok_link} target="_blank">
+                <img src={FILE_DOMAIN + p.file} srcSet={ `${FILE_DOMAIN_500 + p.file} 500w` } alt={isBR ? p.description_pt : p.description} />
+              </a>
+
+              <div className={ styles.short_video_links }>
+                {['tiktok', 'instagram', 'youtube', 'kwai'].map((item) => p[item + '_link'] && <a href={p[item + '_link']} target="_blank" key={item}>
+                  <img src={host('/logos/' + item + '.png')} alt={item + 'Video'} />
+                </a>)}
+              </div>
+
+              <div>
+                {isBR ? p.description_pt : p.description}
+              </div>
+
+              {p.hashtags && <div className={ styles.item_hashtags }>
+                Hashtags: {p.hashtags.reverse().map(h => <span key={h}><Link href={`/hashtags/${h}`} key={h}>#{h}</Link> </span>)}
+              </div>}
+            </div>)}
+          </div>
+
+          <div className="scroller_right_arrow">›</div>
+        </div>
+      </div>}
+
       { instagramPhotos.length > 1 && sortPicker('photos') }
 
       { instagramPhotos.length > 0 && <div className={ styles.instagram_photos }>
@@ -101,29 +136,9 @@ export default async function Country({ params: { theHashtag }, searchParams }) 
           </div>)}
         </div>
       </div> }
-
-      { shortVideos.length > 1 && sortPicker('short') }
-
-      <div className={ styles.instagram_highlights }>
-        <h4>{i18n('Short Videos')}</h4>
-
-        <div className={ styles.instagram_highlights_items }>
-          {shortVideos.map(p => <div key={ p.id } className={ styles.gallery_item }>
-            <a href={p.tiktok_link} target="_blank">
-              <img src={FILE_DOMAIN + p.file} srcSet={ `${FILE_DOMAIN_500 + p.file} 500w` } alt={isBR ? p.description_pt : p.description} />
-            </a>
-
-            <div>
-              {isBR ? p.description_pt : p.description}
-            </div>
-
-            <div className={ styles.item_hashtags }>
-              Hashtags: {p.hashtags.reverse().map(h => <span key={h}><Link href={`/hashtags/${h}`} key={h}>#{h}</Link> </span>)}
-            </div>
-          </div>)}
-        </div>
-      </div>
     </div>
+
+    <Scroller />
 
     <div className="container">
       <Footer />

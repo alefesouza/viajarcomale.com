@@ -10,6 +10,7 @@ import Top from '@/app/components/top';
 import Footer from '@/app/components/footer';
 import { FILE_DOMAIN, FILE_DOMAIN_500, ITEMS_PER_PAGE, SITE_NAME } from '@/app/utils/constants';
 import Pagination from '@/app/components/pagination';
+import Scroller from '@/app/components/scroller';
 
 function getDataFromRoute(slug, searchParams) {
   const [country, path1, path2, path3, path4, path5] = slug;
@@ -204,7 +205,7 @@ export default async function Country({ params: { slug }, searchParams }) {
   const sortPicker = (type) => (<div className={ styles.sort_picker }>
     <span>{i18n('Sorting')}:</span>
 
-    {[{name: 'Latest', value: 'desc'}, {name: 'Oldest', value: 'asc'}, {name: 'Random', value: 'random'}].map((o) => <Link key={o} href={ o.value === 'random' ? paginationBase.split('?')[0].replace('/page/{page}', '') + '?sort=random' : '?sort=' + o.value } scroll={false}><label><input type="radio" name={'sort-' + type } value={o.value} checked={sort === o.value} readOnly />{i18n(o.name)}</label></Link>)}
+    {[{name: 'Latest', value: 'desc'}, {name: 'Oldest', value: 'asc'}, {name: 'Random', value: 'random'}].map((o) => <Link key={o.value} href={ o.value === 'random' ? paginationBase.split('?')[0].replace('/page/{page}', '') + '?sort=random' : '?sort=' + o.value } scroll={false}><label><input type="radio" name={'sort-' + type } value={o.value} checked={sort === o.value} readOnly />{i18n(o.name)}</label></Link>)}
   </div>);
 
   return <main className="container-fluid">
@@ -228,21 +229,61 @@ export default async function Country({ params: { slug }, searchParams }) {
     { instagramHighLights.length > 1 && sortPicker('highlights') }
 
     <div className={ styles.galleries }>
-      <div className={ styles.instagram_highlights }>
+      {instagramHighLights.length && <div className={ styles.instagram_highlights }>
         <h4>{i18n('Instagram Highlights')}</h4>
 
-        <div className={ styles.instagram_highlights_items }>
-          {instagramHighLights.map(p => <div key={ p.id } className={ styles.gallery_item }>
-            <a href={p.link} target="_blank">
-              <img src={FILE_DOMAIN + p.file} srcSet={ `${FILE_DOMAIN_500 + p.file} 500w` } alt={i18n(slugName[p.city])} />
-            </a>
+        <div style={{ position: 'relative' }}>
+          <div className="scroller_left_arrow">‹</div>
 
-            <div>
-              {i18n(slugName[p.city])}
-            </div>
-          </div>)}
+          <div className="scroller_items">
+            {instagramHighLights.map(p => <div key={ p.id } className="scroller_item">
+              <a href={p.link} target="_blank">
+                <img src={FILE_DOMAIN + p.file} srcSet={ `${FILE_DOMAIN_500 + p.file} 500w` } alt={i18n(slugName[p.city])} />
+              </a>
+
+              <div>
+                {i18n(slugName[p.city])}
+              </div>
+            </div>)}
+          </div>
+
+          <div className="scroller_right_arrow">›</div>
         </div>
-      </div>
+      </div>}
+
+      { shortVideos.length > 1 && sortPicker('short') }
+
+      {shortVideos.length > 0 && <div className={ styles.instagram_highlights }>
+        <h4>{i18n('Short Videos')}</h4>
+
+        <div style={{ position: 'relative' }}>
+          <div className="scroller_left_arrow">‹</div>
+
+          <div className="scroller_items">
+            {shortVideos.map(p => <div key={ p.id } className="scroller_item">
+              <a href={p.tiktok_link} target="_blank">
+                <img src={FILE_DOMAIN + p.file} srcSet={ `${FILE_DOMAIN_500 + p.file} 500w` } alt={isBR ? p.description_pt : p.description} />
+              </a>
+
+              <div className={ styles.short_video_links }>
+                {['tiktok', 'instagram', 'youtube', 'kwai'].map((item) => p[item + '_link'] && <a href={p[item + '_link']} target="_blank" key={item}>
+                  <img src={host('/logos/' + item + '.png')} alt={item + 'Video'} />
+                </a>)}
+              </div>
+
+              <div>
+                {isBR ? p.description_pt : p.description}
+              </div>
+
+              {p.hashtags && <div className={ styles.item_hashtags }>
+                Hashtags: {p.hashtags.reverse().map(h => <span key={h}><Link href={`/hashtags/${h}`} key={h}>#{h}</Link> </span>)}
+              </div>}
+            </div>)}
+          </div>
+
+          <div className="scroller_right_arrow">›</div>
+        </div>
+      </div>}
 
       { allInstagramPhotos.length > 1 && sortPicker('photos') }
 
@@ -265,7 +306,7 @@ export default async function Country({ params: { slug }, searchParams }) {
             </div>
 
             <div className={ styles.item_hashtags }>
-              Hashtags: {p.hashtags.reverse().map(h => <span key={h}><Link href={`/hashtags/${h}`} key={h}>#{h}</Link> </span>)}
+              Hashtags: {p.hashtags.reverse().map(h => <span key={h}><Link href={`/hashtags/${h}`}>#{h}</Link> </span>)}
             </div>
           </div>)}
         </div>
@@ -274,35 +315,9 @@ export default async function Country({ params: { slug }, searchParams }) {
           <Pagination base={paginationBase} currentPage={Number(page) || 1} pageNumber={pageNumber} total={allInstagramPhotos.length} textPosition="top" />
         </div> }
       </div> }
-
-      { shortVideos.length > 1 && sortPicker('short') }
-
-      <div className={ styles.instagram_highlights }>
-        <h4>{i18n('Short Videos')}</h4>
-
-        <div className={ styles.instagram_highlights_items }>
-          {shortVideos.map(p => <div key={ p.id } className={ styles.gallery_item }>
-            <a href={p.tiktok_link} target="_blank">
-              <img src={FILE_DOMAIN + p.file} srcSet={ `${FILE_DOMAIN_500 + p.file} 500w` } alt={isBR ? p.description_pt : p.description} />
-            </a>
-
-            <div className={ styles.short_video_links }>
-              {['tiktok', 'instagram', 'youtube', 'kwai'].map((item) => p[item + '_link'] && <a href={p[item + '_link']} target="_blank" key={item}>
-                <img src={host('/logos/' + item + '.png')} alt={item + 'Video'} />
-              </a>)}
-            </div>
-
-            <div>
-              {isBR ? p.description_pt : p.description}
-            </div>
-
-            {p.hashtags && <div className={ styles.item_hashtags }>
-              Hashtags: {p.hashtags.reverse().map(h => <span key={h}><Link href={`/hashtags/${h}`} key={h}>#{h}</Link> </span>)}
-            </div>}
-          </div>)}
-        </div>
-      </div>
     </div>
+
+    <Scroller />
 
     <div className="container">
       <Footer breadcrumbs={breadcrumbs} />

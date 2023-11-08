@@ -84,3 +84,10 @@
 .item_hashtags a:hover {
   text-decoration: underline;
 }
+
+.short_video_links {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
