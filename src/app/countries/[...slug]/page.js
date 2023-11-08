@@ -1,4 +1,3 @@
-import countries from '../../utils/countries';
 import useI18n from '../../hooks/use-i18n';
 import app from '../../firebase';
 import { redirect } from 'next/navigation';
@@ -6,11 +5,10 @@ import useHost from '@/app/hooks/use-host';
 import Link from 'next/link';
 import { getFirestore, doc, getDoc, getDocs, collection, query, where, orderBy } from 'firebase/firestore';
 import styles from '../page.module.css';
-import Top from '@/app/components/top';
-import Footer from '@/app/components/footer';
 import { FILE_DOMAIN, FILE_DOMAIN_500, ITEMS_PER_PAGE, SITE_NAME } from '@/app/utils/constants';
 import Pagination from '@/app/components/pagination';
 import Scroller from '@/app/components/scroller';
+import StructuredBreadcrumbs from '@/app/components/structured-breadcrumbs';
 
 function getDataFromRoute(slug, searchParams) {
   const [country, path1, path2, path3, path4, path5] = slug;
@@ -210,10 +208,8 @@ export default async function Country({ params: { slug }, searchParams }) {
     </div>
   </div>);
 
-  return <main>
+  return <div>
     <div className="container">
-      <Top />
-
       <Link href="/countries">
         <img src={host('/images/back.svg')} alt="Back Button" width="30px"></img>
       </Link>
@@ -329,8 +325,6 @@ export default async function Country({ params: { slug }, searchParams }) {
 
     <Scroller />
 
-    <div className="container">
-      <Footer breadcrumbs={breadcrumbs} />
-    </div>
-  </main>
+    {breadcrumbs.length && <StructuredBreadcrumbs breadcrumbs={breadcrumbs} />}
+  </div>
 }

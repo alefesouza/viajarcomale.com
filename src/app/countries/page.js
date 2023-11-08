@@ -3,8 +3,6 @@ import useI18n from '../hooks/use-i18n';
 import styles from './page.module.css';
 import Link from 'next/link';
 import useHost from '../hooks/use-host';
-import Top from '../components/top';
-import Footer from '../components/footer';
 import { SITE_NAME } from '../utils/constants';
 
 export async function generateMetadata() {
@@ -28,9 +26,7 @@ export default function Countries() {
   const i18n = useI18n();
   const host = useHost();
 
-  return <main className="container">
-    <Top />
-
+  return <div className="container">
     <Link href="/">
       <img src={host('/images/back.svg')} alt="Back Button" width="30px"></img>
     </Link>
@@ -43,7 +39,5 @@ export default function Countries() {
         <span>{i18n(c.name)}</span>
       </Link>)}
     </div>
-
-    <Footer />
-  </main>
+  </div>
 }

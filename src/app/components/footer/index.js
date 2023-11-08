@@ -1,9 +1,8 @@
 import useHost from '@/app/hooks/use-host';
 import { headers } from 'next/headers';
 import VisitedCountries from '../visited-countries';
-import Script from 'next/script';
 
-export default function Footer({ breadcrumbs }) {
+export default function Footer() {
   const host = useHost();
   const isBR = host().includes('viajarcomale.com.br');
   const headersList = headers();
@@ -32,16 +31,5 @@ export default function Footer({ breadcrumbs }) {
     <div style={{textAlign: 'center', marginBottom: 100}}>
       <a href={ (isBR ? 'https://viajarcomale.com' : 'https://viajarcomale.com.br') + headersList.get('x-pathname') } className="language">{ isBR ? 'English' : 'Português' }</a>
     </div>
-
-    {breadcrumbs && breadcrumbs.length && <Script id="ld-breadcrumb" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "BreadcrumbList",
-      "itemListElement": breadcrumbs.map((item, i) => ({
-        "@type": "ListItem",
-        "position": i + 1,
-        "name": item.name,
-        "item": item.item
-      }))
-    }) }}></Script>}
   </>
 }

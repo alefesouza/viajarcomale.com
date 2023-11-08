@@ -4,8 +4,6 @@ import useHost from '@/app/hooks/use-host';
 import Link from 'next/link';
 import { getFirestore, getDocs, collectionGroup, query, where, orderBy } from 'firebase/firestore';
 import styles from './page.module.css';
-import Top from '@/app/components/top';
-import Footer from '@/app/components/footer';
 import { FILE_DOMAIN, FILE_DOMAIN_500, SITE_NAME } from '@/app/utils/constants';
 import Scroller from '@/app/components/scroller';
 
@@ -72,11 +70,7 @@ export default async function Country({ params: { theHashtag }, searchParams }) 
   const instagramPhotos = photos.filter(p => p.type === 'instagram' || p.type === 'instagram-gallery');
   const shortVideos = photos.filter(p => p.type === 'short-video');
 
-  return <main>
-    <div className="container">
-      <Top />
-    </div>
-
+  return <div>
     <div className="container-fluid">
       <h3>#{decodeURIComponent(hashtag)}</h3>
     </div>
@@ -147,9 +141,5 @@ export default async function Country({ params: { theHashtag }, searchParams }) 
     </div>
 
     <Scroller />
-
-    <div className="container">
-      <Footer />
-    </div>
-  </main>
+  </div>
 }

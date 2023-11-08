@@ -4,6 +4,8 @@ import useHost from './hooks/use-host';
 import useI18n from './hooks/use-i18n';
 import { SITE_NAME } from './utils/constants';
 import { headers } from 'next/headers';
+import Top from './components/top';
+import Footer from './components/footer';
 
 export const metadata = {
   title: SITE_NAME,
@@ -81,7 +83,21 @@ export default function RootLayout({ children }) {
 
         <div className="background"></div>
 
-        {children}
+        <div id="loader-spinner">
+          <span className="loader"></span>
+        </div>
+
+        <main>
+          <div className="container">
+            <Top />
+          </div>
+
+          {children}
+
+          <div className="container">
+            <Footer />
+          </div>
+        </main>
 
         <Script async src={ host('app.js') } />
 
