@@ -7,7 +7,6 @@ import { getFirestore, doc, getDoc, getDocs, collection, query, where, orderBy }
 import styles from '../page.module.css';
 import { FILE_DOMAIN, FILE_DOMAIN_500, ITEMS_PER_PAGE, SITE_NAME } from '@/app/utils/constants';
 import Pagination from '@/app/components/pagination';
-import Scroller from '@/app/components/scroller';
 import StructuredBreadcrumbs from '@/app/components/structured-breadcrumbs';
 
 function getDataFromRoute(slug, searchParams) {
@@ -322,8 +321,6 @@ export default async function Country({ params: { slug }, searchParams }) {
         </div>
       </div> }
     </div>
-
-    <Scroller />
 
     {breadcrumbs.length && <StructuredBreadcrumbs breadcrumbs={breadcrumbs} />}
   </div>

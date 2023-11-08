@@ -3,8 +3,6 @@ import HomeButton from './components/home-button';
 import useI18n from './hooks/use-i18n';
 import useHost from './hooks/use-host';
 import Link from 'next/link';
-import Top from './components/top';
-import Footer from './components/footer';
 
 export default async function Home() {
     const host = useHost();
