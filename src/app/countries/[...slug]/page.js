@@ -276,9 +276,7 @@ export default async function Country({ params: { slug }, searchParams }) {
     </div>
 
     <div className="container">
-      <Footer />
+      <Footer breadcrumbs={breadcrumbs} />
     </div>
-
-    <Footer breadcrumbs={breadcrumbs} />
   </main>
 }
