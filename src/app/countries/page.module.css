@@ -34,9 +34,21 @@
   gap: 10px;
 }
 
-@media(min-width: 634px) {
+.vertical_content {
+  width: 200px;
+  height: 355;
+  object-fit: cover;
+}
+
+@media(min-width: 644px) {
   .instagram_highlights_items {
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  }
+
+  .vertical_content {
+    width: 300px;
+    height: 533px;
+    object-fit: cover;
   }
 }
 

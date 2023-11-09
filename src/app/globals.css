@@ -264,17 +264,9 @@ a {
   text-align: center;
 }
 
-.scroller_item > img {
-  width: 200px !important;
-}
-
-@media(min-width: 576px) {
+@media(min-width: 644px) {
   .scroller_item {
     flex: 0 0 300px;
-  }
-
-  .scroller_item > img {
-    width: 300px !important;
   }
 }
 

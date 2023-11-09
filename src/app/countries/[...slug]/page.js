@@ -239,7 +239,7 @@ export default async function Country({ params: { slug }, searchParams }) {
           <div className="scroller_items">
             {instagramHighLights.map(p => <div key={ p.id } className="scroller_item">
               <a href={p.link} target="_blank">
-                <img src={FILE_DOMAIN + p.file} srcSet={ `${FILE_DOMAIN_500 + p.file} 500w` } alt={i18n(slugName[p.city])} />
+                <img src={FILE_DOMAIN + p.file} srcSet={ `${FILE_DOMAIN_500 + p.file} 500w` } alt={i18n(slugName[p.city])} className={styles.vertical_content} />
               </a>
 
               <div>
@@ -265,7 +265,7 @@ export default async function Country({ params: { slug }, searchParams }) {
           <div className="scroller_items">
             {shortVideos.map(p => <div key={ p.id } className="scroller_item">
               <a href={p.tiktok_link} target="_blank">
-                <img src={FILE_DOMAIN + p.file} srcSet={ `${FILE_DOMAIN_500 + p.file} 500w` } alt={isBR ? p.description_pt : p.description} />
+                <img src={FILE_DOMAIN + p.file} srcSet={ `${FILE_DOMAIN_500 + p.file} 500w` } alt={isBR ? p.description_pt : p.description} className={styles.vertical_content} />
               </a>
 
               <div className={ styles.short_video_links }>
