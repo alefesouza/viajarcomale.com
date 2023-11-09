@@ -1,9 +1,11 @@
 import useHost from '@/app/hooks/use-host';
 import { headers } from 'next/headers';
 import VisitedCountries from '../visited-countries';
+import useI18n from '@/app/hooks/use-i18n';
 
 export default function Footer() {
   const host = useHost();
+  const i18n = useI18n();
   const isBR = host().includes('viajarcomale.com.br');
   const headersList = headers();
 
@@ -28,8 +30,12 @@ export default function Footer() {
 
     <VisitedCountries />
 
-    <div style={{textAlign: 'center', marginBottom: 100}}>
+    <div style={{textAlign: 'center', marginBottom: 80}}>
       <a href={ (isBR ? 'https://viajarcomale.com' : 'https://viajarcomale.com.br') + headersList.get('x-pathname') } className="language">{ isBR ? 'English' : 'Português' }</a>
+
+      <div className="developed-by" dangerouslySetInnerHTML={{__html: i18n('Developed by AS.dev and available on GitHub')
+          .replace('AS.dev', '<a href="https://as.dev" target="_blank">AS.dev</a>')
+          .replace('GitHub', '<a href="https://github.com/alefesouza/viajarcomale.com" target="_blank">GitHub</a>')}} />
     </div>
   </>
 }

@@ -163,6 +163,7 @@ a {
   margin: 0px;
   color: rgb(0, 0, 0);
   font-weight: 700;
+  font-size: 20px;
   line-height: 1.5;
   text-overflow: ellipsis;
   max-width: 100%;
@@ -237,7 +238,7 @@ a {
 .nav-link {
   display: block;
   padding: 0.5rem 1rem;
-  color: #007bff;
+  color: #2096cc;
   text-decoration: none;
 }
 .nav-tabs .nav-link:focus, .nav-tabs .nav-link:hover {
@@ -324,4 +325,12 @@ a {
   100% {
       transform: rotate(360deg);
   }
+}
+
+.developed-by {
+  margin-top: 44px;
+}
+
+.developed-by a {
+  color: #2096cc;
 }
