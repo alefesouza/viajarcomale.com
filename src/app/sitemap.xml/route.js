@@ -53,7 +53,7 @@ export async function GET() {
       loc: host('/countries/' + c.slug + '/cities/' + city.slug),
       lastmod,
     }, {
-      loc: host('/countries/' + c.slug + '/expand/cities/' + city.slug),
+      loc: host('/countries/' + c.slug + '/cities/' + city.slug + '/expand'),
       lastmod,
     },
     ...Array.from({ length: Math.ceil((city?.totals?.instagram_photos / ITEMS_PER_PAGE) - 1) }, (_, i) => ({
@@ -61,7 +61,7 @@ export async function GET() {
       lastmod,
     })),
     ...Array.from({ length: Math.ceil((city?.totals?.expanded_instagram_photos / ITEMS_PER_PAGE) - 1) }, (_, i) => ({
-      loc: host('/countries/' + c.slug + '/expand/cities/' + city.slug + '/page/' + (i + 2)),
+      loc: host('/countries/' + c.slug + '/cities/' + city.slug + '/expand/page/' + (i + 2)),
       lastmod,
     }))])).flat(2),
     ...hashtags.flatMap(h => [{
