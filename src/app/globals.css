@@ -157,14 +157,12 @@ a {
   width: 96px;
   height: 96px;
   border-radius: 48px;
-  margin-bottom: 16px;
 }
 
 .profile_name {
   margin: 0px;
   color: rgb(0, 0, 0);
   font-weight: 700;
-  font-size: 20px;
   line-height: 1.5;
   text-overflow: ellipsis;
   max-width: 100%;

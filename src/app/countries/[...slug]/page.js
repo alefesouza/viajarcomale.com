@@ -215,7 +215,7 @@ export default async function Country({ params: { slug }, searchParams }) {
     </div>
 
     <div className="container-fluid">
-      <h3>{i18n(country.name)}</h3>
+      <h3>{i18n(countryData.name)} {countryData.flag}</h3>
 
       <ul className="nav nav-tabs">
         <Link className={ `nav-link${!city ? ' active' : ''}` } aria-current="page" href={ `/countries/${country}${expandGalleries ? '/expand' : ''}` + (sort !== 'desc' ? '?sort=' + sort : '') }>{i18n('All')}</Link>

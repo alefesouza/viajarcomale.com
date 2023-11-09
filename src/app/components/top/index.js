@@ -11,7 +11,7 @@ export default function Top() {
       <img src={ host('profile-photo.jpg') } srcSet={ host('profile-photo-2x.jpg') + ' 2x' } width={96} height={96} alt="Profile photo" className="profile_picture" />
     </Link>
 
-    <span className="profile_name">{SITE_NAME}</span>
+    <h2 className="profile_name">{SITE_NAME}</h2>
 
     <span className="profile_description">
       {countries.map(c => c.flag)}
