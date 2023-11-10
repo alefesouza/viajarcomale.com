@@ -33,7 +33,7 @@ export default function Pagination({ base, currentPage, pageNumber, total, textP
   }
 
   const pageTotal = currentPage * ITEMS_PER_PAGE + 1;
-  const totalText = <div style={{ marginTop: textPosition === 'bottom' ? 14 : 0, marginBottom: textPosition === 'top' ? 14 : 0 }}>{i18n('Showing')} {(currentPage - 1) * ITEMS_PER_PAGE + 1}-{pageTotal < total ? pageTotal : total } {i18n('of')} {total}</div>
+  const totalText = <div style={{ marginTop: textPosition === 'bottom' ? 14 : 0, marginBottom: textPosition === 'top' ? 14 : 0 }}>{i18n('Showing')} {(currentPage - 1) * ITEMS_PER_PAGE + 1}-{pageTotal < total ? pageTotal : total } {i18n('of')} {total} posts</div>
   
   return <div className={styles.pagination}>
     {textPosition === 'top' && totalText}

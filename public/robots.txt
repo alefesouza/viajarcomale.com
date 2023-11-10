@@ -1,1 +1,2 @@
 Disallow: /*?*sort=
+Disallow: /*?*shuffle=
