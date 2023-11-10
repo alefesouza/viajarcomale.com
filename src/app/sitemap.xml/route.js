@@ -6,7 +6,7 @@ import { ITEMS_PER_PAGE } from '../utils/constants';
 
 export async function GET() {
   const host = useHost();
-  const lastmod = '2023-11-09';
+  const lastmod = '2023-11-10';
 
   const db = getFirestore(app);
   const countriesSnapshot = await getDocs(query(collection(db, 'countries')));
@@ -35,35 +35,35 @@ export async function GET() {
       lastmod,
     },
     ...countries.flatMap(c => [{
-      loc: host('/countries/' + c.slug),
-      lastmod,
-    }, {
-      loc: host('/countries/' + c.slug + '/expand'),
-      lastmod,
-    },
-    ...Array.from({ length: Math.ceil((c?.totals?.instagram_photos / ITEMS_PER_PAGE) - 1) }, (_, i) => ({
-      loc: host('/countries/' + c.slug + '/page/' + (i + 2)),
-      lastmod,
-    })),
-    ...Array.from({ length: Math.ceil((c?.totals?.expanded_instagram_photos / ITEMS_PER_PAGE) - 1) }, (_, i) => ({
-      loc: host('/countries/' + c.slug + '/expand/page/' + (i + 2)),
-      lastmod,
-    }))]),
+        loc: host('/countries/' + c.slug),
+        lastmod,
+      }, {
+        loc: host('/countries/' + c.slug + '/expand'),
+        lastmod,
+      },
+      ...Array.from({ length: Math.ceil((c?.totals?.instagram_photos / ITEMS_PER_PAGE) - 1) }, (_, i) => [{
+        loc: host('/countries/' + c.slug + '/page/' + (i + 2)),
+        lastmod,
+      }, {
+        loc: host('/countries/' + c.slug + '/expand/page/' + (i + 2)),
+        lastmod,
+      }]),
+    ]),
     ...countries.map(c => c.cities.map(city => [{
-      loc: host('/countries/' + c.slug + '/cities/' + city.slug),
-      lastmod,
-    }, {
-      loc: host('/countries/' + c.slug + '/cities/' + city.slug + '/expand'),
-      lastmod,
-    },
-    ...Array.from({ length: Math.ceil((city?.totals?.instagram_photos / ITEMS_PER_PAGE) - 1) }, (_, i) => ({
-      loc: host('/countries/' + c.slug + '/cities/' + city.slug + '/page/' + (i + 2)),
-      lastmod,
-    })),
-    ...Array.from({ length: Math.ceil((city?.totals?.expanded_instagram_photos / ITEMS_PER_PAGE) - 1) }, (_, i) => ({
-      loc: host('/countries/' + c.slug + '/cities/' + city.slug + '/expand/page/' + (i + 2)),
-      lastmod,
-    }))])).flat(2),
+        loc: host('/countries/' + c.slug + '/cities/' + city.slug),
+        lastmod,
+      }, {
+        loc: host('/countries/' + c.slug + '/cities/' + city.slug + '/expand'),
+        lastmod,
+      },
+      ...Array.from({ length: Math.ceil((city?.totals?.instagram_photos / ITEMS_PER_PAGE) - 1) }, (_, i) => [{
+        loc: host('/countries/' + c.slug + '/cities/' + city.slug + '/page/' + (i + 2)),
+        lastmod,
+      }, {
+        loc: host('/countries/' + c.slug + '/cities/' + city.slug + '/expand/page/' + (i + 2)),
+        lastmod,
+      }]),
+    ])).flat(2),
     ...hashtags.flatMap(h => [{
       loc: host('/hashtags/') + decodeURIComponent(h.name),
       lastmod,
