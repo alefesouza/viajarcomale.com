@@ -106,6 +106,15 @@ export default async function Country({ params: { slug }, searchParams }) {
     sort = 'desc';
   }
 
+  const cityData = countryData.cities.reduce((prev, curr, i) => {
+    prev[curr.slug] = {
+      name: curr.name,
+      index: i,
+    };
+
+    return prev;
+  }, {});
+
   if (city) {
     photosSnapshot = await getDocs(query(collection(db, 'countries', country, 'medias'), where('city', '==', city), orderBy('order', sort)));
   } else {
@@ -116,6 +125,9 @@ export default async function Country({ params: { slug }, searchParams }) {
 
   photosSnapshot.forEach((photo) => {
     const data = photo.data();
+    if (cityData[data.city]) {
+      data.city_index = cityData[data.city].index;
+    }
 
     photos = [...photos, data];
 
@@ -124,18 +136,14 @@ export default async function Country({ params: { slug }, searchParams }) {
     }
   });
 
+  photos.sort((a,b) => b.city_index - a.city_index);
+
   if (isRandom) {
     photos = photos.map(value => ({ value, sort: Math.random() }))
       .sort((a, b) => a.sort - b.sort)
       .map(({ value }) => value);
     sort = 'random';
   }
-
-  const slugName = countryData.cities.reduce((prev, curr) => {
-    prev[curr.slug] = curr.name;
-
-    return prev;
-  }, {});
 
   const instagramHighLights = photos.filter(p => p.type === 'instagram-highlight');
   const shortVideos = photos.filter(p => p.type === 'short-video');
@@ -185,7 +193,7 @@ export default async function Country({ params: { slug }, searchParams }) {
 
   if (city) {
     currentPath += '/cities/' + city;
-    breadcrumbs.push({ name: i18n(slugName[city]), item: currentPath, });
+    breadcrumbs.push({ name: i18n(cityData[city].name), item: currentPath, });
   }
 
   if (expandGalleries) {
@@ -239,11 +247,11 @@ export default async function Country({ params: { slug }, searchParams }) {
           <div className="scroller_items">
             {instagramHighLights.map(p => <div key={ p.id } className="scroller_item">
               <a href={p.link} target="_blank">
-                <img src={FILE_DOMAIN + p.file} srcSet={ `${FILE_DOMAIN_500 + p.file} 500w` } alt={i18n(slugName[p.city])} className={styles.vertical_content} />
+                <img src={FILE_DOMAIN + p.file} srcSet={ `${FILE_DOMAIN_500 + p.file} 500w` } alt={i18n(cityData[p.city].name)} className={styles.vertical_content} />
               </a>
 
               <div>
-                {i18n(slugName[p.city])}
+                {i18n(cityData[p.city].name)}
               </div>
             </div>)}
           </div>
