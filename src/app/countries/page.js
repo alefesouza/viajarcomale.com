@@ -34,7 +34,7 @@ export default function Countries() {
     <h3>{i18n('Select Country')}</h3>
 
     <div className={styles.country_selector}>
-      {countries.map(c => <Link href={`/countries/${c.slug}`} key={c.name} className={styles.country}>
+      {countries.map(c => <Link href={`/countries/${c.slug}`} key={c.name} className={styles.country} prefetch={false}>
         <span className={styles.country_flag}>{c.flag}</span>
         <span>{i18n(c.name)}</span>
       </Link>)}
