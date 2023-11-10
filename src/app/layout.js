@@ -39,6 +39,7 @@ export default function RootLayout({ children }) {
         <link rel="canonical" href={ new URL(pathname, host().includes('viajarcomale.com.br') ? 'https://viajarcomale.com.br' : 'https://viajarcomale.com').toString() } />
 
         <link rel="manifest" href={ host('manifest.json') } />
+        <link rel="image_src" href={ host('profile-photo-2x.jpg') } />
 
         <meta name="apple-mobile-web-app-title" content={SITE_NAME} />
         <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -50,7 +51,7 @@ export default function RootLayout({ children }) {
         <link rel="apple-touch-icon" sizes="167x167" href={ host('icons/167x167.jpg') } />
         <link rel="apple-touch-icon" sizes="180x180" href={ host('icons/180x180.jpg') } />
 
-        <Script id="ld-website" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({"@context":"http://schema.org","@type":"WebSite","url":host(''),"author":"Alefe Souza","name":SITE_NAME,"alternateName":[SITE_NAME, "@ViajarComAlê", "viajarcomale", "VCA", i18n('Travel with Alefe')],"description":i18n('Travel photos and links to Viajar com Alê social networks.'),"potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":host('') + "?s={search_term_string}"},"query-input":"required name=search_term_string"}}) }}></Script>
+        <Script id="ld-website" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({"@context":"http://schema.org","@type":"WebSite","url":host(''),"author":"Alefe Souza","name":SITE_NAME,"alternateName":[SITE_NAME, "@ViajarComAlê", "viajarcomale", "VCA", i18n('Travel with Alefe')],"description":i18n('Travel photos and links to Viajar com Alê social networks.'),"potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":host('') + "/hashtags/{search_term_string}"},"query-input":"required name=search_term_string"}}) }}></Script>
         <Script id="ld-organization" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({"@context":"http://schema.org","@type":"Organization","url":host(''),"logo":host('/icons/512x512.png'),"email":"mailto:contato@viajarcomale.com","sameAs":["https://instagram.com/viajarcomale","https://tiktok.com/@viajarcomale","https://youtube.com/@viajarcomale","https://twitter.com/viajarcomale"]}) }}></Script>
 
         {pathname === '/' && <meta name="title" content={SITE_NAME} />}
@@ -70,6 +71,7 @@ export default function RootLayout({ children }) {
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:image" content={ host('cover.jpg') }/>
         <meta name="twitter:site" content="@viajarcomale" />
+        <meta name="twitter:description" content={i18n('Travel photos and links to Viajar com Alê social networks.')} />
 
         <Script id="gtm" dangerouslySetInnerHTML={{ __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
         new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
