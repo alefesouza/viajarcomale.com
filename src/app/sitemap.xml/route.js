@@ -45,7 +45,7 @@ export async function GET() {
         loc: host('/countries/' + c.slug + '/page/' + (i + 2)),
         lastmod,
       }, {
-        loc: host('/countries/' + c.slug + '/expand/page/' + (i + 2)),
+        loc: host('/countries/' + c.slug + '/page/' + (i + 2) + '/expand'),
         lastmod,
       }]),
     ]),
@@ -60,7 +60,7 @@ export async function GET() {
         loc: host('/countries/' + c.slug + '/cities/' + city.slug + '/page/' + (i + 2)),
         lastmod,
       }, {
-        loc: host('/countries/' + c.slug + '/cities/' + city.slug + '/expand/page/' + (i + 2)),
+        loc: host('/countries/' + c.slug + '/cities/' + city.slug + '/page/' + (i + 2) + '/expand'),
         lastmod,
       }]),
     ])).flat(2),
