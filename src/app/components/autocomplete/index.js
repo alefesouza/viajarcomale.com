@@ -68,7 +68,7 @@ export default function Autocomplete() {
   }
 
   const onInputChange = (e) => {
-    if (e.length < 3) {
+    if (e.length <= 1) {
       setAllOptions([...featuredOptions, ...randomHashtags])
       return;
     }
