@@ -3,11 +3,7 @@
 import Select from 'react-select';
 import useI18nClient from '@/app/hooks/use-i18n-client';
 import { useRouter } from 'next/navigation';
-import { getFirestore, getDocs, collection, query, where, limit } from 'firebase/firestore';
-import { app } from '@/firebase-client';
 import { useState } from 'react';
-import { ITEMS_PER_PAGE } from '@/app/utils/constants';
-import arrayShuffle from '@/app/utils/array-shuffle';
 
 export default function Autocomplete() {
   const router = useRouter()
@@ -21,25 +17,13 @@ export default function Autocomplete() {
   const [text, setText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const db = getFirestore(app);
-
   const getRandomHashtags = async () => {
     setIsLoading(true);
 
-    const totalHashtags = 521;
-
-    const array = Array.from(Array(totalHashtags).keys());
-    const randomArray = arrayShuffle(array, Math.random()).slice(0, ITEMS_PER_PAGE);
-
-    const snapshot = await getDocs(query(collection(db, 'hashtags'), where('index', 'in', randomArray)));
-    const randomHashtags = [];
-    
-    snapshot.forEach((item) => {
-      const data = item.data();
-      randomHashtags.push({ label: '#' + data.name, value: '#' + data.name });
-    });
-
-    randomHashtags.sort((a, b) => randomArray.indexOf(a.index) - randomArray.indexOf(b.index));
+    const result = await fetch('/api/hashtags?random=true');
+    const data = await result.json();
+    console.log(data)
+    const randomHashtags = data.map(h => ({ label: '#' + h, value: '#' + h }))
 
     setRandomHashtags(randomHashtags);
     setAllOptions([...featuredOptions, ...randomHashtags]);
@@ -54,16 +38,9 @@ export default function Autocomplete() {
 
     setIsLoading(true);
 
-    const end = text.replace(/.$/, c => String.fromCharCode(c.charCodeAt(0) + 1));
-
-    const snapshot = await getDocs(query(collection(db, 'hashtags'), where('name', '>=', text), where('name', '<', end), limit(10)));
-    const hashtags = [];
-    
-    snapshot.forEach((item) => {
-      const data = item.data();
-      hashtags.push({ label: '#' + data.name, value: '#' + data.name });
-    });
-    console.log(hashtags)
+    const result = await fetch('/api/hashtags?s=' + text);
+    const data = await result.json();
+    const hashtags = data.map(h => ({ label: '#' + h, value: '#' + h }))
 
     setCurrentHashtags(hashtags);
     setAllOptions([...featuredOptions, ...hashtags]);

@@ -1,4 +1,6 @@
 import './globals.css';
+import { customInitApp } from './firebase';
+customInitApp();
 import Script from 'next/script';
 import useHost from './hooks/use-host';
 import useI18n from './hooks/use-i18n';
@@ -6,11 +8,7 @@ import { SITE_NAME } from './utils/constants';
 import { headers } from 'next/headers';
 import Top from './components/top';
 import Footer from './components/footer';
-import { customInitApp } from './firebase';
-import Select from 'react-select'
 import Autocomplete from './components/autocomplete';
-
-customInitApp();
 
 export const metadata = {
   title: SITE_NAME,
