@@ -94,7 +94,7 @@ export default function RootLayout({ children }) {
 
         <header className="container">
           <div id="title-bar">
-            <img src="/icons/36x36.png" srcSet="/icons/72x72.png x2" alt="Viajar com Alê Icon" width={36} height={36}></img>
+            <img src={ host('/icons/72x72.png') } alt="Viajar com Alê Icon" width={36} height={36}></img>
 
             <span>{SITE_NAME}</span>
           </div>
