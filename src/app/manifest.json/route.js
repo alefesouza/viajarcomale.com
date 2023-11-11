@@ -18,6 +18,10 @@ export async function GET() {
     orientation: 'any',
     background_color: '#2096cc',
     theme_color: '#2096cc',
+    display_override: [
+      'window-controls-overlay',
+      'minimal-ui',
+    ],
     edge_side_panel: {},
     icons: [
       ...icons.map((size) => ({

@@ -129,4 +129,37 @@
   if (window.location.href.includes(countryRoutes) || window.location.href.includes(hashtagRoutes)) {
     setupScroller();
   }
+
+  const debounce = (func, wait) => {
+    let timeout;
+    return function executedFunction(...args) {
+      const later = () => {
+        clearTimeout(timeout);
+        func(...args);
+      };
+      clearTimeout(timeout);
+      timeout = setTimeout(later, wait);
+    };
+  };
+  
+  if ('windowControlsOverlay' in navigator) {
+    console.log(navigator.windowControlsOverlay.visible)
+    const top = document.querySelector('#top');
+
+    if (navigator.windowControlsOverlay.visible) {
+      document.querySelector('#top').classList.add('window-controls-overlay')
+    }
+
+    navigator.windowControlsOverlay.addEventListener('geometrychange', debounce(e => {
+      // Detect if the Window Controls Overlay is visible.
+      const isOverlayVisible = navigator.windowControlsOverlay.visible;
+  
+      if (isOverlayVisible) {
+        top.classList.add('window-controls-overlay');
+        return;
+      }
+
+      top.classList.remove('window-controls-overlay');
+    }, 200));
+  }
 })();

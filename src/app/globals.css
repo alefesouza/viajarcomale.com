@@ -378,3 +378,39 @@ a {
     width: 50%;
   }
 }
+
+#title-bar {
+  display: none;
+}
+
+.window-controls-overlay #title-bar {
+  position: fixed;
+  left: env(titlebar-area-x, 0);
+  top: env(titlebar-area-y, 0);
+  height: calc(env(titlebar-area-height, 50px));
+  width: env(titlebar-area-width, 100%);
+  background-color: #2096cc;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  z-index: 2;
+}
+
+.window-controls-overlay .autocomplete {
+  position: fixed;
+  padding-top: 3px;
+  padding-right: 10px;
+  left: env(titlebar-area-x, 0);
+  top: env(titlebar-area-y, 0);
+  height: env(titlebar-area-height, 50px);
+  width: env(titlebar-area-width, 100%);
+  z-index: 3;
+}
+
+.window-controls-overlay .autocomplete > div {
+  width: 30%;
+}
+
+.window-controls-overlay .profile {
+  padding-top: calc(env(titlebar-area-height, 50px) + 64px);
+}
