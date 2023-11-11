@@ -56,12 +56,17 @@
   const hashtagRoutes = window.location.origin + '/hashtags';
   const loadingSpinner = document.querySelector('#loader-spinner');
 
-  function showSpinner() {
+  function showSpinner(e) {
+    console.log(e.metaKey)
+    if (e.metaKey) {
+      return;
+    }
+
     loadingSpinner.style.display = 'block';
   }
 
   function setupLinks() {
-    const routeLinks = [...document.querySelectorAll('a')].filter(l => l.href.includes(window.location.origin + '/'));
+    const routeLinks = [...document.querySelectorAll('a')].filter(l => l.href.includes(window.location.origin + '/') && !l.href.includes(window.location.origin + '/#'));
 
     routeLinks.forEach((a) => {
       a.removeEventListener('click', showSpinner);
@@ -130,36 +135,22 @@
     setupScroller();
   }
 
-  const debounce = (func, wait) => {
-    let timeout;
-    return function executedFunction(...args) {
-      const later = () => {
-        clearTimeout(timeout);
-        func(...args);
-      };
-      clearTimeout(timeout);
-      timeout = setTimeout(later, wait);
-    };
-  };
-  
   if ('windowControlsOverlay' in navigator) {
-    console.log(navigator.windowControlsOverlay.visible)
-    const top = document.querySelector('#top');
+    const body = document.querySelector('body');
 
     if (navigator.windowControlsOverlay.visible) {
-      document.querySelector('#top').classList.add('window-controls-overlay')
+      document.querySelector('body').classList.add('window-controls-overlay')
     }
 
-    navigator.windowControlsOverlay.addEventListener('geometrychange', debounce(e => {
-      // Detect if the Window Controls Overlay is visible.
+    navigator.windowControlsOverlay.addEventListener('geometrychange', () => {
       const isOverlayVisible = navigator.windowControlsOverlay.visible;
   
       if (isOverlayVisible) {
-        top.classList.add('window-controls-overlay');
+        body.classList.add('window-controls-overlay');
         return;
       }
 
-      top.classList.remove('window-controls-overlay');
-    }, 200));
+      body.classList.remove('window-controls-overlay');
+    });
   }
 })();

@@ -418,3 +418,7 @@ a {
 .window-controls-overlay .profile {
   padding-top: calc(env(titlebar-area-height, 50px) + 64px);
 }
+
+.window-controls-overlay #loader-spinner {
+  top: calc(env(titlebar-area-height, 0) + 10px);
+}
