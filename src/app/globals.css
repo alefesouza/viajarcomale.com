@@ -394,6 +394,8 @@ a {
   align-items: center;
   gap: 6px;
   z-index: 2;
+  -webkit-app-region: drag;
+  app-region: drag;
 }
 
 .window-controls-overlay .autocomplete {
@@ -409,6 +411,8 @@ a {
 
 .window-controls-overlay .autocomplete > div {
   width: 30%;
+  -webkit-app-region: no-drag;
+  app-region: no-drag;
 }
 
 .window-controls-overlay .profile {
