@@ -4,6 +4,8 @@ import Select from 'react-select';
 import useI18nClient from '@/app/hooks/use-i18n-client';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import arrayShuffle from '@/app/utils/array-shuffle';
+import { ITEMS_PER_PAGE } from '@/app/utils/constants';
 
 export default function Autocomplete() {
   const router = useRouter()
@@ -12,38 +14,45 @@ export default function Autocomplete() {
   const featuredHashtags = [i18n('#food'), i18n('#observationdeck')];
   const featuredOptions = featuredHashtags.map((item) => ({ label: item, value: item }));
   const [allOptions, setAllOptions] = useState(featuredOptions);
+  const [allHashtags, setAllHashtags] = useState(featuredOptions);
   const [randomHashtags, setRandomHashtags] = useState([]);
-  const [currentHashtags, setCurrentHashtags] = useState([]);
-  const [text, setText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [customStyle, setCustomStyles] = useState({});
 
-  const getRandomHashtags = async () => {
-    setIsLoading(true);
-
-    const result = await fetch('/api/hashtags?random=true');
-    const data = await result.json();
-    const randomHashtags = data.map(h => ({ label: '#' + h, value: '#' + h }))
-
+  const updateRandomHashtags = (hashtags) => {
+    const array = Array.from(Array(hashtags.length).keys());
+    const randomArray = arrayShuffle(array).slice(0, ITEMS_PER_PAGE);
+    const randomHashtags = randomArray.map((i) => hashtags[i]);
+    
     setRandomHashtags(randomHashtags);
     setAllOptions([...featuredOptions, ...randomHashtags]);
-
-    setIsLoading(false);
   }
 
-  const getHashtags = async (text) => {
-    if (text.length < 3) {
+  const updateHashtags = async () => {
+    const today = new Date().toISOString().split('T')[0];
+    
+    if (today === localStorage.getItem('hashtags_updated')) {
+      const hashtags = JSON.parse(localStorage.getItem('hashtags'))
+        .map(h => ({ label: '#' + h.name, value: '#' + h.name }));
+      setAllHashtags(hashtags);
+
+      if (!randomHashtags.length) {
+        updateRandomHashtags(hashtags);
+      }
       return;
     }
 
     setIsLoading(true);
 
-    const result = await fetch('/api/hashtags?s=' + text);
-    const data = await result.json();
-    const hashtags = data.map(h => ({ label: '#' + h, value: '#' + h }))
+    const result = await fetch('/api/hashtags');
+    const data = await result.text();
 
-    setCurrentHashtags(hashtags);
-    setAllOptions([...featuredOptions, ...hashtags]);
+    const hashtags = JSON.parse(data).map(h => ({ label: '#' + h.name, value: '#' + h.name }));
+    setAllHashtags([...featuredOptions, ...hashtags]);
+
+    localStorage.setItem('hashtags', data);
+    localStorage.setItem('hashtags_updated', new Date().toISOString().split('T')[0]);
+    updateRandomHashtags(hashtags);
 
     setIsLoading(false);
   }
@@ -59,21 +68,12 @@ export default function Autocomplete() {
       setAllOptions([...featuredOptions, ...randomHashtags])
       return;
     }
-
-    if (text.startsWith(e) || (e.startsWith(text) && currentHashtags.length > 0 && currentHashtags.length < 10)) {
-      setAllOptions([...featuredOptions, ...currentHashtags])
-      return;
-    }
   
-    setText(e);
-
-    getHashtags(e);
+    setAllOptions(allHashtags);
   }
 
   const onFocus = () => {
-    if (randomHashtags.length === 0) {
-      getRandomHashtags();
-    }
+    updateHashtags();
   }
 
   useEffect(() => {
