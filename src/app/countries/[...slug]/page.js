@@ -1,9 +1,8 @@
 import useI18n from '../../hooks/use-i18n';
-import app from '../../firebase';
 import { redirect } from 'next/navigation';
 import useHost from '@/app/hooks/use-host';
 import Link from 'next/link';
-import { getFirestore, doc, getDoc, getDocs, collection, query, where, orderBy, limit, startAt, startAfter } from 'firebase/firestore';
+import { getFirestore } from 'firebase-admin/firestore';
 import styles from '../page.module.css';
 import { FILE_DOMAIN, FILE_DOMAIN_500, ITEMS_PER_PAGE, SITE_NAME } from '@/app/utils/constants';
 import Pagination from '@/app/components/pagination';
@@ -42,7 +41,7 @@ function getDataFromRoute(slug, searchParams) {
 async function getCountry(db, slug, searchParams) {
   let { country, city } = getDataFromRoute(slug, searchParams);
 
-  const countryDoc = await getDoc(doc(db, 'countries', country));
+  const countryDoc = await db.collection('countries').doc(country).get();
   const countryData = countryDoc.data();
 
   if (city && !countryData.cities.find(c => c.slug === city)) {
@@ -59,7 +58,7 @@ export async function generateMetadata({ params: { slug }, searchParams }) {
   const host = useHost();
   const isBR = host().includes('viajarcomale.com.br');
 
-  const db = getFirestore(app);
+  const db = getFirestore();
   const countryData = await getCountry(db, slug, searchParams);
 
   if (!countryData) {
@@ -91,7 +90,7 @@ export default async function Country({ params: { slug }, searchParams }) {
   const host = useHost();
   const isBR = host().includes('viajarcomale.com.br');
   
-  const db = getFirestore(app);
+  const db = getFirestore();
   const countryData = await getCountry(db, slug, searchParams);
 
   if (!countryData) {
@@ -127,23 +126,33 @@ export default async function Country({ params: { slug }, searchParams }) {
   }
 
   if (city) {
-    instagramHighLightsSnapshot = await getDocs(query(collection(db, 'countries', country, 'medias'), where('city', '==', city), where('type', '==', 'instagram-highlight'), orderBy('order', sort)));
-    shortVideosSnapshot = await getDocs(query(collection(db, 'countries', country, 'medias'), where('city', '==', city), where('type', '==', 'short-video'), orderBy('order', sort)));
+    instagramHighLightsSnapshot = await db.collection('countries').doc(country).collection('medias').where('city', '==', city).where('type', '==', 'instagram-highlight').orderBy('order', sort).get();
+    shortVideosSnapshot = await db.collection('countries').doc(country).collection('medias').where('city', '==', city).where('type', '==', 'short-video').orderBy('order', sort).get();
 
     if (isRandom) {
-      instagramPhotosSnapshot = await getDocs(query(collection(db, 'countries', country, 'medias'), where('type', '==', 'instagram'), where('city', '==', city), where('city_index', 'in', randomArray)));
+      instagramPhotosSnapshot = await db.collection('countries').doc(country).collection('medias').where('type', '==', 'instagram').where('city', '==', city).where('city_index', 'in', randomArray).get();
     } else {
-      instagramPhotosSnapshot = await getDocs(query(collection(db, 'countries', country, 'medias'), where('type', '==', 'instagram'), where('city', '==', city), orderBy('city_index', sort), sort === 'asc' ? startAt(paginationStart) : startAfter(paginationStart), limit(ITEMS_PER_PAGE)));
+      instagramPhotosSnapshot = await db.collection('countries').doc(country).collection('medias').where('type', '==', 'instagram').where('city', '==', city).orderBy('city_index', sort);
     }
   } else {
-    instagramHighLightsSnapshot = await getDocs(query(collection(db, 'countries', country, 'medias'), where('type', '==', 'instagram-highlight'), orderBy('city_location_id', sort), orderBy('order', sort)));
-    shortVideosSnapshot = await getDocs(query(collection(db, 'countries', country, 'medias'), where('type', '==', 'short-video'), orderBy('city_location_id', sort), orderBy('order', sort)));
+    instagramHighLightsSnapshot = await db.collection('countries').doc(country).collection('medias').where('type', '==', 'instagram-highlight').orderBy('city_location_id', sort).orderBy('order', sort).get();
+    shortVideosSnapshot = await db.collection('countries').doc(country).collection('medias').where('type', '==', 'short-video').orderBy('city_location_id', sort).orderBy('order', sort).get();
 
     if (isRandom) {
-      instagramPhotosSnapshot = await getDocs(query(collection(db, 'countries', country, 'medias'), where('type', '==', 'instagram'), where('country_index', 'in', randomArray)));
+      instagramPhotosSnapshot = await db.collection('countries').doc(country).collection('medias').where('type', '==', 'instagram').where('country_index', 'in', randomArray).get();
     } else {
-      instagramPhotosSnapshot = await getDocs(query(collection(db, 'countries', country, 'medias'), where('type', '==', 'instagram'), orderBy('country_index', sort), sort === 'asc' ? startAt(paginationStart) : startAfter(paginationStart), limit(ITEMS_PER_PAGE)));
+      instagramPhotosSnapshot = await db.collection('countries').doc(country).collection('medias').where('type', '==', 'instagram').orderBy('country_index', sort);
     }
+  }
+    
+  if (!isRandom) {
+    if (sort === 'asc') {
+      instagramPhotosSnapshot = instagramPhotosSnapshot.startAt(paginationStart);
+    } else {
+      instagramPhotosSnapshot = instagramPhotosSnapshot.startAfter(paginationStart);
+    }
+    
+    instagramPhotosSnapshot = await instagramPhotosSnapshot.limit(ITEMS_PER_PAGE).get();
   }
 
   let instagramHighLights = [];

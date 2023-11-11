@@ -1,22 +1,24 @@
 import {parse} from 'js2xmlparser';
 import useHost from '../hooks/use-host';
-import app from '../firebase';
-import { getFirestore, getDocs, collection, query } from 'firebase/firestore';
+import { getFirestore } from 'firebase-admin/firestore';
 import { ITEMS_PER_PAGE } from '../utils/constants';
+import { customInitApp } from '../firebase';
+
+customInitApp();
 
 export async function GET() {
   const host = useHost();
   const lastmod = '2023-11-10';
 
-  const db = getFirestore(app);
-  const countriesSnapshot = await getDocs(query(collection(db, 'countries')));
+  const db = getFirestore();
+  const countriesSnapshot = await db.collection('countries').get();
   let countries = [];
 
   countriesSnapshot.forEach((country) => {
     countries = [...countries, country.data()];
   });
 
-  const hashtagsSnapshot = await getDocs(query(collection(db, 'hashtags')));
+  const hashtagsSnapshot = await db.collection('hashtags').get();
   let hashtags = [];
 
   hashtagsSnapshot.forEach((hashtag) => {

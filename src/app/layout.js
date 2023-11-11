@@ -6,6 +6,9 @@ import { SITE_NAME } from './utils/constants';
 import { headers } from 'next/headers';
 import Top from './components/top';
 import Footer from './components/footer';
+import { customInitApp } from './firebase';
+
+customInitApp();
 
 export const metadata = {
   title: SITE_NAME,

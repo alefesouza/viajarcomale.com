@@ -1,8 +1,7 @@
 import useI18n from '../../hooks/use-i18n';
-import app from '../../firebase';
 import useHost from '@/app/hooks/use-host';
 import Link from 'next/link';
-import { getFirestore, getDocs, collectionGroup, query, where, orderBy } from 'firebase/firestore';
+import { getFirestore } from 'firebase-admin/firestore';
 import styles from './page.module.css';
 import { FILE_DOMAIN, FILE_DOMAIN_500, SITE_NAME } from '@/app/utils/constants';
 
@@ -36,8 +35,8 @@ export default async function Country({ params: { theHashtag }, searchParams }) 
     sort = 'desc';
   }
 
-  const db = getFirestore(app);
-  const photosSnapshot = await getDocs(query(collectionGroup(db, 'medias'), where('hashtags', 'array-contains', decodeURIComponent(hashtag)), orderBy('order', sort)));
+  const db = getFirestore();
+  const photosSnapshot = await db.collectionGroup('medias').where('hashtags', 'array-contains', decodeURIComponent(hashtag)).orderBy('order', sort).get();
 
   let photos = [];
 
@@ -62,7 +61,7 @@ export default async function Country({ params: { theHashtag }, searchParams }) 
     <div className={ styles.sort_picker }>
       <span>{i18n('Sorting')}:</span>
 
-      {[{name: 'Latest', value: 'desc'}, {name: 'Oldest', value: 'asc'}, {name: 'Random', value: 'random'}].map((o) => <Link key={o} href={ '?sort=' + o.value } scroll={false}><label><input type="radio" name={'sort-' + type } value={o.value} checked={sort === o.value} readOnly prefetch={false} />{i18n(o.name)}</label></Link>)}
+      {[{name: 'Latest', value: 'desc'}, {name: 'Oldest', value: 'asc'}, {name: 'Random', value: 'random'}].map((o) => <Link key={o} href={ '?sort=' + o.value } scroll={false}><label><input type="radio" name={'sort-' + type } value={o.value} checked={sort === o.value} readOnly />{i18n(o.name)}</label></Link>)}
     </div>
   </div>);
 
