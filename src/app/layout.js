@@ -92,25 +92,25 @@ export default function RootLayout({ children }) {
           <span className="loader"></span>
         </div>
 
+        <header className="container">
+          <div id="title-bar">
+            <img src="/icons/36x36.png" srcSet="/icons/72x72.png x2" alt="Viajar com Alê Icon" width={36} height={36}></img>
+
+            <span>{SITE_NAME}</span>
+          </div>
+
+          <Autocomplete />
+
+          <Top />
+        </header>
+
         <main>
-          <div className="container" id="top">
-            <div id="title-bar">
-              <img src="/icons/36x36.png" srcSet="/icons/72x72.png x2" alt="Viajar com Alê Icon" width={36} height={36}></img>
-
-              <span>{SITE_NAME}</span>
-            </div>
-
-            <Autocomplete />
-
-            <Top />
-          </div>
-
           {children}
-
-          <div className="container">
-            <Footer />
-          </div>
         </main>
+
+        <footer className="container">
+          <Footer />
+        </footer>
 
         <Script async src={ host('app.js') } />
 

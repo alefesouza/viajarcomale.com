@@ -57,8 +57,7 @@
   const loadingSpinner = document.querySelector('#loader-spinner');
 
   function showSpinner(e) {
-    console.log(e.metaKey)
-    if (e.metaKey) {
+    if (e?.metaKey) {
       return;
     }
 

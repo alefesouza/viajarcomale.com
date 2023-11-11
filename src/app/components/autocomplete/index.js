@@ -22,7 +22,6 @@ export default function Autocomplete() {
 
     const result = await fetch('/api/hashtags?random=true');
     const data = await result.json();
-    console.log(data)
     const randomHashtags = data.map(h => ({ label: '#' + h, value: '#' + h }))
 
     setRandomHashtags(randomHashtags);
@@ -49,6 +48,8 @@ export default function Autocomplete() {
   }
 
   const onChange = (e) => {
+    document.querySelector('#loader-spinner').style.display = 'block';
+
     router.push('/hashtags/' + e.value.replace('#', ''));
   }
 
