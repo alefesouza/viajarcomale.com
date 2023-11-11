@@ -362,3 +362,19 @@ a {
   background-color: #2096cc;
   border-color: #2096cc;
 }
+
+.autocomplete {
+  padding-top: 30px;
+  display: flex;
+  justify-content: end;
+}
+
+.autocomplete > div {
+  width: 75%;
+}
+
+@media(min-width: 644px) {
+  .autocomplete > div {
+    width: 50%;
+  }
+}

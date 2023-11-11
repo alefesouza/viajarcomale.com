@@ -7,6 +7,8 @@ import { headers } from 'next/headers';
 import Top from './components/top';
 import Footer from './components/footer';
 import { customInitApp } from './firebase';
+import Select from 'react-select'
+import Autocomplete from './components/autocomplete';
 
 customInitApp();
 
@@ -94,6 +96,8 @@ export default function RootLayout({ children }) {
 
         <main>
           <div className="container">
+            <Autocomplete />
+
             <Top />
           </div>
 
