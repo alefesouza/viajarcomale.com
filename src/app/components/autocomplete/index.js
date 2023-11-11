@@ -3,7 +3,7 @@
 import Select from 'react-select';
 import useI18nClient from '@/app/hooks/use-i18n-client';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function Autocomplete() {
   const router = useRouter()
@@ -16,6 +16,7 @@ export default function Autocomplete() {
   const [currentHashtags, setCurrentHashtags] = useState([]);
   const [text, setText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [customStyle, setCustomStyles] = useState({});
 
   const getRandomHashtags = async () => {
     setIsLoading(true);
@@ -75,7 +76,48 @@ export default function Autocomplete() {
     }
   }
 
+  useEffect(() => {
+    if (!navigator.windowControlsOverlay) {
+      return;
+    }
+
+    const theCustomStyles = {
+      control: base => ({
+        ...base,
+        height: 35,
+        minHeight: 35
+      })
+    };
+
+    const isOverlayVisible = navigator.windowControlsOverlay.visible;
+
+    if (isOverlayVisible) {
+      setCustomStyles(theCustomStyles);
+    }
+
+    const geometrychange = () => {
+      const isOverlayVisible = navigator.windowControlsOverlay.visible;
+  
+      if (isOverlayVisible) {
+        setCustomStyles(theCustomStyles);
+        return;
+      }
+
+      setCustomStyles({});
+    };
+
+    navigator.windowControlsOverlay.addEventListener('geometrychange', geometrychange);
+
+    return () => {
+      if (!navigator.windowControlsOverlay) {
+        return;
+      }
+      
+      navigator.windowControlsOverlay.removeEventListener('geometrychange', geometrychange);
+    }
+  }, []);
+
   return <div className="autocomplete">
-    <Select options={allOptions} placeholder={ i18n('Hashtag Search') } onInputChange={onInputChange} onChange={onChange} onFocus={onFocus} isLoading={isLoading} />
+    <Select options={allOptions} placeholder={ i18n('Hashtag Search') } onInputChange={onInputChange} onChange={onChange} onFocus={onFocus} isLoading={isLoading} styles={customStyle} />
   </div>
 }
