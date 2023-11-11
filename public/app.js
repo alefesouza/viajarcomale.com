@@ -65,7 +65,7 @@
   }
 
   function setupLinks() {
-    const routeLinks = [...document.querySelectorAll('a')].filter(l => l.href.includes(window.location.origin + '/') && !l.href.includes(window.location.origin + '/#'));
+    const routeLinks = [...document.querySelectorAll('a')].filter(l => l.href.includes(window.location.origin + '/') && !l.href.includes(window.location.origin + '/#') && l.href !== window.location.href);
 
     routeLinks.forEach((a) => {
       a.removeEventListener('click', showSpinner);

@@ -58,6 +58,10 @@ export default function Autocomplete() {
   }
 
   const onChange = (e) => {
+    if (window.location.pathname === '/hashtags/' + e.value.replace('#', '')) {
+      return;
+    }
+
     document.querySelector('#loader-spinner').style.display = 'block';
 
     router.push('/hashtags/' + e.value.replace('#', ''));
