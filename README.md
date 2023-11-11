@@ -7,3 +7,5 @@ This repository contains the code for my travel account Viajar com Alê website 
 * Offline access
 
 The website is built using Next.js and hosted on Firebase Hosting with full SSR support using Firestore and Firebase Cloud Storage, the Portuguese version (same project with domain comparison) is hosted on [https://viajarcomale.com.br](https://viajarcomale.com.br).
+
+![Web App Screenshot](./webapp.png)
