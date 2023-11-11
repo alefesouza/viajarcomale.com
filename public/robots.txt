@@ -1,2 +1,3 @@
 Disallow: /*?*sort=
 Disallow: /*?*shuffle=
+Disallow: /*?*indexes=

@@ -113,16 +113,20 @@ export default async function Country({ params: { slug }, searchParams }) {
 
   const totalPhotos = city ? cityData[city]?.totals?.instagram_photos : countryData?.totals?.instagram_photos;
   const paginationStart = sort === 'asc' ? ((page - 1) * ITEMS_PER_PAGE) : totalPhotos  - ((page - 1) * ITEMS_PER_PAGE);
-
-  let shuffle = parseFloat( searchParams.shuffle );
   
   if (isRandom) {
     sort = 'desc';
-    let shuffle = parseFloat( searchParams.shuffle );
-    shuffle = isNaN(shuffle) ? Math.random() : shuffle;
     
-    const array = Array.from(Array(totalPhotos).keys());
-    randomArray = arrayShuffle(array, shuffle).slice(0, ITEMS_PER_PAGE);
+    if (searchParams.indexes) {
+      randomArray = searchParams.indexes.split(',').map(i => parseInt(i));
+      
+      if (randomArray.length > 20) {
+        randomArray = [0];
+      }
+    } else {
+      const array = Array.from(Array(totalPhotos).keys());
+      randomArray = arrayShuffle(array).slice(0, ITEMS_PER_PAGE);
+    }
   }
 
   if (city) {
@@ -178,6 +182,8 @@ export default async function Country({ params: { slug }, searchParams }) {
     }
   });
 
+  const index = city ? 'city_index' : 'country_index';
+
   if (isRandom) {
     instagramHighLights = instagramHighLights.map(value => ({ value, sort: Math.random() }))
       .sort((a, b) => a.sort - b.sort)
@@ -185,7 +191,6 @@ export default async function Country({ params: { slug }, searchParams }) {
     shortVideos = shortVideos.map(value => ({ value, sort: Math.random() }))
       .sort((a, b) => a.sort - b.sort)
       .map(({ value }) => value);
-    const index = city ? 'city_index' : 'country_index';
     instagramPhotos = instagramPhotos.sort((a, b) => randomArray.indexOf(a[index]) - randomArray.indexOf(b[index]));
     sort = 'random';
   }
@@ -323,7 +328,7 @@ export default async function Country({ params: { slug }, searchParams }) {
         <div className={ styles.instagram_photos }>
           <div className={ styles.instagram_photos_title }>
             <h4>{i18n('Instagram Photos')}</h4>
-            <Link href={ `/countries/${country}${city ? '/cities/' + city : ''}${page ? '/page/' + page : ''}${!expandGalleries ? '/expand' : ''}` + (sort !== 'desc' ? '?sort=' + sort : '') + (sort === 'random' && !isNaN(shuffle) ? '&shuffle=' + shuffle : '')} scroll={false} prefetch={false}>{expandGalleries ? i18n('Minimize Galleries') : i18n('Expand Galleries')}</Link>
+            <Link href={ `/countries/${country}${city ? '/cities/' + city : ''}${page ? '/page/' + page : ''}${!expandGalleries ? '/expand' : ''}` + (sort !== 'desc' ? '?sort=' + sort : '') + (sort === 'random' ? '&indexes=' + instagramPhotos.filter(p => !p.file_type).map(p => p[index]).join(',') : '')} scroll={false} prefetch={false}>{expandGalleries ? i18n('Minimize Galleries') : i18n('Expand Galleries')}</Link>
           </div>
 
           {!isRandom && pageNumber > 1 && <Pagination base={paginationBase} currentPage={Number(page) || 1} pageNumber={pageNumber} total={totalPhotos} textPosition="bottom" />}

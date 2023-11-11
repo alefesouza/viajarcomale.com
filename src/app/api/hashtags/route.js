@@ -12,22 +12,26 @@ export async function GET(req) {
 
   const db = getFirestore();
 
-  const hashtags = [];
+  let hashtags = [];
 
   if (random) {
     const totalHashtags = 521;
 
     const array = Array.from(Array(totalHashtags).keys());
-    const randomArray = arrayShuffle(array, Math.random()).slice(0, ITEMS_PER_PAGE);
+    const randomArray = arrayShuffle(array).slice(0, ITEMS_PER_PAGE);
 
     const snapshot = await db.collection('hashtags').where('index', 'in', randomArray).get();
     
     snapshot.forEach((item) => {
       const data = item.data();
-      hashtags.push(data.name);
+      hashtags.push({
+        name: data.name,
+        index: data.index,
+      });
     });
 
     hashtags.sort((a, b) => randomArray.indexOf(a.index) - randomArray.indexOf(b.index));
+    hashtags = hashtags.map(h => h.name);
   }
 
   if (text && text.length >= 3) {
