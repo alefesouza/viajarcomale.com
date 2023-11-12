@@ -8,20 +8,17 @@ export async function GET() {
   const allHashtagsRef = await db.collection('all_hashtags').doc('all_hashtags').get();
   const allHashtags = allHashtagsRef.data();
   let hashtags = [];
-
-  if (allHashtags.should_update) {
+  
+  if (allHashtags.a_should_update) {
     const snapshot = await db.collection('hashtags').get();
 
     snapshot.forEach((item) => {
       const data = item.data();
-      hashtags.push({
-        name: data.name,
-        index: data.index,
-      });
+      hashtags.push(data.name);
     });
 
     await allHashtagsRef.ref.update({
-      should_update: false,
+      a_should_update: false,
       hashtags,
     });
   }

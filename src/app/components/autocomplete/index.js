@@ -33,7 +33,7 @@ export default function Autocomplete() {
     
     if (today === localStorage.getItem('hashtags_updated')) {
       const hashtags = JSON.parse(localStorage.getItem('hashtags'))
-        .map(h => ({ label: '#' + h.name, value: '#' + h.name }));
+        .map(h => ({ label: '#' + h, value: '#' + h }));
       setAllHashtags(hashtags);
 
       if (!randomHashtags.length) {
@@ -47,7 +47,7 @@ export default function Autocomplete() {
     const result = await fetch('/api/hashtags');
     const data = await result.text();
 
-    const hashtags = JSON.parse(data).map(h => ({ label: '#' + h.name, value: '#' + h.name }));
+    const hashtags = JSON.parse(data).map(h => ({ label: '#' + h, value: '#' + h }));
     setAllHashtags([...featuredOptions, ...hashtags]);
 
     localStorage.setItem('hashtags', data);
