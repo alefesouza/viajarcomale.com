@@ -1,6 +1,6 @@
 'use client'
 
-import Select from 'react-select';
+import Select, { components } from 'react-select';
 import useI18nClient from '@/app/hooks/use-i18n-client';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -18,6 +18,7 @@ export default function Autocomplete() {
   const [randomHashtags, setRandomHashtags] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [customStyle, setCustomStyles] = useState({});
+  const [text, setText] = useState('');
 
   const updateRandomHashtags = (hashtags) => {
     const array = Array.from(Array(hashtags.length).keys());
@@ -68,6 +69,8 @@ export default function Autocomplete() {
   }
 
   const onInputChange = (e) => {
+    setText(e);
+
     if (e.length <= 1) {
       setAllOptions([...featuredOptions, ...randomHashtags])
       return;
@@ -121,7 +124,31 @@ export default function Autocomplete() {
     }
   }, []);
 
+  const Menu = (props) => {
+    return (
+      <>
+        <components.Menu {...props}>
+          <div>
+            {props.selectProps.fetchingData ? (
+              <span className="fetching">Fetching data...</span>
+            ) : (
+              <div>{props.children}</div>
+            )}
+          </div>
+          {text.length <= 1 && <div style={{ textAlign: 'center', padding: 5 }}>
+            <button
+              className="btn btn-primary"
+              onClick={() => updateRandomHashtags(allHashtags)}
+            >
+              {i18n('Shuffle')}
+            </button>
+          </div>}
+        </components.Menu>
+      </>
+    );
+  };
+
   return <div className="autocomplete">
-    <Select options={allOptions} placeholder={ i18n('Hashtag Search') } onInputChange={onInputChange} onChange={onChange} onFocus={onFocus} isLoading={isLoading} styles={customStyle} />
+    <Select options={allOptions} placeholder={ i18n('Hashtag Search') } onInputChange={onInputChange} onChange={onChange} onFocus={onFocus} isLoading={isLoading} styles={customStyle} components={{ Menu }} />
   </div>
 }
