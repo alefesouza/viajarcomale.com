@@ -31,7 +31,7 @@ export default function Footer() {
     <VisitedCountries />
 
     <div style={{textAlign: 'center', marginBottom: 80}}>
-      <a href={ (isBR ? 'https://viajarcomale.com' : 'https://viajarcomale.com.br') + headersList.get('x-pathname') } className="language">{ isBR ? 'English' : 'Português' }</a>
+      <a href={ (isBR ? 'https://viajarcomale.com' : 'https://viajarcomale.com.br') + headersList.get('x-pathname') } className="language" id="language-switcher">{ isBR ? 'English' : 'Português' }</a>
 
       <div className="developed-by" dangerouslySetInnerHTML={{__html: i18n('Developed by AS.dev and available on GitHub')
           .replace('AS.dev', '<a href="https://as.dev" target="_blank">AS.dev</a>')

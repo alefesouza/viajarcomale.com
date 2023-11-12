@@ -57,20 +57,29 @@
   const loadingSpinner = document.querySelector('#loader-spinner');
 
   function showSpinner(e) {
-    if (e?.metaKey) {
+    const link = e?.target?.href || e?.target?.parentElement?.href;
+
+    if (e?.metaKey || !link) {
+      return;
+    }
+    
+    if (!link.includes(window.location.origin + '/') || link === window.location.origin + '/#' || link === window.location.href) {
       return;
     }
 
     loadingSpinner.style.display = 'block';
   }
 
-  function setupLinks() {
-    const routeLinks = [...document.querySelectorAll('a')].filter(l => l.href.includes(window.location.origin + '/') && !l.href.includes(window.location.origin + '/#') && l.href !== window.location.href);
+  function setupLinks(tag) {
+    const currentUrl = window.location.href;
+
+    const routeLinks = [...document.querySelectorAll(tag + ' a')];
 
     routeLinks.forEach((a) => {
-      a.removeEventListener('click', showSpinner);
       a.addEventListener('click', showSpinner);
     });
+
+    document.querySelector('#language-switcher').href = currentUrl.includes('viajarcomale.com.br') ? currentUrl.replace('viajarcomale.com.br', 'viajarcomale.com') : currentUrl.replace('viajarcomale.com', 'viajarcomale.com.br');
   }
 
   function setupScroller() {
@@ -119,7 +128,7 @@
   observer = new MutationObserver(function() {
     loadingSpinner.style.display = 'none';
 
-    setupLinks();
+    setupLinks('main');
 
     if (window.location.href.includes(countryRoutes) || window.location.href.includes(hashtagRoutes)) {
       setupScroller();
@@ -128,7 +137,7 @@
 
   observer.observe(elementToObserve, {characterData: false, childList: true, attributes: false, subtree:true});
 
-  setupLinks();
+  setupLinks('body');
   
   if (window.location.href.includes(countryRoutes) || window.location.href.includes(hashtagRoutes)) {
     setupScroller();
