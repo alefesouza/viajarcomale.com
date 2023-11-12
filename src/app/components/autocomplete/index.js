@@ -124,6 +124,14 @@ export default function Autocomplete() {
     }
   }, []);
 
+  const onShuffleClick = (e) => {
+    if (e.nativeEvent instanceof PointerEvent && e.nativeEvent.pointerType === 'touch') {
+      return;
+    }
+    
+    updateRandomHashtags(allHashtags);
+  }
+
   const Menu = (props) => {
     return (
       <>
@@ -139,7 +147,8 @@ export default function Autocomplete() {
             <button
               className="btn btn-primary"
               style={{ width: '100%' }}
-              onClick={ () => updateRandomHashtags(allHashtags) }
+              onClick={ onShuffleClick }
+              onTouchStart={ onShuffleClick }
             >
               {i18n('Shuffle')}
             </button>
