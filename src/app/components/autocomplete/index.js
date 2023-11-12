@@ -138,7 +138,8 @@ export default function Autocomplete() {
           {text.length <= 1 && <div style={{ textAlign: 'center', padding: 5 }}>
             <button
               className="btn btn-primary"
-              onClick={() => updateRandomHashtags(allHashtags)}
+              style={{ width: '100%' }}
+              onClick={ () => updateRandomHashtags(allHashtags) }
             >
               {i18n('Shuffle')}
             </button>

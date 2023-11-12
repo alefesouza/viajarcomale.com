@@ -82,7 +82,6 @@ body {
 }
 
 .list-group-item-action:focus, .list-group-item-action:hover {
-  z-index: 1;
   text-decoration: none;
   background-color: #f8f9fa;
 }
