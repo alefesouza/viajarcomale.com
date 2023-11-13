@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { getFirestore } from 'firebase-admin/firestore';
 import styles from './page.module.css';
 import { FILE_DOMAIN, FILE_DOMAIN_500, SITE_NAME } from '@/app/utils/constants';
+import Scroller from '@/app/components/scroller';
 
 export async function generateMetadata({ params: { theHashtag } }) {
   const title = '#' + decodeURIComponent(theHashtag[0]) + ' - Hashtags' + ' - ' + SITE_NAME;
@@ -67,6 +68,7 @@ export default async function Country({ params: { theHashtag }, searchParams }) 
 
   const instagramPhotos = photos.filter(p => p.type === 'instagram' || p.type === 'instagram-gallery');
   const shortVideos = photos.filter(p => p.type === 'short-video');
+  const youtubeVideos = photos.filter(p => p.type === 'youtube');
 
   return <div>
     <div className="container-fluid">
@@ -76,39 +78,11 @@ export default async function Country({ params: { theHashtag }, searchParams }) 
     <div className={ styles.galleries }>
       { shortVideos.length > 1 && sortPicker('short') }
 
-      {shortVideos.length > 0 && <div className={ styles.instagram_highlights }>
-        <div className="container-fluid">
-          <h4>{i18n('Short Videos')}</h4>
-        </div>
+      { shortVideos.length > 0 && <Scroller title="Short Videos" items={shortVideos} isShortVideos /> }
 
-        <div style={{ position: 'relative' }}>
-          <div className="scroller_left_arrow">‹</div>
+      { youtubeVideos.length > 1 && sortPicker('youtube') }
 
-          <div className="scroller_items">
-            {shortVideos.map(p => <div key={ p.id } className="scroller_item">
-              <a href={p.tiktok_link} target="_blank">
-                <img src={FILE_DOMAIN + p.file} srcSet={ `${FILE_DOMAIN_500 + p.file} 500w` } alt={isBR ? p.description_pt : p.description} loading="lazy" className={styles.vertical_content} />
-              </a>
-
-              <div className={ styles.short_video_links }>
-                {['tiktok', 'instagram', 'youtube', 'kwai'].map((item) => p[item + '_link'] && <a href={p[item + '_link']} target="_blank" key={item}>
-                  <img src={host('/logos/' + item + '.png')} alt={item + 'Video'} />
-                </a>)}
-              </div>
-
-              <div>
-                {isBR ? p.description_pt : p.description}
-              </div>
-
-              {p.hashtags && <div className={ styles.item_hashtags }>
-                Hashtags: {p.hashtags.reverse().map(h => <span key={h}><Link href={`/hashtags/${h}`} key={h} prefetch={false}>#{h}</Link> </span>)}
-              </div>}
-            </div>)}
-          </div>
-
-          <div className="scroller_right_arrow">›</div>
-        </div>
-      </div>}
+      { youtubeVideos.length > 0 && <Scroller title="YouTube Videos" items={youtubeVideos} isYouTubeVideos /> }
 
       { instagramPhotos.length > 1 && sortPicker('photos') }
 

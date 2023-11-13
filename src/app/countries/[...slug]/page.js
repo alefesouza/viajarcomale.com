@@ -8,6 +8,7 @@ import { FILE_DOMAIN, FILE_DOMAIN_500, ITEMS_PER_PAGE, SITE_NAME } from '@/app/u
 import Pagination from '@/app/components/pagination';
 import StructuredBreadcrumbs from '@/app/components/structured-breadcrumbs';
 import arrayShuffle from '@/app/utils/array-shuffle';
+import Scroller from '@/app/components/scroller';
 
 function getDataFromRoute(slug, searchParams) {
   const [country, path1, path2, path3, path4, path5] = slug;
@@ -102,6 +103,7 @@ export default async function Country({ params: { slug }, searchParams }) {
   let instagramHighLightsSnapshot = null;
   let shortVideosSnapshot = null;
   let instagramPhotosSnapshot = null;
+  let youtubeSnapshot = null;
   let isRandom = sort === 'random';
   let randomArray = [];
 
@@ -132,8 +134,9 @@ export default async function Country({ params: { slug }, searchParams }) {
   if (city) {
     instagramHighLightsSnapshot = await db.collection('countries').doc(country).collection('medias').where('city', '==', city).where('type', '==', 'instagram-highlight').orderBy('order', sort).get();
     shortVideosSnapshot = await db.collection('countries').doc(country).collection('medias').where('city', '==', city).where('type', '==', 'short-video').orderBy('order', sort).get();
+    youtubeSnapshot = await db.collection('countries').doc(country).collection('medias').where('city', '==', city).where('type', '==', 'youtube').orderBy('order', sort).get();
 
-    if (isRandom) {
+    if (isRandom && totalPhotos > 0) {
       instagramPhotosSnapshot = await db.collection('countries').doc(country).collection('medias').where('type', '==', 'instagram').where('city', '==', city).where('city_index', 'in', randomArray).get();
     } else {
       instagramPhotosSnapshot = await db.collection('countries').doc(country).collection('medias').where('type', '==', 'instagram').where('city', '==', city).orderBy('city_index', sort);
@@ -141,8 +144,9 @@ export default async function Country({ params: { slug }, searchParams }) {
   } else {
     instagramHighLightsSnapshot = await db.collection('countries').doc(country).collection('medias').where('type', '==', 'instagram-highlight').orderBy('city_location_id', sort).orderBy('order', sort).get();
     shortVideosSnapshot = await db.collection('countries').doc(country).collection('medias').where('type', '==', 'short-video').orderBy('city_location_id', sort).orderBy('order', sort).get();
+    youtubeSnapshot = await db.collection('countries').doc(country).collection('medias').where('type', '==', 'youtube').orderBy('city_location_id', sort).orderBy('order', sort).get();
 
-    if (isRandom) {
+    if (isRandom && totalPhotos > 0) {
       instagramPhotosSnapshot = await db.collection('countries').doc(country).collection('medias').where('type', '==', 'instagram').where('country_index', 'in', randomArray).get();
     } else {
       instagramPhotosSnapshot = await db.collection('countries').doc(country).collection('medias').where('type', '==', 'instagram').orderBy('country_index', sort);
@@ -161,6 +165,7 @@ export default async function Country({ params: { slug }, searchParams }) {
 
   let instagramHighLights = [];
   let shortVideos = [];
+  let youtubeVideos = [];
   let instagramPhotos = [];
 
   instagramHighLightsSnapshot.forEach((media) => {
@@ -172,15 +177,22 @@ export default async function Country({ params: { slug }, searchParams }) {
     const data = media.data();
     shortVideos = [...shortVideos, data];
   });
-  
-  instagramPhotosSnapshot.forEach((photo) => {
-    const data = photo.data();
-    instagramPhotos = [...instagramPhotos, data];
 
-    if (expandGalleries && data.gallery) {
-      instagramPhotos = [...instagramPhotos, ...data.gallery.map((g, i) => ({ ...data, ...g, img_index: i + 2 }))];
-    }
+  youtubeSnapshot.forEach((media) => {
+    const data = media.data();
+    youtubeVideos = [...youtubeVideos, data];
   });
+  
+  if (totalPhotos > 0) {
+    instagramPhotosSnapshot.forEach((photo) => {
+      const data = photo.data();
+      instagramPhotos = [...instagramPhotos, data];
+
+      if (expandGalleries && data.gallery) {
+        instagramPhotos = [...instagramPhotos, ...data.gallery.map((g, i) => ({ ...data, ...g, img_index: i + 2 }))];
+      }
+    });
+  }
 
   const index = city ? 'city_index' : 'country_index';
 
@@ -189,6 +201,9 @@ export default async function Country({ params: { slug }, searchParams }) {
       .sort((a, b) => a.sort - b.sort)
       .map(({ value }) => value);
     shortVideos = shortVideos.map(value => ({ value, sort: Math.random() }))
+      .sort((a, b) => a.sort - b.sort)
+      .map(({ value }) => value);
+    youtubeVideos = youtubeVideos.map(value => ({ value, sort: Math.random() }))
       .sort((a, b) => a.sort - b.sort)
       .map(({ value }) => value);
     instagramPhotos = instagramPhotos.sort((a, b) => randomArray.indexOf(a[index]) - randomArray.indexOf(b[index]));
@@ -262,65 +277,15 @@ export default async function Country({ params: { slug }, searchParams }) {
     { instagramHighLights.length > 1 && sortPicker('highlights') }
 
     <div className={ styles.galleries }>
-      {instagramHighLights.length > 0 && <div className={ styles.instagram_highlights }>
-        <div className="container-fluid">
-          <h4>{i18n('Instagram Highlights')}</h4>
-        </div>
-
-        <div style={{ position: 'relative' }}>
-          <div className="scroller_left_arrow">‹</div>
-
-          <div className="scroller_items">
-            {instagramHighLights.map(p => <div key={ p.id } className="scroller_item">
-              <a href={p.link} target="_blank">
-                <img src={FILE_DOMAIN + p.file} srcSet={ `${FILE_DOMAIN_500 + p.file} 500w` } alt={i18n(cityData[p.city].name)} className={styles.vertical_content} loading="lazy" />
-              </a>
-
-              <div>
-                {i18n(cityData[p.city].name)}
-              </div>
-            </div>)}
-          </div>
-
-          <div className="scroller_right_arrow">›</div>
-        </div>
-      </div>}
+      {instagramHighLights.length > 0 && <Scroller title="Instagram Highlights" items={instagramHighLights} isInstagramHighlights cityData={cityData} />}
 
       { shortVideos.length > 1 && sortPicker('short') }
 
-      {shortVideos.length > 0 && <div className={ styles.instagram_highlights }>
-        <div className="container-fluid">
-          <h4>{i18n('Short Videos')}</h4>
-        </div>
+      { shortVideos.length > 0 && <Scroller title="Short Videos" items={shortVideos} isShortVideos /> }
 
-        <div style={{ position: 'relative' }}>
-          <div className="scroller_left_arrow">‹</div>
+      { youtubeVideos.length > 1 && sortPicker('youtube') }
 
-          <div className="scroller_items">
-            {shortVideos.map(p => <div key={ p.id } className="scroller_item">
-              <a href={p.tiktok_link} target="_blank">
-                <img src={FILE_DOMAIN + p.file} srcSet={ `${FILE_DOMAIN_500 + p.file} 500w` } alt={isBR ? p.description_pt : p.description} className={styles.vertical_content} loading="lazy" />
-              </a>
-
-              <div className={ styles.short_video_links }>
-                {['tiktok', 'instagram', 'youtube', 'kwai'].map((item) => p[item + '_link'] && <a href={p[item + '_link']} target="_blank" key={item}>
-                  <img src={host('/logos/' + item + '.png')} alt={item + 'Video'} />
-                </a>)}
-              </div>
-
-              <div>
-                {isBR ? p.description_pt : p.description}
-              </div>
-
-              {p.hashtags && <div className={ styles.item_hashtags }>
-                Hashtags: {p.hashtags.reverse().map(h => <span key={h}><Link href={`/hashtags/${h}`} key={h} prefetch={false}>#{h}</Link> </span>)}
-              </div>}
-            </div>)}
-          </div>
-
-          <div className="scroller_right_arrow">›</div>
-        </div>
-      </div>}
+      { youtubeVideos.length > 0 && <Scroller title="YouTube Videos" items={youtubeVideos} isYouTubeVideos /> }
 
       { instagramPhotos.length > 1 && sortPicker('photos') }
 

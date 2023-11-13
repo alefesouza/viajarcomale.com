@@ -83,7 +83,7 @@
   }
 
   function setupScroller() {
-    const highlightVideoItems = document.querySelectorAll('.scroller_items');
+    const highlightVideoItems = document.querySelectorAll('[data-scroller]');
 
     Array.from(highlightVideoItems).forEach((scroller) => {
       const highlightScrollLeft = scroller.previousElementSibling;
