@@ -80,6 +80,12 @@
     });
 
     document.querySelector('#language-switcher').href = currentUrl.includes('viajarcomale.com.br') ? currentUrl.replace('viajarcomale.com.br', 'viajarcomale.com') : currentUrl.replace('viajarcomale.com', 'viajarcomale.com.br');
+
+    if (window.matchMedia('(display-mode: standalone)').matches || window.matchMedia('(display-mode: window-controls-overlay)').matches) {
+      document.querySelectorAll('a[target=_blank]').forEach(function(a) {
+        a.removeAttribute('target');
+     });
+    }
   }
 
   function setupScroller() {
