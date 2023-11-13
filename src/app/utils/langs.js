@@ -12,8 +12,8 @@ const langs = {
     'Select Country': 'Selecione o país',
     'All': 'Todos',
     'Sorting': 'Ordenar por',
-    'Latest': 'Mais recentes',
-    'Oldest': 'Mais antigos',
+    'Latest': 'Recentes',
+    'Oldest': 'Antigas',
     'Random': 'Aleatório',
     'Instagram Highlights': 'Destaques do Instagram',
     'Instagram Photos': 'Fotos do Instagram',
@@ -26,6 +26,7 @@ const langs = {
     'Page': 'Página',
     'Shuffle': 'Embaralhar',
     'Short Videos': 'Vídeos curtos',
+    'YouTube Videos': 'Vídeos do YouTube',
 
     // Meta
     'Travel photos and links to Viajar com Alê social networks.': 'Fotos de viagens e links para as redes sociais do Viajar com Alê.',
