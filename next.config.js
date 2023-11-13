@@ -2,6 +2,7 @@ const withPWA = require('next-pwa')({
   dest: 'public',
   sw: 'serviceworker.js',
   register: false,
+  runtimeCaching: require('./src/cache'),
 })
 
 /** @type {import('next').NextConfig} */
