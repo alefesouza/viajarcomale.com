@@ -17,7 +17,19 @@ export default function Autocomplete() {
   const [allHashtags, setAllHashtags] = useState(featuredOptions);
   const [randomHashtags, setRandomHashtags] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [customStyle, setCustomStyles] = useState({});
+  const defaultStyling = {
+    control: (base, state) => ({
+      ...base,
+      border: state.isFocused ? '1px solid #2096cc' : '',
+      boxShadow: state.isFocused ? '0px 0px 0px 1px #2096cc' : '',
+    }),
+    option: (provided, state) => ({
+      ...provided,
+      backgroundColor: state.isSelected ? '#2096cc' : 'inherit',
+      '&:hover': { backgroundColor: state.isSelected ? '#2096cc' : '#deebff' }
+    }),
+  };
+  const [customStyle, setCustomStyles] = useState(defaultStyling);
   const [text, setText] = useState('');
 
   const updateRandomHashtags = (hashtags) => {
@@ -89,11 +101,18 @@ export default function Autocomplete() {
     }
 
     const theCustomStyles = {
-      control: base => ({
+      control: (base, state) => ({
         ...base,
         height: 35,
-        minHeight: 35
-      })
+        minHeight: 35,
+        border: state.isFocused ? '1px solid #2096cc' : '',
+        boxShadow: state.isFocused ? '0px 0px 0px 1px #2096cc' : '',
+      }),
+      option: (provided, state) => ({
+        ...provided,
+        backgroundColor: state.isSelected ? '#2096cc' : 'inherit',
+        '&:hover': { backgroundColor: state.isSelected ? '#2096cc' : '#deebff' }
+      }),
     };
 
     const isOverlayVisible = navigator.windowControlsOverlay.visible;
@@ -110,7 +129,7 @@ export default function Autocomplete() {
         return;
       }
 
-      setCustomStyles({});
+      setCustomStyles(defaultStyling);
     };
 
     navigator.windowControlsOverlay.addEventListener('geometrychange', geometrychange);
@@ -137,11 +156,7 @@ export default function Autocomplete() {
       <>
         <components.Menu {...props}>
           <div>
-            {props.selectProps.fetchingData ? (
-              <span className="fetching">Fetching data...</span>
-            ) : (
-              <div>{props.children}</div>
-            )}
+            <div>{props.children}</div>
           </div>
           {text.length <= 1 && <div style={{ textAlign: 'center', padding: 5 }}>
             <button

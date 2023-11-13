@@ -34,9 +34,9 @@ export default function RootLayout({ children }) {
 
         <meta name="theme-color" content="#2096cc" />
 
-        <link rel="alternate" hrefLang="en-US" href={ 'https://viajarcomale.com' + headersList.get('x-pathname') } />
-        <link rel="alternate" hrefLang="pt-BR" href={ 'https://viajarcomale.com.br' + headersList.get('x-pathname') } />
-        <link rel="alternate" hrefLang="x-default" href={ 'https://viajarcomale.com' + headersList.get('x-pathname') } />
+        <link rel="alternate" hreflang="en-US" href={ 'https://viajarcomale.com' + headersList.get('x-pathname') } />
+        <link rel="alternate" hreflang="pt-BR" href={ 'https://viajarcomale.com.br' + headersList.get('x-pathname') } />
+        <link rel="alternate" hreflang="x-default" href={ 'https://viajarcomale.com' + headersList.get('x-pathname') } />
 
         <link rel="shortcut icon" href={ host('favicon.ico') } />
         <link rel="canonical" href={ new URL(pathname, host().includes('viajarcomale.com.br') ? 'https://viajarcomale.com.br' : 'https://viajarcomale.com').toString() } />
