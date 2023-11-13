@@ -18,12 +18,8 @@ export async function GET() {
     countries = [...countries, country.data()];
   });
 
-  const hashtagsSnapshot = await db.collection('hashtags').get();
-  let hashtags = [];
-
-  hashtagsSnapshot.forEach((hashtag) => {
-    hashtags = [...hashtags, hashtag.data()];
-  });
+  const allHashtagsRef = await db.collection('all_hashtags').doc('all_hashtags').get();
+  const hashtags = allHashtagsRef.data().hashtags;
 
   const obj = {
     '@': {
@@ -67,10 +63,10 @@ export async function GET() {
       }]),
     ])).flat(2),
     ...hashtags.flatMap(h => [{
-      loc: host('/hashtags/') + decodeURIComponent(h.name),
+      loc: host('/hashtags/') + decodeURIComponent(h),
       lastmod,
     }, {
-      loc: host('/hashtags/') + decodeURIComponent(h.name) + '/expand',
+      loc: host('/hashtags/') + decodeURIComponent(h) + '/expand',
       lastmod,
     }]),]
   };

@@ -27,7 +27,5 @@ exports.onMediaUpdated = onDocumentUpdated('/countries/{countryId}/medias/{media
     update.hashtags = newValue.hashtags.split('#').map(h => h.trim()).filter(h => h);
   }
 
-  update.updatedAt = admin.firestore.FieldValue.serverTimestamp();
-
-  return event.data.ref.update(update);
+  return event.data.after.ref.update(update);
 });
