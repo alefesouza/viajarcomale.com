@@ -87,7 +87,7 @@ export default async function Country({ params: { theHashtag }, searchParams }) 
           <div className="scroller_items">
             {shortVideos.map(p => <div key={ p.id } className="scroller_item">
               <a href={p.tiktok_link} target="_blank">
-                <img src={FILE_DOMAIN + p.file} srcSet={ `${FILE_DOMAIN_500 + p.file} 500w` } alt={isBR ? p.description_pt : p.description} className={styles.vertical_content} />
+                <img src={FILE_DOMAIN + p.file} srcSet={ `${FILE_DOMAIN_500 + p.file} 500w` } alt={isBR ? p.description_pt : p.description} loading="lazy" className={styles.vertical_content} />
               </a>
 
               <div className={ styles.short_video_links }>
@@ -122,7 +122,7 @@ export default async function Country({ params: { theHashtag }, searchParams }) 
           <div className={ styles.instagram_highlights_items }>
             {instagramPhotos.map(p => <div key={ p.file } className={ styles.gallery_item + (p.gallery && p.gallery.length && ! expandGalleries ? ' ' + styles.is_gallery : '' ) }>
               <a href={p.link + (p.img_index ? '?img_index=' + p.img_index : '')} target="_blank">
-                {p.file_type === 'video' ? <video src={FILE_DOMAIN + p.file} controls /> : <img src={FILE_DOMAIN + p.file} srcSet={ `${FILE_DOMAIN_500 + p.file} 500w` } alt={isBR ? p.description_pt : p.description} />}
+                {p.file_type === 'video' ? <video src={FILE_DOMAIN + p.file} controls /> : <img src={FILE_DOMAIN + p.file} srcSet={ `${FILE_DOMAIN_500 + p.file} 500w` } alt={isBR ? p.description_pt : p.description} loading="lazy" />}
               </a>
 
               <div className={ styles.item_description }>
