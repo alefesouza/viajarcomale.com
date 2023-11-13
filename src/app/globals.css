@@ -357,9 +357,21 @@ a {
 }
 
 .window-controls-overlay .autocomplete > div {
-  width: 30%;
+  width: 50%;
   -webkit-app-region: no-drag;
   app-region: no-drag;
+}
+
+@media(min-width: 768px) {
+  .window-controls-overlay .autocomplete > div {
+    width: 40%;
+  }
+}
+
+@media(min-width: 1024px) {
+  .window-controls-overlay .autocomplete > div {
+    width: 30%;
+  }
 }
 
 .window-controls-overlay .profile {
