@@ -8,12 +8,25 @@ import Scroller from '@/app/components/scroller';
 import { redirect } from 'next/dist/server/api-utils';
 
 export async function generateMetadata({ params: { theHashtag } }) {
-  const title = '#' + decodeURIComponent(theHashtag[0]) + ' - Hashtags' + ' - ' + SITE_NAME;
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const i18n = useI18n();
+  
+  const hashtag = decodeURIComponent(theHashtag[0]);
+  const title = '#' + hashtag + ' - Hashtags' + ' - ' + SITE_NAME;
+  const description = i18n('Photos and videos taken by Viajar com Alê with the hashtag #:hashtag:.', {
+    hashtag,
+  });
 
   return {
     title,
+    description,
     openGraph: {
       title,
+      description,
+    },
+    twitter: {
+      title,
+      description,
     },
     other: {
       title,

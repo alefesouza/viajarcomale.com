@@ -76,12 +76,22 @@ export async function generateMetadata({ params: { slug }, searchParams }) {
     theCity = countryData.cities.find(c => c.slug === city);
   }
 
-  const title = (theCity ? isBR && theCity.name_pt ? theCity.name_pt + ' - ' : theCity.name + ' - ' : '') + i18n(countryData.name) + ' - ' + i18n('Albums') + ' - ' + SITE_NAME;
+  const location = (theCity ? isBR && theCity.name_pt ? theCity.name_pt + ' - ' : theCity.name + ' - ' : '') + i18n(countryData.name);
+  const title = location + ' - ' + i18n('Albums') + ' - ' + SITE_NAME;
+  const description = i18n('Photos and videos taken by Viajar com Alê in :location:.', {
+    location
+  });
  
   return {
     title,
+    description,
     openGraph: {
       title,
+      description,
+    },
+    twitter: {
+      title,
+      description,
     },
     other: {
       title,

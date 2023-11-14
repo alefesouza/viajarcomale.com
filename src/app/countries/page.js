@@ -10,11 +10,18 @@ export async function generateMetadata() {
   const i18n = useI18n();
  
   const title = i18n('Albums') + ' - ' + SITE_NAME;
+  const description = i18n('Choose which country to Travel with Alê.');
 
   return {
     title,
+    description,
     openGraph: {
       title,
+      description,
+    },
+    twitter: {
+      title,
+      description,
     },
     other: {
       title,

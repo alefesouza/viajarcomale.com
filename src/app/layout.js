@@ -10,11 +10,28 @@ import Top from './components/top';
 import Footer from './components/footer';
 import Autocomplete from './components/autocomplete';
 
-export const metadata = {
-  title: SITE_NAME,
-  openGraph: {
-    title: SITE_NAME,
-  },
+export async function generateMetadata() {
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const i18n = useI18n();
+ 
+  const title = SITE_NAME;
+  const description = i18n('Travel photos and links to Viajar com Alê social networks.');
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+    },
+    twitter: {
+      title,
+      description,
+    },
+    other: {
+      title,
+    },
+  }
 }
 
 export default function RootLayout({ children }) {
@@ -57,12 +74,9 @@ export default function RootLayout({ children }) {
         <Script id="ld-website" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({"@context":"http://schema.org","@type":"WebSite","url":host(''),"author":"Alefe Souza","name":SITE_NAME,"alternateName":[SITE_NAME, "@ViajarComAlê", "viajarcomale", "VCA", i18n('Travel with Alefe')],"description":i18n('Travel photos and links to Viajar com Alê social networks.'),"potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":host('') + "/hashtags/{search_term_string}"},"query-input":"required name=search_term_string"}}) }}></Script>
         <Script id="ld-organization" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({"@context":"http://schema.org","@type":"Organization","url":host(''),"logo":host('/icons/512x512.png'),"email":"mailto:contato@viajarcomale.com","sameAs":["https://instagram.com/viajarcomale","https://tiktok.com/@viajarcomale","https://youtube.com/@viajarcomale","https://twitter.com/viajarcomale"]}) }}></Script>
 
-        {pathname === '/' && <meta name="title" content={SITE_NAME} />}
-        <meta name="description" content={i18n('Travel photos and links to Viajar com Alê social networks.')} />
         <meta name="image" content={ host('cover.jpg') }/>
         <meta property="og:locale" content={i18n('en_US')} />
         <meta property="og:type" content="website" />
-        <meta property="og:description" content={i18n('Travel photos and links to Viajar com Alê social networks.')} />
         <meta property="og:url" content={ host('') } />
         <meta property="og:site_name" content={SITE_NAME} />
         <meta property='article:author' content='https://www.facebook.com/viajarcomale' />
@@ -74,7 +88,6 @@ export default function RootLayout({ children }) {
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:image" content={ host('cover.jpg') }/>
         <meta name="twitter:site" content="@viajarcomale" />
-        <meta name="twitter:description" content={i18n('Travel photos and links to Viajar com Alê social networks.')} />
 
         <Script id="gtm" dangerouslySetInnerHTML={{ __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
         new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
