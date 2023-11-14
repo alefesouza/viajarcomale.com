@@ -100,7 +100,7 @@ export default async function Country({ params: { slug }, searchParams }) {
 
   let { country, city, page, sort, expandGalleries } = getDataFromRoute(slug, searchParams);
 
-  const cacheRef = `/caches/countries/countries/${country}/caches${city ? '/' + city : '/country'}/page/${page}${expandGalleries ? '/expand/expand' : ''}/sort/${sort === 'asc' ? 'asc' : 'desc'}`;
+  const cacheRef = `/caches/countries/countries/${country}/caches${city ? '/' + city : '/country'}/page/${page}$/sort/${sort === 'asc' ? 'asc' : 'desc'}`;
 
   const cache = await db.doc(cacheRef).get();
 
@@ -199,10 +199,6 @@ export default async function Country({ params: { slug }, searchParams }) {
         instagramPhotosSnapshot.forEach((photo) => {
           const data = photo.data();
           instagramPhotos = [...instagramPhotos, data];
-
-          if (expandGalleries && data.gallery) {
-            instagramPhotos = [...instagramPhotos, ...data.gallery.map((g, i) => ({ ...data, ...g, img_index: i + 2 }))];
-          }
         });
       }
     }
@@ -243,6 +239,20 @@ export default async function Country({ params: { slug }, searchParams }) {
       .map(({ value }) => value);
     instagramPhotos = instagramPhotos.sort((a, b) => randomArray.indexOf(a[index]) - randomArray.indexOf(b[index]));
     sort = 'random';
+  }
+
+  if (expandGalleries) {
+    let expandedList = [];
+
+    instagramPhotos.forEach((item) => {
+      expandedList = [...expandedList, item];
+
+      if (item.gallery && item.gallery.length) {
+        expandedList = [...expandedList, ...item.gallery.map((g, i) => ({ ...item, ...g, img_index: i + 2 }))];
+      }
+    });
+    
+    instagramPhotos = expandedList;
   }
 
   let paginationBase = null;

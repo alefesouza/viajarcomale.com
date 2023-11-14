@@ -25,12 +25,13 @@ export default async function Country({ params: { theHashtag }, searchParams }) 
   const host = useHost();
   const isBR = host().includes('viajarcomale.com.br');
 
-  const [hashtag, expand] = theHashtag;
+  const [queryHashtag, expand] = theHashtag;
+  const hashtag = decodeURIComponent(queryHashtag);
 
   const expandGalleries = expand;
   let sort = searchParams.sort && ['asc', 'desc', 'random'].includes(searchParams.sort) && searchParams.sort || 'desc';
 
-  const cacheRef = `/caches/hashtags/hashtags/${hashtag}${expandGalleries ? '/expand/expand' : ''}/sort/${sort === 'asc' ? 'asc' : 'desc'}`;
+  const cacheRef = `/caches/hashtags/hashtags/${hashtag}/sort/${sort === 'asc' ? 'asc' : 'desc'}`;
 
   const db = getFirestore();
   const cache = await db.doc(cacheRef).get();
@@ -44,7 +45,7 @@ export default async function Country({ params: { theHashtag }, searchParams }) 
   let photos = [];
 
   if (!cache.exists) {
-    const photosSnapshot = await db.collectionGroup('medias').where('hashtags', 'array-contains', decodeURIComponent(hashtag)).orderBy('order', sort).get();
+    const photosSnapshot = await db.collectionGroup('medias').where('hashtags', 'array-contains', hashtag).orderBy('order', sort).get();
 
     photosSnapshot.forEach((photo) => {
       const data = photo.data();
@@ -81,9 +82,23 @@ export default async function Country({ params: { theHashtag }, searchParams }) 
     </div>
   </div>);
 
-  const instagramPhotos = photos.filter(p => p.type === 'instagram' || p.type === 'instagram-gallery');
+  let instagramPhotos = photos.filter(p => p.type === 'instagram' || p.type === 'instagram-gallery');
   const shortVideos = photos.filter(p => p.type === 'short-video');
   const youtubeVideos = photos.filter(p => p.type === 'youtube');
+
+  if (expandGalleries) {
+    let expandedList = [];
+
+    instagramPhotos.forEach((item) => {
+      expandedList = [...expandedList, item];
+
+      if (item.gallery && item.gallery.length) {
+        expandedList = [...expandedList, ...item.gallery.map((g, i) => ({ ...item, ...g, img_index: i + 2 }))];
+      }
+    });
+    
+    instagramPhotos = expandedList;
+  }
 
   return <div>
     <div className="container-fluid">
@@ -118,9 +133,9 @@ export default async function Country({ params: { theHashtag }, searchParams }) 
                 {isBR ? p.description_pt : p.description}
               </div>
 
-              <div className={ styles.item_hashtags }>
+              {!p.file_type && <div className={ styles.item_hashtags }>
                 Hashtags: {p.hashtags.reverse().map(h => <><Link href={`/hashtags/${h}`} key={h} prefetch={false}>#{h}</Link> </>)}
-              </div>
+              </div>}
             </div>)}
           </div>
         </div>
