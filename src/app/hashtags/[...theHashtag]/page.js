@@ -106,6 +106,12 @@ export default async function Country({ params: { theHashtag }, searchParams }) 
   }
 
   return <div>
+    <div className="container">
+      <a href="#" id="history-back-button" className={ styles.history_back_button }>
+        <img src="/images/back.svg" alt="Back Button" width="30px"></img>
+      </a>
+    </div>
+    
     <div className="container-fluid">
       <h3>#{decodeURIComponent(hashtag)}</h3>
     </div>

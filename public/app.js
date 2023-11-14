@@ -70,6 +70,19 @@
     loadingSpinner.style.display = 'block';
   }
 
+  const firstPage = window.location.pathname;
+
+  function onHashtagBackClick(e) {
+    e.preventDefault();
+
+    if (window.location.pathname === firstPage) {
+      window.location.href = '/';
+      return;
+    }
+
+    history.back();
+  }
+
   function setupLinks(tag) {
     const currentUrl = window.location.href;
 
@@ -81,11 +94,20 @@
 
     document.querySelector('#language-switcher').href = currentUrl.includes('viajarcomale.com.br') ? currentUrl.replace('viajarcomale.com.br', 'viajarcomale.com') : currentUrl.replace('viajarcomale.com', 'viajarcomale.com.br');
 
+    const hashtagBackButton = document.querySelector('#history-back-button');
+
+    if (hashtagBackButton) {
+      hashtagBackButton.removeEventListener('click', onHashtagBackClick);
+      hashtagBackButton.addEventListener('click', onHashtagBackClick);
+    }
+
     if (window.matchMedia('(display-mode: standalone)').matches || window.matchMedia('(display-mode: window-controls-overlay)').matches) {
       document.querySelectorAll('a[target=_blank]').forEach(function(a) {
         a.removeAttribute('target');
      });
     }
+
+    firstAccess = false;
   }
 
   function setupScroller() {
