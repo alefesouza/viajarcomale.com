@@ -100,6 +100,10 @@ export default async function Country({ params: { slug }, searchParams }) {
 
   let { country, city, page, sort, expandGalleries } = getDataFromRoute(slug, searchParams);
 
+  const cacheRef = `/caches/countries/countries/${country}/caches${city ? '/' + city : '/country'}/page/${page}${expandGalleries ? '/expand/expand' : ''}/sort/${sort === 'asc' ? 'asc' : 'desc'}`;
+
+  const cache = await db.doc(cacheRef).get();
+
   let instagramHighLightsSnapshot = null;
   let shortVideosSnapshot = null;
   let instagramPhotosSnapshot = null;
@@ -116,82 +120,113 @@ export default async function Country({ params: { slug }, searchParams }) {
   const totalPhotos = city ? cityData[city]?.totals?.instagram_photos : countryData?.totals?.instagram_photos;
   const paginationStart = sort === 'asc' ? ((page - 1) * ITEMS_PER_PAGE) : totalPhotos  - ((page - 1) * ITEMS_PER_PAGE);
   
-  if (isRandom) {
-    sort = 'desc';
-    
-    if (searchParams.indexes) {
-      randomArray = searchParams.indexes.split(',').map(i => parseInt(i));
-      
-      if (randomArray.length > 20) {
-        randomArray = [0];
-      }
-    } else {
-      const array = Array.from(Array(totalPhotos).keys());
-      randomArray = arrayShuffle(array).slice(0, ITEMS_PER_PAGE);
-    }
-  }
-
-  if (city) {
-    instagramHighLightsSnapshot = await db.collection('countries').doc(country).collection('medias').where('city', '==', city).where('type', '==', 'instagram-highlight').orderBy('order', sort).get();
-    shortVideosSnapshot = await db.collection('countries').doc(country).collection('medias').where('city', '==', city).where('type', '==', 'short-video').orderBy('order', sort).get();
-    youtubeSnapshot = await db.collection('countries').doc(country).collection('medias').where('city', '==', city).where('type', '==', 'youtube').orderBy('order', sort).get();
-
-    if (isRandom && totalPhotos > 0) {
-      instagramPhotosSnapshot = await db.collection('countries').doc(country).collection('medias').where('type', '==', 'instagram').where('city', '==', city).where('city_index', 'in', randomArray).get();
-    } else {
-      instagramPhotosSnapshot = await db.collection('countries').doc(country).collection('medias').where('type', '==', 'instagram').where('city', '==', city).orderBy('city_index', sort);
-    }
-  } else {
-    instagramHighLightsSnapshot = await db.collection('countries').doc(country).collection('medias').where('type', '==', 'instagram-highlight').orderBy('city_location_id', sort).orderBy('order', sort).get();
-    shortVideosSnapshot = await db.collection('countries').doc(country).collection('medias').where('type', '==', 'short-video').orderBy('city_location_id', sort).orderBy('order', sort).get();
-    youtubeSnapshot = await db.collection('countries').doc(country).collection('medias').where('type', '==', 'youtube').orderBy('city_location_id', sort).orderBy('order', sort).get();
-
-    if (isRandom && totalPhotos > 0) {
-      instagramPhotosSnapshot = await db.collection('countries').doc(country).collection('medias').where('type', '==', 'instagram').where('country_index', 'in', randomArray).get();
-    } else {
-      instagramPhotosSnapshot = await db.collection('countries').doc(country).collection('medias').where('type', '==', 'instagram').orderBy('country_index', sort);
-    }
-  }
-    
-  if (!isRandom) {
-    if (sort === 'asc') {
-      instagramPhotosSnapshot = instagramPhotosSnapshot.startAt(paginationStart);
-    } else {
-      instagramPhotosSnapshot = instagramPhotosSnapshot.startAfter(paginationStart);
-    }
-    
-    instagramPhotosSnapshot = await instagramPhotosSnapshot.limit(ITEMS_PER_PAGE).get();
-  }
-
   let instagramHighLights = [];
   let shortVideos = [];
   let youtubeVideos = [];
   let instagramPhotos = [];
 
-  instagramHighLightsSnapshot.forEach((media) => {
-    const data = media.data();
-    instagramHighLights = [...instagramHighLights, data];
-  });
-
-  shortVideosSnapshot.forEach((media) => {
-    const data = media.data();
-    shortVideos = [...shortVideos, data];
-  });
-
-  youtubeSnapshot.forEach((media) => {
-    const data = media.data();
-    youtubeVideos = [...youtubeVideos, data];
-  });
-  
-  if (totalPhotos > 0) {
-    instagramPhotosSnapshot.forEach((photo) => {
-      const data = photo.data();
-      instagramPhotos = [...instagramPhotos, data];
-
-      if (expandGalleries && data.gallery) {
-        instagramPhotos = [...instagramPhotos, ...data.gallery.map((g, i) => ({ ...data, ...g, img_index: i + 2 }))];
+  if (!cache.exists || isRandom) {
+    if (isRandom) {
+      sort = 'desc';
+      
+      if (searchParams.indexes) {
+        randomArray = searchParams.indexes.split(',').map(i => parseInt(i));
+        
+        if (randomArray.length > 20) {
+          randomArray = [0];
+        }
+      } else {
+        const array = Array.from(Array(totalPhotos).keys());
+        randomArray = arrayShuffle(array).slice(0, ITEMS_PER_PAGE);
       }
-    });
+    }
+
+    if (!cache.exists) {
+      if (city) {
+        instagramHighLightsSnapshot = await db.collection('countries').doc(country).collection('medias').where('city', '==', city).where('type', '==', 'instagram-highlight').orderBy('order', sort).get();
+        shortVideosSnapshot = await db.collection('countries').doc(country).collection('medias').where('city', '==', city).where('type', '==', 'short-video').orderBy('order', sort).get();
+        youtubeSnapshot = await db.collection('countries').doc(country).collection('medias').where('city', '==', city).where('type', '==', 'youtube').orderBy('order', sort).get();
+      } else {
+        instagramHighLightsSnapshot = await db.collection('countries').doc(country).collection('medias').where('type', '==', 'instagram-highlight').orderBy('city_location_id', sort).orderBy('order', sort).get();
+        shortVideosSnapshot = await db.collection('countries').doc(country).collection('medias').where('type', '==', 'short-video').orderBy('city_location_id', sort).orderBy('order', sort).get();
+        youtubeSnapshot = await db.collection('countries').doc(country).collection('medias').where('type', '==', 'youtube').orderBy('city_location_id', sort).orderBy('order', sort).get();
+      }
+    }
+
+    if (city) {
+        if (isRandom && totalPhotos > 0) {
+        instagramPhotosSnapshot = await db.collection('countries').doc(country).collection('medias').where('type', '==', 'instagram').where('city', '==', city).where('city_index', 'in', randomArray).get();
+      } else {
+        instagramPhotosSnapshot = await db.collection('countries').doc(country).collection('medias').where('type', '==', 'instagram').where('city', '==', city).orderBy('city_index', sort);
+      }
+    } else {
+      if (isRandom && totalPhotos > 0) {
+        instagramPhotosSnapshot = await db.collection('countries').doc(country).collection('medias').where('type', '==', 'instagram').where('country_index', 'in', randomArray).get();
+      } else {
+        instagramPhotosSnapshot = await db.collection('countries').doc(country).collection('medias').where('type', '==', 'instagram').orderBy('country_index', sort);
+      }
+    }
+
+    if (!isRandom) {
+      if (sort === 'asc') {
+        instagramPhotosSnapshot = instagramPhotosSnapshot.startAt(paginationStart);
+      } else {
+        instagramPhotosSnapshot = instagramPhotosSnapshot.startAfter(paginationStart);
+      }
+      
+      instagramPhotosSnapshot = await instagramPhotosSnapshot.limit(ITEMS_PER_PAGE).get();
+    }
+
+    if (!cache.exists) {
+      instagramHighLightsSnapshot.forEach((media) => {
+        const data = media.data();
+        instagramHighLights = [...instagramHighLights, data];
+      });
+
+      shortVideosSnapshot.forEach((media) => {
+        const data = media.data();
+        shortVideos = [...shortVideos, data];
+      });
+
+      youtubeSnapshot.forEach((media) => {
+        const data = media.data();
+        youtubeVideos = [...youtubeVideos, data];
+      });
+    }
+    
+    if (!cache.exists || isRandom) {
+      if (totalPhotos > 0) {
+        instagramPhotosSnapshot.forEach((photo) => {
+          const data = photo.data();
+          instagramPhotos = [...instagramPhotos, data];
+
+          if (expandGalleries && data.gallery) {
+            instagramPhotos = [...instagramPhotos, ...data.gallery.map((g, i) => ({ ...data, ...g, img_index: i + 2 }))];
+          }
+        });
+      }
+    }
+
+    if (!isRandom && !cache.exists) {
+      db.doc(cacheRef).set({
+        instagramHighLights,
+        shortVideos,
+        youtubeVideos,
+        instagramPhotos,
+        last_update: (new Date().toISOString()).split('T')[0],
+      });
+    }
+  }
+  
+  if (cache.exists) {
+    const cacheData = cache.data();
+    instagramHighLights = cacheData.instagramHighLights;
+    shortVideos = cacheData.shortVideos;
+    youtubeVideos = cacheData.youtubeVideos;
+
+    if (!isRandom) {
+      instagramPhotos = cacheData.instagramPhotos;
+    }
   }
 
   const index = city ? 'city_index' : 'country_index';
@@ -214,8 +249,8 @@ export default async function Country({ params: { slug }, searchParams }) {
   const pageNumber = Math.ceil(totalPhotos / ITEMS_PER_PAGE);
 
   paginationBase = `/countries/${country}${city ? '/cities/' + city : ''}/page/{page}${expandGalleries ? '/expand' : ''}`;
-
   paginationBase += (sort !== 'desc' ? '?sort=' + sort : '');
+
   let currentPath = host('/countries/' + countryData.slug);
 
   const breadcrumbs = [{

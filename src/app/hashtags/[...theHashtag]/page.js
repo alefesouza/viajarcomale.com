@@ -30,26 +30,41 @@ export default async function Country({ params: { theHashtag }, searchParams }) 
   const expandGalleries = expand;
   let sort = searchParams.sort && ['asc', 'desc', 'random'].includes(searchParams.sort) && searchParams.sort || 'desc';
 
+  const cacheRef = `/caches/hashtags/hashtags/${hashtag}${expandGalleries ? '/expand/expand' : ''}/sort/${sort === 'asc' ? 'asc' : 'desc'}`;
+
+  const db = getFirestore();
+  const cache = await db.doc(cacheRef).get();
+
   let isRandom = sort === 'random';
 
   if (isRandom) {
     sort = 'desc';
   }
 
-  const db = getFirestore();
-  const photosSnapshot = await db.collectionGroup('medias').where('hashtags', 'array-contains', decodeURIComponent(hashtag)).orderBy('order', sort).get();
-
   let photos = [];
 
-  photosSnapshot.forEach((photo) => {
-    const data = photo.data();
+  if (!cache.exists) {
+    const photosSnapshot = await db.collectionGroup('medias').where('hashtags', 'array-contains', decodeURIComponent(hashtag)).orderBy('order', sort).get();
 
-    photos = [...photos, data];
+    photosSnapshot.forEach((photo) => {
+      const data = photo.data();
 
-    if (expandGalleries && data.gallery) {
-      photos = [...photos, ...data.gallery.map((g, i) => ({ ...data, ...g, img_index: i + 2 }))];
+      photos = [...photos, data];
+
+      if (expandGalleries && data.gallery) {
+        photos = [...photos, ...data.gallery.map((g, i) => ({ ...data, ...g, img_index: i + 2 }))];
+      }
+    });
+
+    if (!isRandom && !cache.exists) {
+      db.doc(cacheRef).set({
+        photos,
+        last_update: (new Date().toISOString()).split('T')[0],
+      });
     }
-  });
+  } else {
+    photos = cache.data().photos;
+  }
 
   if (isRandom) {
     photos = photos.map(value => ({ value, sort: Math.random() }))
