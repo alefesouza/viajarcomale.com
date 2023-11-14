@@ -26,7 +26,10 @@ function getDataFromRoute(slug, searchParams) {
     city = path2;
   }
 
-  const page = path1 === 'page' ? path2 : path3 === 'page' ? path4 : 1;
+  let page = path1 === 'page' ? path2 : path3 === 'page' ? path4 : 1;
+  page = parseInt(page);
+  page = isNaN(page) ? 1 : page;
+
   const expandGalleries = path1 === 'expand' || path3 === 'expand' || path5 === 'expand';
   let sort = searchParams.sort && ['asc', 'desc', 'random'].includes(searchParams.sort) && searchParams.sort || 'desc';
 
@@ -100,7 +103,7 @@ export default async function Country({ params: { slug }, searchParams }) {
 
   let { country, city, page, sort, expandGalleries } = getDataFromRoute(slug, searchParams);
 
-  const cacheRef = `/caches/countries/countries/${country}/caches${city ? '/' + city : '/country'}/page/${page}$/sort/${sort === 'asc' ? 'asc' : 'desc'}`;
+  const cacheRef = `/caches/countries/countries/${country}/caches${city ? '/' + city : '/country'}/page/${page}/sort/${sort === 'asc' ? 'asc' : 'desc'}`;
 
   const cache = await db.doc(cacheRef).get();
 

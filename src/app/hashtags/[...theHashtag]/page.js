@@ -5,6 +5,7 @@ import { getFirestore } from 'firebase-admin/firestore';
 import styles from './page.module.css';
 import { FILE_DOMAIN, FILE_DOMAIN_500, SITE_NAME } from '@/app/utils/constants';
 import Scroller from '@/app/components/scroller';
+import { redirect } from 'next/dist/server/api-utils';
 
 export async function generateMetadata({ params: { theHashtag } }) {
   const title = '#' + decodeURIComponent(theHashtag[0]) + ' - Hashtags' + ' - ' + SITE_NAME;
@@ -56,6 +57,10 @@ export default async function Country({ params: { theHashtag }, searchParams }) 
         photos = [...photos, ...data.gallery.map((g, i) => ({ ...data, ...g, img_index: i + 2 }))];
       }
     });
+
+    if (!photos.length) {
+      redirect('/');
+    }
 
     if (!isRandom && !cache.exists) {
       db.doc(cacheRef).set({
