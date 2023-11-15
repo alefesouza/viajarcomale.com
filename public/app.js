@@ -92,7 +92,9 @@
       a.addEventListener('click', showSpinner);
     });
 
-    document.querySelector('#language-switcher').href = currentUrl.includes('viajarcomale.com.br') ? currentUrl.replace('viajarcomale.com.br', 'viajarcomale.com') : currentUrl.replace('viajarcomale.com', 'viajarcomale.com.br');
+    const languageSwitcherLink = currentUrl.includes('viajarcomale.com.br') ? currentUrl.replace('viajarcomale.com.br', 'viajarcomale.com') : currentUrl.replace('viajarcomale.com', 'viajarcomale.com.br');
+    document.querySelector('#language-switcher').href = languageSwitcherLink;
+    document.querySelector('#portuguese-language-switcher').href = languageSwitcherLink;
 
     const hashtagBackButton = document.querySelector('#history-back-button');
 
@@ -188,5 +190,9 @@
 
       body.classList.remove('window-controls-overlay');
     });
+  }
+
+  if (!window.matchMedia('(display-mode: standalone)').matches && !window.matchMedia('(display-mode: window-controls-overlay)').matches && navigator.language.startsWith('pt')) {
+    document.querySelector('#portuguese-language-switcher').style.display = 'block';
   }
 })();

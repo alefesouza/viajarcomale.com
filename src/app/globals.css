@@ -180,6 +180,19 @@ a {
   border-radius: 40px;
 }
 
+#portuguese-language-switcher {   
+  position: absolute;
+  top: 89px;
+  display: none;
+}
+
+@media(min-width: 644px) {
+  #portuguese-language-switcher {   
+    position: absolute;
+    top: 37px;
+  }
+}
+
 .bottom_links {
   margin-top: 30px;
   margin-bottom: 24px;
@@ -312,7 +325,7 @@ a {
 .autocomplete {
   padding-top: 30px;
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
 }
 
 .autocomplete > div {

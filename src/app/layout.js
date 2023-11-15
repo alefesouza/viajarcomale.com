@@ -112,6 +112,10 @@ export default function RootLayout({ children }) {
             <span>{SITE_NAME}</span>
           </div>
 
+          <div id="portuguese-language-switcher">
+            <a href={ 'https://viajarcomale.com.br' + headersList.get('x-pathname') } className="language">Clique aqui para português</a>
+          </div>
+
           <Autocomplete />
 
           <Top />
