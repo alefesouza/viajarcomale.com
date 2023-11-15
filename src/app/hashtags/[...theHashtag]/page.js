@@ -136,7 +136,7 @@ export default async function Country({ params: { theHashtag }, searchParams }) 
 
       { instagramPhotos.filter(p => !p.file_type).length > 1 && sortPicker('photos') }
 
-      { instagramPhotos && <div className="container-fluid">
+      { instagramPhotos.filter(p => !p.file_type).length > 0 && <div className="container-fluid">
         <div className={ styles.instagram_photos }>
           <div className={ styles.instagram_photos_title }>
             <h3>{i18n('Instagram Photos')}</h3>

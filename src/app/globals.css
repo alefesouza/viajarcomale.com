@@ -322,6 +322,11 @@ a {
   border-color: #2096cc;
 }
 
+.btn-primary[disabled] {
+  background-color: rgba(32, 150, 204, 0.5);
+  border-color: rgba(32, 150, 204, 0.5);
+}
+
 .autocomplete {
   padding-top: 30px;
   display: flex;

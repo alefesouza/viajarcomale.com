@@ -308,7 +308,7 @@ export default async function Country({ params: { slug }, searchParams }) {
     </div>
 
     {isRandom && <div style={{ textAlign: 'center' }}>
-      <Link href={'?sort=random&shuffle=' + Math.random()} scroll={false} prefetch={false}>
+      <Link href={'?sort=random&shuffle=' + Math.random()} scroll={false} prefetch={false}className="shuffle">
         <button className="btn btn-primary">{i18n('Shuffle')}</button>
       </Link>
     </div>}
@@ -373,7 +373,7 @@ export default async function Country({ params: { slug }, searchParams }) {
           </div>
 
           {isRandom && <div style={{ textAlign: 'center', marginTop: 30 }}>
-            <Link href={'?sort=random&shuffle=' + Math.random()} scroll={false} prefetch={false}>
+            <Link href={'?sort=random&shuffle=' + Math.random()} scroll={false} prefetch={false} className="shuffle">
               <button className="btn btn-primary">{i18n('Shuffle')}</button>
             </Link>
           </div>}
