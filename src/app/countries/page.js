@@ -38,7 +38,7 @@ export default function Countries() {
       <img src={host('/images/back.svg')} alt="Back Button" width="30px"></img>
     </Link>
 
-    <h3>{i18n('Select Country')}</h3>
+    <h2>{i18n('Select Country')}</h2>
 
     <div className={styles.country_selector}>
       {countries.map(c => <Link href={`/countries/${c.slug}`} key={c.name} className={styles.country} prefetch={false}>

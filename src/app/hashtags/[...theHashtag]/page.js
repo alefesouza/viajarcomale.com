@@ -122,7 +122,7 @@ export default async function Country({ params: { theHashtag }, searchParams }) 
     </div>
     
     <div className="container-fluid">
-      <h3>#{decodeURIComponent(hashtag)}</h3>
+      <h2>#{decodeURIComponent(hashtag)}</h2>
     </div>
 
     <div className={ styles.galleries }>
@@ -139,7 +139,7 @@ export default async function Country({ params: { theHashtag }, searchParams }) 
       { instagramPhotos && <div className="container-fluid">
         <div className={ styles.instagram_photos }>
           <div className={ styles.instagram_photos_title }>
-            <h4>{i18n('Instagram Photos')}</h4>
+            <h3>{i18n('Instagram Photos')}</h3>
             { !expandGalleries ? <Link href={ `/hashtags/${hashtag}/expand` + (sort !== 'desc' ? '?sort=' + sort : '')} scroll={false} prefetch={false}>{i18n('Expand Galleries')}</Link> : <Link href={ `/hashtags/${hashtag}` + (sort !== 'desc' ? '?sort=' + sort : '')} scroll={false} prefetch={false}>{i18n('Minimize Galleries')}</Link> }
           </div>
           

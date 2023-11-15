@@ -11,7 +11,7 @@ export default function Scroller({ title, items, isShortVideos, isInstagramHighl
 
   return (<div>
     <div className="container-fluid">
-      <h4>{i18n(title)}</h4>
+      <h3>{i18n(title)}</h3>
     </div>
 
     <div style={{ position: 'relative' }}>
