@@ -90,7 +90,7 @@ export default function RootLayout({ children }) {
         <meta name="twitter:image" content={ host('cover.jpg') }/>
         <meta name="twitter:site" content="@viajarcomale" />
 
-        { isBR ? <meta name="facebook-domain-verification" content={process.env.NEXT_NEXT_FACEBOOK_DOMAIN_VERIFICATION_BR} /> : <meta name="facebook-domain-verification" content={process.env.NEXT_NEXT_FACEBOOK_DOMAIN_VERIFICATION} /> }
+        { isBR ? <meta name="facebook-domain-verification" content={process.env.NEXT_FACEBOOK_DOMAIN_VERIFICATION_BR} /> : <meta name="facebook-domain-verification" content={process.env.NEXT_FACEBOOK_DOMAIN_VERIFICATION} /> }
 
         <Script id="gtm" dangerouslySetInnerHTML={{ __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
         new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
