@@ -94,7 +94,7 @@
 
     const languageSwitcherLink = currentUrl.includes('viajarcomale.com.br') ? currentUrl.replace('viajarcomale.com.br', 'viajarcomale.com') : currentUrl.replace('viajarcomale.com', 'viajarcomale.com.br');
     document.querySelector('#language-switcher').href = languageSwitcherLink;
-    document.querySelector('#portuguese-language-switcher').href = languageSwitcherLink;
+    document.querySelector('#portuguese-language-switcher a').href = languageSwitcherLink;
 
     const hashtagBackButton = document.querySelector('#history-back-button');
 
