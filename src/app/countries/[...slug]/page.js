@@ -345,7 +345,7 @@ export default async function Country({ params: { slug }, searchParams }) {
 
       { youtubeVideos.length > 0 && <Scroller title="YouTube Videos" items={youtubeVideos} isYouTubeVideos /> }
 
-      { instagramPhotos.length > 1 && sortPicker('photos') }
+      { instagramPhotos.filter(p => !p.file_type).length > 1 && sortPicker('photos') }
 
       { instagramPhotos.length > 0 && <div className="container-fluid">
         <div className={ styles.instagram_photos }>

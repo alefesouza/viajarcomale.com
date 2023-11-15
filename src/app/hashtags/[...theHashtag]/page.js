@@ -65,10 +65,6 @@ export default async function Country({ params: { theHashtag }, searchParams }) 
       const data = photo.data();
 
       photos = [...photos, data];
-
-      if (expandGalleries && data.gallery) {
-        photos = [...photos, ...data.gallery.map((g, i) => ({ ...data, ...g, img_index: i + 2 }))];
-      }
     });
 
     if (!photos.length) {
@@ -138,9 +134,9 @@ export default async function Country({ params: { theHashtag }, searchParams }) 
 
       { youtubeVideos.length > 0 && <Scroller title="YouTube Videos" items={youtubeVideos} isYouTubeVideos /> }
 
-      { instagramPhotos.length > 1 && sortPicker('photos') }
+      { instagramPhotos.filter(p => !p.file_type).length > 1 && sortPicker('photos') }
 
-      { instagramPhotos.length > 0 && <div className="container-fluid">
+      { instagramPhotos && <div className="container-fluid">
         <div className={ styles.instagram_photos }>
           <div className={ styles.instagram_photos_title }>
             <h4>{i18n('Instagram Photos')}</h4>

@@ -3,7 +3,7 @@
 import Select, { components } from 'react-select';
 import useI18nClient from '@/app/hooks/use-i18n-client';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useId } from 'react';
 import arrayShuffle from '@/app/utils/array-shuffle';
 import { ITEMS_PER_PAGE } from '@/app/utils/constants';
 
@@ -174,6 +174,6 @@ export default function Autocomplete() {
   };
 
   return <div className="autocomplete">
-    <Select options={allOptions} placeholder={ i18n('Hashtag Search') } onInputChange={onInputChange} onChange={onChange} onFocus={onFocus} isLoading={isLoading} styles={customStyle} components={{ Menu }} />
+    <Select options={allOptions} placeholder={ i18n('Hashtag Search') } onInputChange={onInputChange} onChange={onChange} onFocus={onFocus} isLoading={isLoading} styles={customStyle} components={{ Menu }} instanceId={useId()} />
   </div>
 }
