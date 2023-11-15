@@ -37,6 +37,7 @@ export async function generateMetadata() {
 export default function RootLayout({ children }) {
   const host = useHost();
   const i18n = useI18n();
+  const isBR = host().includes('viajarcomale.com.br');
   const headersList = headers();
   const pathname = headersList.get('x-pathname');
 
@@ -88,6 +89,8 @@ export default function RootLayout({ children }) {
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:image" content={ host('cover.jpg') }/>
         <meta name="twitter:site" content="@viajarcomale" />
+
+        { isBR ? <meta name="facebook-domain-verification" content={process.env.NEXT_NEXT_FACEBOOK_DOMAIN_VERIFICATION_BR} /> : <meta name="facebook-domain-verification" content={process.env.NEXT_NEXT_FACEBOOK_DOMAIN_VERIFICATION} /> }
 
         <Script id="gtm" dangerouslySetInnerHTML={{ __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
         new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
