@@ -23,7 +23,20 @@ const nextConfig =  withPWA({
         pathname: '/**',
       },
     ],
-  }
+  },
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=86400',
+          },
+        ],
+      },
+    ];
+  },
 });
 
 module.exports = nextConfig
