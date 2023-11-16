@@ -103,8 +103,8 @@ export default function Autocomplete() {
     const theCustomStyles = {
       control: (base, state) => ({
         ...base,
-        height: 35,
-        minHeight: 35,
+        height: 34,
+        minHeight: 34,
         border: state.isFocused ? '1px solid #2096cc' : '',
         boxShadow: state.isFocused ? '0px 0px 0px 1px #2096cc' : '',
       }),

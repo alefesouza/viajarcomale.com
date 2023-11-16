@@ -83,8 +83,42 @@
     history.back();
   }
 
+  let shuffleClicks = 0;
+
+  const today = new Date().toISOString().split('T')[0];
+  let totalShuffleClicksToday = localStorage.getItem('total_shuffle_clicks_today');
+  let totalShuffleClicksTodayDate = localStorage.getItem('total_shuffle_clicks_today_date');
+
+  if (totalShuffleClicksToday >= 25) {
+    [...document.querySelectorAll('.shuffle')].forEach((item) => {
+      item.style.display = 'none';
+    });
+  }
+
   function onShuffleClick() {
-    let count = 20;
+    if (totalShuffleClicksTodayDate !== today) {
+      localStorage.setItem('total_shuffle_clicks_today_date', today);
+      localStorage.setItem('total_shuffle_clicks_today', '0');
+      totalShuffleClicksTodayDate = today;
+      totalShuffleClicksToday = 0;
+    }
+
+    shuffleClicks++;
+
+    if (shuffleClicks >= 5 || totalShuffleClicksToday >= 25) {
+      [...document.querySelectorAll('.shuffle')].forEach((item) => {
+        item.style.display = 'none';
+      });
+    }
+
+    if (!totalShuffleClicksToday) {
+      localStorage.setItem('total_shuffle_clicks_today', '1');
+      totalShuffleClicksToday = 1;
+    } else {
+      localStorage.setItem('total_shuffle_clicks_today', ++totalShuffleClicksToday);
+    }
+
+    let count = 3;
     const initialText = this.textContent;
 
     [...document.querySelectorAll('.shuffle button')].forEach((item) => {
@@ -96,9 +130,9 @@
 
     const internal = setInterval(() => {
       [...document.querySelectorAll('.shuffle button')].forEach((item) => {
+        item.disabled = true;
         item.textContent = count;
       });
-      count--;
 
       if (count == 0) {
         [...document.querySelectorAll('.shuffle button')].forEach((item) => {
@@ -108,6 +142,8 @@
     
         clearInterval(internal);
       }
+      
+      count--;
     }, 1000);
   }
 
