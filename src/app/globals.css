@@ -365,7 +365,7 @@ a {
 
 .window-controls-overlay .autocomplete {
   position: fixed;
-  padding-top: 1px;
+  padding-top: 2px;
   padding-right: 2px;
   left: env(titlebar-area-x, 0);
   top: env(titlebar-area-y, 0);
