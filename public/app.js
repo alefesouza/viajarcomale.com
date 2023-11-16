@@ -118,7 +118,7 @@
       localStorage.setItem('total_shuffle_clicks_today', ++totalShuffleClicksToday);
     }
 
-    let count = 3;
+    let count = 30;
     const initialText = this.textContent;
 
     [...document.querySelectorAll('.shuffle button')].forEach((item) => {
