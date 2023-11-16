@@ -1,6 +1,6 @@
 import {parse} from 'js2xmlparser';
 import useHost from '../hooks/use-host';
-import { getFirestore } from 'firebase-admin/firestore';
+import { getFirestore, FieldValue } from 'firebase-admin/firestore';
 import { ITEMS_PER_PAGE } from '../utils/constants';
 import { customInitApp } from '../firebase';
 
@@ -70,6 +70,10 @@ export async function GET() {
       lastmod,
     }]),]
   };
+
+  db.collection('accesses').doc('accesses').set({
+    [host('/sitemap.xml')]: FieldValue.increment(1),
+  }, {merge:true});
 
   return new Response(parse('urlset', obj, { declaration: { encoding: 'UTF-8' } }), {
     headers: { 'Content-Type': 'application/xml' },

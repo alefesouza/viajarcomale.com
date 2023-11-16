@@ -1,7 +1,7 @@
 import useI18n from '../../hooks/use-i18n';
 import useHost from '@/app/hooks/use-host';
 import Link from 'next/link';
-import { getFirestore } from 'firebase-admin/firestore';
+import { getFirestore, FieldValue } from 'firebase-admin/firestore';
 import styles from './page.module.css';
 import { FILE_DOMAIN, FILE_DOMAIN_500, SITE_NAME } from '@/app/utils/constants';
 import Scroller from '@/app/components/scroller';
@@ -87,6 +87,10 @@ export default async function Country({ params: { theHashtag }, searchParams }) 
       .map(({ value }) => value);
       sort = 'random';
   }
+
+  db.collection('accesses').doc('accesses').set({
+    [host('/hashtags/') + hashtag + ('?sort=' + sort)]: FieldValue.increment(1),
+  }, {merge:true});
 
   const sortPicker = (type) => (<div className="container-fluid">
     <div className={ styles.sort_picker }>

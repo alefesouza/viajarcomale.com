@@ -1,9 +1,11 @@
-import { getFirestore } from 'firebase-admin/firestore';
+import { getFirestore, FieldValue } from 'firebase-admin/firestore';
 import { customInitApp } from '@/app/firebase';
+import useHost from '@/app/hooks/use-host';
 
 customInitApp();
 
 export async function GET() {
+  const host = useHost();
   const db = getFirestore();
   const allHashtagsRef = await db.collection('all_hashtags').doc('all_hashtags').get();
   const allHashtags = allHashtagsRef.data();
@@ -26,6 +28,10 @@ export async function GET() {
   if (hashtags.length === 0) {
     hashtags = allHashtags.hashtags;
   }
+
+  db.collection('accesses').doc('accesses').set({
+    [host('/api/hashtags')]: FieldValue.increment(1),
+  }, {merge:true});
 
   return new Response(JSON.stringify(hashtags), {
     headers: { 'Content-Type': 'application/json' },

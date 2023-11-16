@@ -2,7 +2,7 @@ import useI18n from '../../hooks/use-i18n';
 import { redirect } from 'next/navigation';
 import useHost from '@/app/hooks/use-host';
 import Link from 'next/link';
-import { getFirestore } from 'firebase-admin/firestore';
+import { getFirestore, FieldValue } from 'firebase-admin/firestore';
 import styles from '../page.module.css';
 import { FILE_DOMAIN, FILE_DOMAIN_500, ITEMS_PER_PAGE, SITE_NAME } from '@/app/utils/constants';
 import Pagination from '@/app/components/pagination';
@@ -81,7 +81,7 @@ export async function generateMetadata({ params: { slug }, searchParams }) {
   const description = i18n('Photos and videos taken by Viajar com Alê in :location:.', {
     location
   });
- 
+
   return {
     title,
     description,
@@ -299,6 +299,10 @@ export default async function Country({ params: { slug }, searchParams }) {
 
     breadcrumbs.push({ name: i18n('Expand Galleries'), item: currentPath, });
   }
+
+  db.collection('accesses').doc('accesses').set({
+    [currentPath + ('?sort=' + sort)]: FieldValue.increment(1),
+  }, {merge: true});
 
   const sortPicker = (type) => (<div className="container-fluid">
       <div className={ styles.sort_picker }>
