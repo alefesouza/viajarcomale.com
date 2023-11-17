@@ -124,6 +124,7 @@ export default function Autocomplete() {
       indicatorsContainer: (provided) => ({
         ...provided,
         marginTop: -3,
+        padding: '0 8px'
       }),
     };
 
