@@ -374,6 +374,10 @@ a {
   z-index: 3;
 }
 
+.window-controls-overlay .autocomplete [class$=indicatorContainer] {
+  padding: 0 8px;
+}
+
 .window-controls-overlay #title-bar img {
   max-height: calc(env(titlebar-area-height, 38px) - 2px);
   max-width: calc(env(titlebar-area-height, 38px) - 2px);
