@@ -27,7 +27,7 @@ const langs = {
     'Shuffle': 'Embaralhar',
     'Short Videos': 'Vídeos curtos',
     'YouTube Videos': 'Vídeos do YouTube',
-    'Choose which country to Travel with Alê.': 'Escolha qual país para Viajar com Alê.',
+    'Choose which country to travel with me.': 'Escolha qual país para Viajar com Alê.',
     'Photos and videos taken by Viajar com Alê in :location:.': 'Fotos e vídeos tirados por Viajar com Alê em :location:.',
     'Photos and videos taken by Viajar com Alê with the hashtag #:hashtag:.': 'Fotos e vídeos tirados por Viajar com Alê com a hashtag #:hashtag:.',
 
