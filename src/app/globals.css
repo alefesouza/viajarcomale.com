@@ -374,6 +374,11 @@ a {
   z-index: 3;
 }
 
+.window-controls-overlay #title-bar img {
+  max-height: calc(env(titlebar-area-height, 38px) - 2px);
+  max-width: calc(env(titlebar-area-height, 38px) - 2px);
+}
+
 .window-controls-overlay .autocomplete > div {
   width: 50%;
   -webkit-app-region: no-drag;

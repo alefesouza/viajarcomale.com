@@ -103,8 +103,8 @@ export default function Autocomplete() {
     const theCustomStyles = {
       control: (base, state) => ({
         ...base,
-        height: 34,
-        minHeight: 34,
+        height: 'calc(env(titlebar-area-height, 34px) - 4px)',
+        minHeight: 'calc(env(titlebar-area-height, 34px) - 4px)',
         border: state.isFocused ? '1px solid #2096cc' : '',
         boxShadow: state.isFocused ? '0px 0px 0px 1px #2096cc' : '',
       }),
@@ -112,6 +112,10 @@ export default function Autocomplete() {
         ...provided,
         backgroundColor: state.isSelected ? '#2096cc' : 'inherit',
         '&:hover': { backgroundColor: state.isSelected ? '#2096cc' : '#deebff' }
+      }),
+      valueContainer: (provided) => ({
+        ...provided,
+        marginTop: 'calc(env(titlebar-area-height, 34px) - 42px)',
       }),
     };
 
