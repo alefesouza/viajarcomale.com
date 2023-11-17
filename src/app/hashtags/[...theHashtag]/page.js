@@ -58,7 +58,7 @@ export default async function Country({ params: { theHashtag }, searchParams }) 
 
   let photos = [];
 
-  if (!cache.exists) {
+  // if (!cache.exists) {
     const photosSnapshot = await db.collectionGroup('medias').where('hashtags', 'array-contains', hashtag).orderBy('order', sort).get();
 
     photosSnapshot.forEach((photo) => {
@@ -77,9 +77,9 @@ export default async function Country({ params: { theHashtag }, searchParams }) 
         last_update: (new Date().toISOString()).split('T')[0],
       });
     }
-  } else {
-    photos = cache.data().photos;
-  }
+  // } else {
+  //   photos = cache.data().photos;
+  // }
 
   if (isRandom) {
     photos = photos.map(value => ({ value, sort: Math.random() }))
@@ -104,19 +104,30 @@ export default async function Country({ params: { theHashtag }, searchParams }) 
   const shortVideos = photos.filter(p => p.type === 'short-video');
   const youtubeVideos = photos.filter(p => p.type === 'youtube');
 
-  if (expandGalleries) {
-    let expandedList = [];
+  let expandedList = [];
 
-    instagramPhotos.forEach((item) => {
-      expandedList = [...expandedList, item];
+  instagramPhotos.forEach((item) => {
+    expandedList = [...expandedList, item];
 
-      if (item.gallery && item.gallery.length) {
-        expandedList = [...expandedList, ...item.gallery.map((g, i) => ({ ...item, ...g, img_index: i + 2 }))];
+    if (item.gallery && item.gallery.length) {
+      const gallery = item.gallery.map((g, i) => ({ ...item, ...g, img_index: i + 2 }));
+      const itemWithHashtag = gallery.findIndex(g => g.item_hashtags && g.item_hashtags.includes(hashtag));
+
+      if (itemWithHashtag > -1) {
+        delete gallery[itemWithHashtag].file_type;
+        expandedList[expandedList.length - 1] = gallery[itemWithHashtag];
+
+        item.file_type = 'image';
+        gallery[itemWithHashtag] = item;
       }
-    });
-    
-    instagramPhotos = expandedList;
-  }
+
+      if (expandGalleries) {
+        expandedList = [...expandedList, ...gallery];
+      }
+    }
+  });
+  
+  instagramPhotos = expandedList;
 
   return <div>
     <div className="container">
