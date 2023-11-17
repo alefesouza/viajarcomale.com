@@ -115,7 +115,15 @@ export default function Autocomplete() {
       }),
       valueContainer: (provided) => ({
         ...provided,
-        marginTop: 'calc(env(titlebar-area-height, 34px) - 42px)',
+        marginTop: 'calc(env(titlebar-area-height, 34px) - 39px)',
+      }),
+      indicatorsSeparator: (provided) => ({
+        ...provided,
+        marginTop: 2,
+      }),
+      indicatorsContainer: (provided) => ({
+        ...provided,
+        marginTop: -3,
       }),
     };
 
