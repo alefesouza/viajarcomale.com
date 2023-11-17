@@ -9,6 +9,7 @@ import Pagination from '@/app/components/pagination';
 import StructuredBreadcrumbs from '@/app/components/structured-breadcrumbs';
 import arrayShuffle from '@/app/utils/array-shuffle';
 import Scroller from '@/app/components/scroller';
+import randomIntFromInterval from '@/app/utils/random-int';
 
 function getDataFromRoute(slug, searchParams) {
   const [country, path1, path2, path3, path4, path5] = slug;
@@ -103,6 +104,18 @@ export default async function Country({ params: { slug }, searchParams }) {
   const i18n = useI18n();
   const host = useHost();
   const isBR = host().includes('viajarcomale.com.br');
+
+  if (searchParams.shuffle) {
+    const theShuffle = searchParams.shuffle;
+
+    if (theShuffle < 1 || theShuffle > 15) {
+      redirect('/');
+    }
+  }
+
+  if (searchParams.sort == 'random' && !searchParams.shuffle) {
+    redirect('/');
+  }
   
   const db = getFirestore();
   const countryData = await getCountry(db, slug, searchParams);
@@ -304,15 +317,21 @@ export default async function Country({ params: { slug }, searchParams }) {
     [currentPath + ('?sort=' + sort)]: FieldValue.increment(1),
   }, {merge: true});
 
+  let newShuffle = randomIntFromInterval(1, 15);
+
+  if (newShuffle == searchParams.shuffle) {
+    newShuffle = randomIntFromInterval(1, 15);
+  }
+
   const sortPicker = (type) => (<div className="container-fluid">
       <div className={ styles.sort_picker }>
       <span>{i18n('Sorting')}:</span>
 
-      {[{name: 'Latest', value: 'desc'}, {name: 'Oldest', value: 'asc'}, {name: 'Random', value: 'random'}].map((o) => <Link key={o.value} href={ o.value === 'random' ? paginationBase.split('?')[0].replace('/page/{page}', '') + '?sort=random' : '?sort=' + o.value } scroll={false} prefetch={false}><label><input type="radio" name={'sort-' + type } value={o.value} checked={sort === o.value} readOnly />{i18n(o.name)}</label></Link>)}
+      {[{name: 'Latest', value: 'desc'}, {name: 'Oldest', value: 'asc'}, {name: 'Random', value: 'random'}].map((o) => <Link key={o.value} href={ o.value === 'random' ? sort === 'random' ? '/' : paginationBase.split('?')[0].replace('/page/{page}', '') + '?sort=random&shuffle=' + newShuffle : '?sort=' + o.value } scroll={false} prefetch={false}><label><input type="radio" name={'sort-' + type } value={o.value} checked={sort === o.value} readOnly />{i18n(o.name)}</label></Link>)}
     </div>
 
     {isRandom && <div style={{ textAlign: 'center', marginTop: 18 }}>
-      <Link href={'?sort=random&shuffle=' + Math.random()} scroll={false} prefetch={false} className="shuffle">
+      <Link href={'?sort=random&shuffle=' + newShuffle} scroll={false} prefetch={false} className="shuffle">
         <button className="btn btn-primary">{i18n('Shuffle')}</button>
       </Link>
     </div>}
@@ -377,7 +396,7 @@ export default async function Country({ params: { slug }, searchParams }) {
           </div>
 
           {isRandom && <div style={{ textAlign: 'center', marginTop: 30 }}>
-            <Link href={'?sort=random&shuffle=' + Math.random()} scroll={false} prefetch={false} className="shuffle">
+            <Link href={'?sort=random&shuffle=' + newShuffle} scroll={false} prefetch={false} className="shuffle">
               <button className="btn btn-primary">{i18n('Shuffle')}</button>
             </Link>
           </div>}
