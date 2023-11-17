@@ -106,14 +106,14 @@ export default async function Country({ params: { slug }, searchParams }) {
   const isBR = host().includes('viajarcomale.com.br');
 
   if (searchParams.shuffle) {
-    const theShuffle = searchParams.shuffle;
+    const theShuffle = parseInt(searchParams.shuffle);
 
-    if (theShuffle < 1 || theShuffle > 15) {
+    if (theShuffle != searchParams.shuffle || theShuffle < 1 || theShuffle > 15) {
       redirect('/');
     }
   }
-
-  if (searchParams.sort == 'random' && !searchParams.shuffle) {
+  
+  if (searchParams.sort == 'random' && (!searchParams.shuffle || Object.keys(searchParams).length > 2)) {
     redirect('/');
   }
   
