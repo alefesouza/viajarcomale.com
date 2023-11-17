@@ -311,8 +311,8 @@ export default async function Country({ params: { slug }, searchParams }) {
       {[{name: 'Latest', value: 'desc'}, {name: 'Oldest', value: 'asc'}, {name: 'Random', value: 'random'}].map((o) => <Link key={o.value} href={ o.value === 'random' ? paginationBase.split('?')[0].replace('/page/{page}', '') + '?sort=random' : '?sort=' + o.value } scroll={false} prefetch={false}><label><input type="radio" name={'sort-' + type } value={o.value} checked={sort === o.value} readOnly />{i18n(o.name)}</label></Link>)}
     </div>
 
-    {isRandom && <div style={{ textAlign: 'center' }}>
-      <Link href={'?sort=random&shuffle=' + Math.random()} scroll={false} prefetch={false}className="shuffle">
+    {isRandom && <div style={{ textAlign: 'center', marginTop: 18 }}>
+      <Link href={'?sort=random&shuffle=' + Math.random()} scroll={false} prefetch={false} className="shuffle">
         <button className="btn btn-primary">{i18n('Shuffle')}</button>
       </Link>
     </div>}
