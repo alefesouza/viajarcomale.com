@@ -1,7 +1,4 @@
-import {parse} from 'js2xmlparser';
 import useHost from '../hooks/use-host';
-import { getFirestore, FieldValue } from 'firebase-admin/firestore';
-import { ITEMS_PER_PAGE } from '../utils/constants';
 import { customInitApp } from '../firebase';
 
 customInitApp();
