@@ -27,6 +27,7 @@ const langs = {
     'Shuffle': 'Embaralhar',
     'Short Videos': 'Vídeos curtos',
     'YouTube Videos': 'Vídeos do YouTube',
+    '360 Photos': 'Fotos 360',
     'Choose which country to travel with me.': 'Escolha qual país para Viajar com Alê.',
     'Photos and videos taken by Viajar com Alê in :location:.': 'Fotos e vídeos tirados por Viajar com Alê em :location:.',
     'Photos and videos taken by Viajar com Alê with the hashtag #:hashtag:.': 'Fotos e vídeos tirados por Viajar com Alê com a hashtag #:hashtag:.',
@@ -47,6 +48,8 @@ const langs = {
     'Mexico': 'México',
     'Canada': 'Canadá',
     'Paraguay': 'Paraguai',
+    'France': 'França',
+    'Luxembourg': 'Luxemburgo',
 
     // Manifest
     'Access Viajar com Alê Albums': 'Acessar os álbuns do Viajar com Alê',

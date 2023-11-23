@@ -103,6 +103,7 @@ export default async function Country({ params: { theHashtag }, searchParams }) 
   let instagramPhotos = photos.filter(p => p.type === 'instagram' || p.type === 'instagram-gallery');
   const shortVideos = photos.filter(p => p.type === 'short-video');
   const youtubeVideos = photos.filter(p => p.type === 'youtube');
+  const _360photos = photos.filter(p => p.type === '360photo');
 
   let expandedList = [];
 
@@ -148,6 +149,10 @@ export default async function Country({ params: { theHashtag }, searchParams }) 
       { youtubeVideos.length > 1 && sortPicker('youtube') }
 
       { youtubeVideos.length > 0 && <Scroller title="YouTube Videos" items={youtubeVideos} isYouTubeVideos /> }
+
+      { _360photos.length > 1 && sortPicker('360photos') }
+
+      { _360photos.length > 0 && <Scroller title="360 Photos" items={_360photos} is360Photos /> }
 
       { instagramPhotos.filter(p => !p.file_type).length > 1 && sortPicker('photos') }
 

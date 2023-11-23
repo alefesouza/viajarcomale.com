@@ -4,7 +4,7 @@ import Link from 'next/link';
 import styles from './index.module.css';
 import { FILE_DOMAIN, FILE_DOMAIN_500 } from '@/app/utils/constants';
 
-export default function Scroller({ title, items, isShortVideos, isInstagramHighlights, isYouTubeVideos, cityData }) {
+export default function Scroller({ title, items, isShortVideos, isInstagramHighlights, isYouTubeVideos, is360Photos, cityData }) {
   const i18n = useI18n();
   const host = useHost();
   const isBR = host().includes('viajarcomale.com.br');
@@ -18,9 +18,9 @@ export default function Scroller({ title, items, isShortVideos, isInstagramHighl
       <div className={ styles.scroller_left_arrow }>‹</div>
 
       <div className={ styles.scroller_items } data-scroller>
-        {items.map(p => <div key={ p.id } className={ styles.scroller_item }>
+        {items.map(p => <div key={ p.id } className={ styles.scroller_item + (is360Photos ? ' ' + styles.item_360_photo : '') }>
           <a href={isShortVideos ? p.tiktok_link : p.link} target="_blank">
-            <img src={isYouTubeVideos ? p.image : FILE_DOMAIN + p.file} srcSet={ isYouTubeVideos ? p.image : `${FILE_DOMAIN_500 + p.file} 500w` } alt={isBR ? p.description_pt : p.description} className={!isYouTubeVideos ? styles.vertical_content : ''} loading="lazy" />
+            <img src={isYouTubeVideos ? p.image : FILE_DOMAIN + p.file} srcSet={ isYouTubeVideos ? p.image : `${FILE_DOMAIN_500 + p.file} 500w` } alt={isBR ? p.description_pt : p.description} className={!isYouTubeVideos && !is360Photos ? styles.vertical_content : ''} loading="lazy" />
           </a>
 
           {isShortVideos && <div className={ styles.short_video_links }>

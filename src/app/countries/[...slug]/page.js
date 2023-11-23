@@ -134,6 +134,7 @@ export default async function Country({ params: { slug }, searchParams }) {
   let shortVideosSnapshot = null;
   let instagramPhotosSnapshot = null;
   let youtubeSnapshot = null;
+  let _360PhotosSnapshot = null;
   let isRandom = sort === 'random';
   let randomArray = [];
 
@@ -149,6 +150,7 @@ export default async function Country({ params: { slug }, searchParams }) {
   let instagramHighLights = [];
   let shortVideos = [];
   let youtubeVideos = [];
+  let _360photos = [];
   let instagramPhotos = [];
 
   if (!cache.exists || isRandom) {
@@ -172,10 +174,12 @@ export default async function Country({ params: { slug }, searchParams }) {
         instagramHighLightsSnapshot = await db.collection('countries').doc(country).collection('medias').where('city', '==', city).where('type', '==', 'instagram-highlight').orderBy('order', sort).get();
         shortVideosSnapshot = await db.collection('countries').doc(country).collection('medias').where('city', '==', city).where('type', '==', 'short-video').orderBy('order', sort).get();
         youtubeSnapshot = await db.collection('countries').doc(country).collection('medias').where('city', '==', city).where('type', '==', 'youtube').orderBy('order', sort).get();
+        _360PhotosSnapshot = await db.collection('countries').doc(country).collection('medias').where('city', '==', city).where('type', '==', '360photo').orderBy('order', sort).get();
       } else {
         instagramHighLightsSnapshot = await db.collection('countries').doc(country).collection('medias').where('type', '==', 'instagram-highlight').orderBy('city_location_id', sort).orderBy('order', sort).get();
         shortVideosSnapshot = await db.collection('countries').doc(country).collection('medias').where('type', '==', 'short-video').orderBy('city_location_id', sort).orderBy('order', sort).get();
         youtubeSnapshot = await db.collection('countries').doc(country).collection('medias').where('type', '==', 'youtube').orderBy('city_location_id', sort).orderBy('order', sort).get();
+        _360PhotosSnapshot = await db.collection('countries').doc(country).collection('medias').where('type', '==', '360photo').orderBy('city_location_id', sort).orderBy('order', sort).get();
       }
     }
 
@@ -218,6 +222,11 @@ export default async function Country({ params: { slug }, searchParams }) {
         const data = media.data();
         youtubeVideos = [...youtubeVideos, data];
       });
+
+      _360PhotosSnapshot.forEach((media) => {
+        const data = media.data();
+        _360photos = [..._360photos, data];
+      });
     }
     
     if (!cache.exists || isRandom) {
@@ -235,6 +244,7 @@ export default async function Country({ params: { slug }, searchParams }) {
         shortVideos,
         youtubeVideos,
         instagramPhotos,
+        _360photos,
         last_update: (new Date().toISOString()).split('T')[0],
       });
     }
@@ -245,6 +255,7 @@ export default async function Country({ params: { slug }, searchParams }) {
     instagramHighLights = cacheData.instagramHighLights;
     shortVideos = cacheData.shortVideos;
     youtubeVideos = cacheData.youtubeVideos;
+    _360photos = cacheData._360photos;
 
     if (!isRandom) {
       instagramPhotos = cacheData.instagramPhotos;
@@ -261,6 +272,9 @@ export default async function Country({ params: { slug }, searchParams }) {
       .sort((a, b) => a.sort - b.sort)
       .map(({ value }) => value);
     youtubeVideos = youtubeVideos.map(value => ({ value, sort: Math.random() }))
+      .sort((a, b) => a.sort - b.sort)
+      .map(({ value }) => value);
+    _360photos = _360photos.map(value => ({ value, sort: Math.random() }))
       .sort((a, b) => a.sort - b.sort)
       .map(({ value }) => value);
     instagramPhotos = instagramPhotos.sort((a, b) => randomArray.indexOf(a[index]) - randomArray.indexOf(b[index]));
@@ -322,7 +336,7 @@ export default async function Country({ params: { slug }, searchParams }) {
   if (newShuffle == searchParams.shuffle) {
     newShuffle = randomIntFromInterval(1, 15);
   }
-
+  
   const sortPicker = (type) => (<div className="container-fluid">
       <div className={ styles.sort_picker }>
       <span>{i18n('Sorting')}:</span>
@@ -367,6 +381,10 @@ export default async function Country({ params: { slug }, searchParams }) {
       { youtubeVideos.length > 1 && sortPicker('youtube') }
 
       { youtubeVideos.length > 0 && <Scroller title="YouTube Videos" items={youtubeVideos} isYouTubeVideos /> }
+
+      { _360photos.length > 1 && sortPicker('360photos') }
+
+      { _360photos.length > 0 && <Scroller title="360 Photos" items={_360photos} is360Photos /> }
 
       { instagramPhotos.filter(p => !p.file_type).length > 1 && sortPicker('photos') }
 
