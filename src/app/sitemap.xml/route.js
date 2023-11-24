@@ -11,12 +11,12 @@ export async function GET() {
   const lastmod = '2023-11-24';
 
   const db = getFirestore();
-  const sitemapRef = await db.collection('caches').doc('static_pages').collection('static_pages').doc('sitemap').get();
+  const sitemapRef = await db.collection('caches').doc('static_pages').collection('static_pages').doc(host('sitemap.xml').split('//')[1].replaceAll('/', '-')).get();
   const allSitemap = sitemapRef.data();
 
   let obj = {};
 
-  if (allSitemap.a_should_update) {
+  if (!allSitemap || allSitemap.a_should_update) {
     const countriesSnapshot = await db.collection('countries').get();
     let countries = [];
 
@@ -89,7 +89,7 @@ export async function GET() {
       }))])]
     };
 
-    await sitemapRef.ref.update({
+    await sitemapRef.ref.set({
       a_should_update: false,
       sitemap: JSON.stringify(obj),
     });
