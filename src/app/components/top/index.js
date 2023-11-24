@@ -14,7 +14,7 @@ export default function Top() {
     <h2 className="profile_name">{SITE_NAME}</h2>
 
     <span className="profile_description">
-      {countries.map(c => c.flag)}
+      {countries.map(c => <Link href={'/countries/' + c.slug} key={c.name}>{c.flag}</Link>)}
     </span>
   </div>;
 }
