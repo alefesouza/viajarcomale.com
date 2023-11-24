@@ -171,7 +171,7 @@ export default async function Country({ params: { country, city, media } }) {
     </div>
 
     <div className={ styles.media }>
-      <InstagramMedia media={theMedia} isBR={isBR} withoutLink expandGalleries fullQuality />
+      <InstagramMedia media={theMedia} isBR={isBR} withoutLink expandGalleries fullQuality isMain />
 
       {theMedia.gallery && theMedia.gallery.length && theMedia.gallery.map(g => <div key={g.file} style={{ marginTop: 16 }}>
         <InstagramMedia key={g.file} media={g} isBR={isBR} withoutLink expandGalleries fullQuality />

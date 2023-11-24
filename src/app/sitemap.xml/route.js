@@ -83,6 +83,9 @@ export async function GET() {
       ...medias.filter(m => m.type === 'instagram').flatMap(m => [{
         loc: host('/countries/' + m.country + '/cities/' + m.city + '/medias/' + m.id),
         lastmod,
+      }, {
+        loc: host('/countries/' + m.country + '/cities/' + m.city + '/medias/' + m.id + '/1'),
+        lastmod,
       }, ...m.gallery.map((g, i) => ({
         loc: host('/countries/' + m.country + '/cities/' + m.city + '/medias/' + m.id + '/' + (i + 2)),
         lastmod,
