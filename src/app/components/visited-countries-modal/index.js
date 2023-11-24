@@ -23,7 +23,7 @@ export default function VisitedCountriesModal({ onClose: handleClose }) {
       </div>
 
       <div className={ styles.visited_countries }>
-        <VisitedCountries isModal={ true } />
+        <VisitedCountries isModal={ true } onCloseModal={ handleClose } />
       </div>
     </div>
   </div>
