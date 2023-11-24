@@ -57,7 +57,7 @@
   text-align: center;
 }
 
-.scroller_item {
+.item_360_photo {
   flex: 0 0 300px;
   text-align: center;
 }
@@ -67,7 +67,7 @@
     flex: 0 0 300px;
   }
 
-  .scroller_item {
+  .item_360_photo {
     flex: 0 0 400px;
   }
 }
