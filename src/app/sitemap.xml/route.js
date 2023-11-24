@@ -71,7 +71,7 @@ export async function GET() {
     }]),]
   };
 
-  db.collection('accesses').doc('accesses').set({
+  db.collection('accesses').doc((new Date()).toISOString().split('T')[0]).set({
     [host('/sitemap.xml')]: FieldValue.increment(1),
   }, {merge:true});
 

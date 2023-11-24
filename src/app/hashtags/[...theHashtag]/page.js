@@ -88,7 +88,7 @@ export default async function Country({ params: { theHashtag }, searchParams }) 
       sort = 'random';
   }
 
-  db.collection('accesses').doc('accesses').set({
+  db.collection('accesses').doc((new Date()).toISOString().split('T')[0]).set({
     [host('/hashtags/') + hashtag + ('?sort=' + sort)]: FieldValue.increment(1),
   }, {merge:true});
 
