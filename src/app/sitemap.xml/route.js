@@ -20,7 +20,13 @@ export async function GET() {
 
   const allHashtagsRef = await db.collection('all_hashtags').doc('all_hashtags').get();
   const hashtags = allHashtagsRef.data().hashtags;
+  const mediasSnapshot = await db.collectionGroup('medias').get();
+  const medias = [];
+  mediasSnapshot.forEach(doc => {
+    medias.push(doc.data());
+  });
 
+  console.log(medias.length)
   const obj = {
     '@': {
       xmlns: 'http://www.sitemaps.org/schemas/sitemap/0.9',
@@ -68,7 +74,14 @@ export async function GET() {
     }, {
       loc: host('/hashtags/') + decodeURIComponent(h) + '/expand',
       lastmod,
-    }]),]
+    }]),
+    ...medias.filter(m => m.type === 'instagram').flatMap(m => [{
+      loc: host('/countries/' + m.country + '/cities/' + m.city + '/medias/' + m.id),
+      lastmod,
+    }, ...m.gallery.map((g, i) => ({
+      loc: host('/countries/' + m.country + '/cities/' + m.city + '/medias/' + m.id + '/' + (i + 2)),
+      lastmod,
+    }))])]
   };
 
   db.collection('accesses').doc((new Date()).toISOString().split('T')[0]).set({

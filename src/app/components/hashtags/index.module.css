@@ -1,0 +1,12 @@
+.item_hashtags {
+  margin-top: 4px;
+}
+
+.item_hashtags a {
+  margin-top: 4px;
+  color: #2096cc;
+}
+
+.item_hashtags a:hover {
+  text-decoration: underline;
+}

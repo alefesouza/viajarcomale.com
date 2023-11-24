@@ -51,23 +51,6 @@
   }
 }
 
-.galleries img, .galleries video {
-  max-width: 100%;
-}
-
-.gallery_item {
-  text-align: center;
-  position: relative;
-}
-
-.is_gallery::after {
-  content: url('/images/gallery.svg');
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  pointer-events: none;
-}
-
 .instagram_photos_title {
   display: flex;
   align-items: center;
@@ -78,23 +61,6 @@
   display: flex;
   align-items: center;
   margin-top: 24px; 
-}
-
-.item_description {
-
-}
-
-.item_hashtags {
-  margin-top: 4px;
-}
-
-.item_hashtags a {
-  margin-top: 4px;
-  color: #2096cc;
-}
-
-.item_hashtags a:hover {
-  text-decoration: underline;
 }
 
 .short_video_links {

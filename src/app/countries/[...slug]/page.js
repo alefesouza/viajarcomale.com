@@ -10,6 +10,7 @@ import StructuredBreadcrumbs from '@/app/components/structured-breadcrumbs';
 import arrayShuffle from '@/app/utils/array-shuffle';
 import Scroller from '@/app/components/scroller';
 import randomIntFromInterval from '@/app/utils/random-int';
+import InstagramMedia from '@/app/components/instagram-media';
 
 function getDataFromRoute(slug, searchParams) {
   const [country, path1, path2, path3, path4, path5] = slug;
@@ -398,19 +399,7 @@ export default async function Country({ params: { slug }, searchParams }) {
           {!isRandom && pageNumber > 1 && <Pagination base={paginationBase} currentPage={Number(page) || 1} pageNumber={pageNumber} total={totalPhotos} textPosition="bottom" />}
           
           <div className={ styles.instagram_highlights_items }>
-            {instagramPhotos.map(p => <div key={ p.file } className={ styles.gallery_item + (p.gallery && p.gallery.length && ! expandGalleries ? ' ' + styles.is_gallery : '' ) }>
-              <a href={p.link + (p.img_index ? '?img_index=' + p.img_index : '')} target="_blank">
-                {p.file_type === 'video' ? <video src={FILE_DOMAIN + p.file + '#t=0.1'} controls /> : <img src={FILE_DOMAIN_500 + p.file} alt={isBR ? p.description_pt : p.description} loading="lazy" />}
-              </a>
-
-              <div className={ styles.item_description }>
-                {isBR ? p.description_pt : p.description}
-              </div>
-
-              {!p.file_type && <div className={ styles.item_hashtags }>
-                Hashtags: {p.hashtags.reverse().map(h => <span key={h}><Link href={`/hashtags/${h}`} prefetch={false}>#{h}</Link> </span>)}
-              </div>}
-            </div>)}
+            {instagramPhotos.map(p => <InstagramMedia key={p.id} media={p} isBR={isBR} />)}
           </div>
 
           {isRandom && <div style={{ textAlign: 'center', marginTop: 30 }}>

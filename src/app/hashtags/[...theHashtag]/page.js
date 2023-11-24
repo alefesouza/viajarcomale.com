@@ -6,6 +6,7 @@ import styles from './page.module.css';
 import { FILE_DOMAIN, FILE_DOMAIN_500, SITE_NAME } from '@/app/utils/constants';
 import Scroller from '@/app/components/scroller';
 import { redirect } from 'next/dist/server/api-utils';
+import InstagramMedia from '@/app/components/instagram-media';
 
 export async function generateMetadata({ params: { theHashtag } }) {
   // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -164,19 +165,7 @@ export default async function Country({ params: { theHashtag }, searchParams }) 
           </div>
           
           <div className={ styles.instagram_highlights_items }>
-            {instagramPhotos.map(p => <div key={ p.file } className={ styles.gallery_item + (p.gallery && p.gallery.length && ! expandGalleries ? ' ' + styles.is_gallery : '' ) }>
-              <a href={p.link + (p.img_index ? '?img_index=' + p.img_index : '')} target="_blank">
-                {p.file_type === 'video' ? <video src={FILE_DOMAIN + p.file + '#t=0.1'} controls /> : <img src={FILE_DOMAIN + p.file} srcSet={ `${FILE_DOMAIN_500 + p.file} 500w` } alt={isBR ? p.description_pt : p.description} loading="lazy" />}
-              </a>
-
-              <div className={ styles.item_description }>
-                {isBR ? p.description_pt : p.description}
-              </div>
-
-              {!p.file_type && <div className={ styles.item_hashtags }>
-                Hashtags: {p.hashtags.reverse().map(h => <><Link href={`/hashtags/${h}`} key={h} prefetch={false}>#{h}</Link> </>)}
-              </div>}
-            </div>)}
+            {instagramPhotos.map(p => <InstagramMedia key={p.id} media={p} isBR={isBR} />)}
           </div>
         </div>
       </div>}

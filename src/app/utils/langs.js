@@ -31,6 +31,8 @@ const langs = {
     'Choose which country to travel with me.': 'Escolha qual país para Viajar com Alê.',
     'Photos and videos taken by Viajar com Alê in :location:.': 'Fotos e vídeos tirados por Viajar com Alê em :location:.',
     'Photos and videos taken by Viajar com Alê with the hashtag #:hashtag:.': 'Fotos e vídeos tirados por Viajar com Alê com a hashtag #:hashtag:.',
+    'Link copied to clipboard.': 'Link copiado para a área de transferência.',
+    'Share': 'Compartilhar',
 
     // Meta
     'Travel photos and links to Viajar com Alê social networks.': 'Fotos de viagens e links para as redes sociais do Viajar com Alê.',
