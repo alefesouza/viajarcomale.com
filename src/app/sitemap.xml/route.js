@@ -8,81 +8,96 @@ customInitApp();
 
 export async function GET() {
   const host = useHost();
-  const lastmod = '2023-11-10';
+  const lastmod = '2023-11-24';
 
   const db = getFirestore();
-  const countriesSnapshot = await db.collection('countries').get();
-  let countries = [];
+  const sitemapRef = await db.collection('caches').doc('static_pages').collection('static_pages').doc('sitemap').get();
+  const allSitemap = sitemapRef.data();
 
-  countriesSnapshot.forEach((country) => {
-    countries = [...countries, country.data()];
-  });
+  let obj = {};
 
-  const allHashtagsRef = await db.collection('all_hashtags').doc('all_hashtags').get();
-  const hashtags = allHashtagsRef.data().hashtags;
-  const mediasSnapshot = await db.collectionGroup('medias').get();
-  const medias = [];
-  mediasSnapshot.forEach(doc => {
-    medias.push(doc.data());
-  });
+  if (allSitemap.a_should_update) {
+    const countriesSnapshot = await db.collection('countries').get();
+    let countries = [];
 
-  console.log(medias.length)
-  const obj = {
-    '@': {
-      xmlns: 'http://www.sitemaps.org/schemas/sitemap/0.9',
-    },
-    url: [{
-      loc: host('/'),
-      lastmod,
-    }, {
-      loc: host('/countries'),
-      lastmod,
-    },
-    ...countries.flatMap(c => [{
-        loc: host('/countries/' + c.slug),
+    countriesSnapshot.forEach((country) => {
+      countries = [...countries, country.data()];
+    });
+
+    const allHashtagsRef = await db.collection('caches').doc('static_pages').collection('static_pages').doc('hashtags').get();
+    const hashtags = allHashtagsRef.data().hashtags;
+    const mediasSnapshot = await db.collectionGroup('medias').get();
+    const medias = [];
+    mediasSnapshot.forEach(doc => {
+      medias.push(doc.data());
+    });
+
+    obj = {
+      '@': {
+        xmlns: 'http://www.sitemaps.org/schemas/sitemap/0.9',
+      },
+      url: [{
+        loc: host('/'),
         lastmod,
       }, {
-        loc: host('/countries/' + c.slug + '/expand'),
+        loc: host('/countries'),
         lastmod,
       },
-      ...Array.from({ length: Math.ceil((c?.totals?.instagram_photos / ITEMS_PER_PAGE) - 1) }, (_, i) => [{
-        loc: host('/countries/' + c.slug + '/page/' + (i + 2)),
+      ...countries.flatMap(c => [{
+          loc: host('/countries/' + c.slug),
+          lastmod,
+        }, {
+          loc: host('/countries/' + c.slug + '/expand'),
+          lastmod,
+        },
+        ...Array.from({ length: Math.ceil((c?.totals?.instagram_photos / ITEMS_PER_PAGE) - 1) }, (_, i) => [{
+          loc: host('/countries/' + c.slug + '/page/' + (i + 2)),
+          lastmod,
+        }, {
+          loc: host('/countries/' + c.slug + '/page/' + (i + 2) + '/expand'),
+          lastmod,
+        }]),
+      ]),
+      ...countries.map(c => c.cities.map(city => [{
+          loc: host('/countries/' + c.slug + '/cities/' + city.slug),
+          lastmod,
+        }, {
+          loc: host('/countries/' + c.slug + '/cities/' + city.slug + '/expand'),
+          lastmod,
+        },
+        ...Array.from({ length: Math.ceil((city?.totals?.instagram_photos / ITEMS_PER_PAGE) - 1) }, (_, i) => [{
+          loc: host('/countries/' + c.slug + '/cities/' + city.slug + '/page/' + (i + 2)),
+          lastmod,
+        }, {
+          loc: host('/countries/' + c.slug + '/cities/' + city.slug + '/page/' + (i + 2) + '/expand'),
+          lastmod,
+        }]),
+      ])).flat(2),
+      ...hashtags.flatMap(h => [{
+        loc: host('/hashtags/') + decodeURIComponent(h),
         lastmod,
       }, {
-        loc: host('/countries/' + c.slug + '/page/' + (i + 2) + '/expand'),
+        loc: host('/hashtags/') + decodeURIComponent(h) + '/expand',
         lastmod,
       }]),
-    ]),
-    ...countries.map(c => c.cities.map(city => [{
-        loc: host('/countries/' + c.slug + '/cities/' + city.slug),
+      ...medias.filter(m => m.type === 'instagram').flatMap(m => [{
+        loc: host('/countries/' + m.country + '/cities/' + m.city + '/medias/' + m.id),
         lastmod,
-      }, {
-        loc: host('/countries/' + c.slug + '/cities/' + city.slug + '/expand'),
+      }, ...m.gallery.map((g, i) => ({
+        loc: host('/countries/' + m.country + '/cities/' + m.city + '/medias/' + m.id + '/' + (i + 2)),
         lastmod,
-      },
-      ...Array.from({ length: Math.ceil((city?.totals?.instagram_photos / ITEMS_PER_PAGE) - 1) }, (_, i) => [{
-        loc: host('/countries/' + c.slug + '/cities/' + city.slug + '/page/' + (i + 2)),
-        lastmod,
-      }, {
-        loc: host('/countries/' + c.slug + '/cities/' + city.slug + '/page/' + (i + 2) + '/expand'),
-        lastmod,
-      }]),
-    ])).flat(2),
-    ...hashtags.flatMap(h => [{
-      loc: host('/hashtags/') + decodeURIComponent(h),
-      lastmod,
-    }, {
-      loc: host('/hashtags/') + decodeURIComponent(h) + '/expand',
-      lastmod,
-    }]),
-    ...medias.filter(m => m.type === 'instagram').flatMap(m => [{
-      loc: host('/countries/' + m.country + '/cities/' + m.city + '/medias/' + m.id),
-      lastmod,
-    }, ...m.gallery.map((g, i) => ({
-      loc: host('/countries/' + m.country + '/cities/' + m.city + '/medias/' + m.id + '/' + (i + 2)),
-      lastmod,
-    }))])]
-  };
+      }))])]
+    };
+
+    await sitemapRef.ref.update({
+      a_should_update: false,
+      sitemap: JSON.stringify(obj),
+    });
+  }
+
+  if (Object.keys(obj).length === 0) {
+    obj = JSON.parse(allSitemap.sitemap);
+  }
 
   db.collection('accesses').doc((new Date()).toISOString().split('T')[0]).set({
     [host('/sitemap.xml')]: FieldValue.increment(1),

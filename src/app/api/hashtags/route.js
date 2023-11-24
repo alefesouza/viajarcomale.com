@@ -7,7 +7,7 @@ customInitApp();
 export async function GET() {
   const host = useHost();
   const db = getFirestore();
-  const allHashtagsRef = await db.collection('all_hashtags').doc('all_hashtags').get();
+  const allHashtagsRef = await db.collection('caches').doc('static_pages').collection('static_pages').doc('hashtags').get();
   const allHashtags = allHashtagsRef.data();
   let hashtags = [];
   
@@ -19,7 +19,7 @@ export async function GET() {
       hashtags.push(data.name);
     });
 
-    await allHashtagsRef.ref.update({
+    await allHashtagsRef.ref.set({
       a_should_update: false,
       hashtags,
     });
