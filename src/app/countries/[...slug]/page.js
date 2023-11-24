@@ -392,7 +392,7 @@ export default async function Country({ params: { slug }, searchParams }) {
       { instagramPhotos.length > 0 && <div className="container-fluid">
         <div className={ styles.instagram_photos }>
           <div className={ styles.instagram_photos_title }>
-            <h3>{i18n('Instagram Photos')}</h3>
+            <h3>{i18n('Instagram Posts')}</h3>
             <Link href={ `/countries/${country}${city ? '/cities/' + city : ''}${page ? '/page/' + page : ''}${!expandGalleries ? '/expand' : ''}` + (sort !== 'desc' ? '?sort=' + sort : '') + (sort === 'random' ? '&indexes=' + instagramPhotos.filter(p => !p.file_type).map(p => p[index]).join(',') : '')} scroll={false} prefetch={false}>{expandGalleries ? i18n('Minimize Galleries') : i18n('Expand Galleries')}</Link>
           </div>
 

@@ -3,7 +3,7 @@ import useHost from '@/app/hooks/use-host';
 import Link from 'next/link';
 import { getFirestore, FieldValue } from 'firebase-admin/firestore';
 import styles from './page.module.css';
-import { FILE_DOMAIN, FILE_DOMAIN_500, SITE_NAME } from '@/app/utils/constants';
+import { SITE_NAME } from '@/app/utils/constants';
 import Scroller from '@/app/components/scroller';
 import { redirect } from 'next/dist/server/api-utils';
 import InstagramMedia from '@/app/components/instagram-media';
@@ -160,7 +160,7 @@ export default async function Country({ params: { theHashtag }, searchParams }) 
       { instagramPhotos.filter(p => !p.file_type).length > 0 && <div className="container-fluid">
         <div className={ styles.instagram_photos }>
           <div className={ styles.instagram_photos_title }>
-            <h3>{i18n('Instagram Photos')}</h3>
+            <h3>{i18n('Instagram Posts')}</h3>
             { !expandGalleries ? <Link href={ `/hashtags/${hashtag}/expand` + (sort !== 'desc' ? '?sort=' + sort : '')} scroll={false} prefetch={false}>{i18n('Expand Galleries')}</Link> : <Link href={ `/hashtags/${hashtag}` + (sort !== 'desc' ? '?sort=' + sort : '')} scroll={false} prefetch={false}>{i18n('Minimize Galleries')}</Link> }
           </div>
           

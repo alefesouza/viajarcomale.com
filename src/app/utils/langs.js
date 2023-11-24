@@ -16,7 +16,7 @@ const langs = {
     'Oldest': 'Antigas',
     'Random': 'Aleatório',
     'Instagram Highlights': 'Destaques do Instagram',
-    'Instagram Photos': 'Fotos do Instagram',
+    'Instagram Posts': 'Posts do Instagram',
     'Expand Galleries': 'Expandir galerias',
     'Minimize Galleries': 'Minimizar galerias',
     'Next': 'Próximo',
