@@ -4,6 +4,7 @@ import styles from './page.module.css';
 import Link from 'next/link';
 import useHost from '../hooks/use-host';
 import { SITE_NAME } from '../utils/constants';
+import ShareButton from '../components/share-button';
 
 export async function generateMetadata() {
   // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -34,9 +35,13 @@ export default function Countries() {
   const host = useHost();
 
   return <div className="container">
-    <Link href="/">
-      <img src={host('/images/back.svg')} alt="Back Button" width="30px"></img>
-    </Link>
+    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+      <Link href="/">
+        <img src={host('/images/back.svg')} alt="Back Button" width="30px"></img>
+      </Link>
+
+      <ShareButton />
+    </div>
 
     <h2>{i18n('Select Country')}</h2>
 

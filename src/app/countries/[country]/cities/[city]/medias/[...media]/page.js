@@ -2,7 +2,7 @@ import useI18n from '@/app/hooks/use-i18n';
 import useHost from '@/app/hooks/use-host';
 import { getFirestore } from 'firebase-admin/firestore';
 import styles from './page.module.css';
-import { SITE_NAME } from '@/app/utils/constants';
+import { FILE_DOMAIN_500, SITE_NAME } from '@/app/utils/constants';
 import { redirect } from 'next/navigation'
 import InstagramMedia from '@/app/components/instagram-media';
 import Link from 'next/link';
@@ -20,7 +20,31 @@ async function getCountry(country, city) {
   return countryData;
 }
 
-export async function generateMetadata({ params: { country, city } }) {
+function getSelectedMedia(media, theMedia) {
+  let mediaIndex = null;
+
+  if (media[1]) {
+    mediaIndex = parseInt(media[1]);
+
+    if (mediaIndex != media[1] || mediaIndex < 1 || (!theMedia.gallery && mediaIndex > 1) || mediaIndex > theMedia.gallery.length + 1) {
+      redirect('/');
+    }
+
+    if (mediaIndex !== 1) {
+      theMedia = theMedia.gallery[mediaIndex - 2];
+      delete theMedia.is_gallery;
+    }
+
+    delete theMedia.gallery;
+  }
+
+  return {
+    mediaIndex,
+    selectedMedia: theMedia,
+  }
+}
+
+export async function generateMetadata({ params: { country, city, media } }) {
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const i18n = useI18n();
   // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -39,25 +63,51 @@ export async function generateMetadata({ params: { country, city } }) {
     theCity = countryData.cities.find(c => c.slug === city);
   }
 
-  const location = (theCity ? isBR && theCity.name_pt ? theCity.name_pt + ' - ' : theCity.name + ' - ' : '') + i18n(countryData.name);
-  const title = location + ' - ' + i18n('Albums') + ' - ' + SITE_NAME;
-  const description = i18n('Photos and videos taken by Viajar com Alê in :location:.', {
-    location
-  });
+  if (!theCity) {
+    return {};
+  }
 
+  const db = getFirestore();
+  const mediaRef = await db.collection('countries').doc(country).collection('medias').doc(media[0]).get();
+  let theMedia = mediaRef.data();
+
+  if (theMedia.gallery && theMedia.gallery.length) {
+    theMedia.gallery = theMedia.gallery.map((g, i) => ({ ...theMedia, ...g, is_gallery: true, img_index: i + 2 }));
+  }
+  
+  const { selectedMedia } = getSelectedMedia(media, theMedia);
+
+  const originalMedia = theMedia;
+  theMedia = selectedMedia;
+
+  const location = (theCity ? isBR && theCity.name_pt ? theCity.name_pt + ' - ' : theCity.name + ' - ' : '') + i18n(countryData.name);
+  const title = (theMedia.file_type === 'video' ? i18n('Video') : i18n('Photo')) + ' - ' + location + ' - ' + i18n('Albums') + ' - ' + SITE_NAME;
+  const description = isBR && theMedia.description_pt ? theMedia.description_pt : theMedia.description;
+  const image = theMedia.file_type === 'video' ? FILE_DOMAIN_500 + originalMedia.file : FILE_DOMAIN_500 + theMedia.file;
+
+  const images = [{
+    url: image,
+    width: theMedia.width,
+    height: theMedia.height,
+    type: 'image/jpg',
+  }];
+  
   return {
     title,
     description,
     openGraph: {
       title,
       description,
+      images,
     },
     twitter: {
       title,
       description,
+      images,
     },
     other: {
       title,
+      image,
     },
   }
 }
@@ -84,27 +134,11 @@ export default async function Country({ params: { country, city, media } }) {
   let theMedia = mediaRef.data();
 
   if (theMedia.gallery && theMedia.gallery.length) {
-    theMedia.gallery = theMedia.gallery.map((g, i) => ({ ...theMedia, ...g, img_index: i + 2 }));
+    theMedia.gallery = theMedia.gallery.map((g, i) => ({ ...theMedia, ...g, is_gallery: true, img_index: i + 2 }));
   }
 
-  let mediaIndex = null;
-
-  if (media[1]) {
-    mediaIndex = parseInt(media[1]);
-
-    if (mediaIndex != media[1] || mediaIndex < 1 || (!theMedia.gallery && mediaIndex > 1) || mediaIndex > theMedia.gallery.length + 1) {
-      redirect('/');
-    }
-
-    if (mediaIndex !== 1) {
-      const originalMedia = {...theMedia};
-      theMedia = theMedia.gallery[mediaIndex - 2];
-      theMedia.description = originalMedia.description;
-      theMedia.description_pt = originalMedia.description_pt;
-    }
-
-    delete theMedia.gallery;
-  }
+  const { mediaIndex, selectedMedia } = getSelectedMedia(media, theMedia);
+  theMedia = selectedMedia;
 
   return <div className="container">
     <div style={{ display: 'flex', justifyContent: 'space-between' }}>

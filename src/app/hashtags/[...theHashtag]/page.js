@@ -7,6 +7,7 @@ import { SITE_NAME } from '@/app/utils/constants';
 import Scroller from '@/app/components/scroller';
 import { redirect } from 'next/dist/server/api-utils';
 import InstagramMedia from '@/app/components/instagram-media';
+import ShareButton from '@/app/components/share-button';
 
 export async function generateMetadata({ params: { theHashtag } }) {
   // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -112,11 +113,11 @@ export default async function Country({ params: { theHashtag }, searchParams }) 
     expandedList = [...expandedList, item];
 
     if (item.gallery && item.gallery.length) {
-      const gallery = item.gallery.map((g, i) => ({ ...item, ...g, img_index: i + 2 }));
+      const gallery = item.gallery.map((g, i) => ({ ...item, ...g, is_gallery: true, img_index: i + 2 }));
       const itemWithHashtag = gallery.findIndex(g => g.item_hashtags && g.item_hashtags.includes(hashtag));
 
       if (itemWithHashtag > -1) {
-        delete gallery[itemWithHashtag].file_type;
+        delete gallery[itemWithHashtag].is_gallery;
         expandedList[expandedList.length - 1] = gallery[itemWithHashtag];
 
         item.file_type = 'image';
@@ -133,9 +134,13 @@ export default async function Country({ params: { theHashtag }, searchParams }) 
 
   return <div>
     <div className="container">
-      <a href="#" id="history-back-button" className={ styles.history_back_button }>
-        <img src="/images/back.svg" alt="Back Button" width="30px"></img>
-      </a>
+      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <a href="#" id="history-back-button" className={ styles.history_back_button }>
+          <img src="/images/back.svg" alt="Back Button" width="30px"></img>
+        </a>
+
+        <ShareButton />
+      </div>
     </div>
     
     <div className="container-fluid">

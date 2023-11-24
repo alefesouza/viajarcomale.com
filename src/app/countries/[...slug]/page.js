@@ -11,6 +11,7 @@ import arrayShuffle from '@/app/utils/array-shuffle';
 import Scroller from '@/app/components/scroller';
 import randomIntFromInterval from '@/app/utils/random-int';
 import InstagramMedia from '@/app/components/instagram-media';
+import ShareButton from '@/app/components/share-button';
 
 function getDataFromRoute(slug, searchParams) {
   const [country, path1, path2, path3, path4, path5] = slug;
@@ -289,7 +290,7 @@ export default async function Country({ params: { slug }, searchParams }) {
       expandedList = [...expandedList, item];
 
       if (item.gallery && item.gallery.length) {
-        expandedList = [...expandedList, ...item.gallery.map((g, i) => ({ ...item, ...g, img_index: i + 2 }))];
+        expandedList = [...expandedList, ...item.gallery.map((g, i) => ({ ...item, ...g, is_gallery: true, img_index: i + 2 }))];
       }
     });
     
@@ -354,9 +355,13 @@ export default async function Country({ params: { slug }, searchParams }) {
 
   return <div>
     <div className="container">
-      <Link href="/countries">
-        <img src={host('/images/back.svg')} alt="Back Button" width="30px"></img>
-      </Link>
+      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <Link href="/countries">
+          <img src={host('/images/back.svg')} alt="Back Button" width="30px"></img>
+        </Link>
+
+        <ShareButton />
+      </div>
     </div>
 
     <div className="container-fluid">

@@ -33,6 +33,8 @@ const langs = {
     'Photos and videos taken by Viajar com Alê with the hashtag #:hashtag:.': 'Fotos e vídeos tirados por Viajar com Alê com a hashtag #:hashtag:.',
     'Link copied to clipboard.': 'Link copiado para a área de transferência.',
     'Share': 'Compartilhar',
+    'Photo': 'Foto',
+    'Video': 'Vídeo',
 
     // Meta
     'Travel photos and links to Viajar com Alê social networks.': 'Fotos de viagens e links para as redes sociais do Viajar com Alê.',
