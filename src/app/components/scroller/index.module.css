@@ -57,6 +57,10 @@
   text-align: center;
 }
 
+.item_360_photo img {
+  max-width: 100%;
+}
+
 .item_360_photo {
   flex: 0 0 300px;
   text-align: center;
