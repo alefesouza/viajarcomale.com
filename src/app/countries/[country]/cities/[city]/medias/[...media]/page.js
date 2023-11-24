@@ -7,6 +7,7 @@ import { redirect } from 'next/navigation'
 import InstagramMedia from '@/app/components/instagram-media';
 import Link from 'next/link';
 import ShareButton from '@/app/components/share-button';
+import StructuredBreadcrumbs from '@/app/components/structured-breadcrumbs';
 
 async function getCountry(country, city) {
   const db = getFirestore();
@@ -81,8 +82,8 @@ export async function generateMetadata({ params: { country, city, media } }) {
   theMedia = selectedMedia;
 
   const location = (theCity ? isBR && theCity.name_pt ? theCity.name_pt + ' - ' : theCity.name + ' - ' : '') + i18n(countryData.name);
-  const title = (theMedia.file_type === 'video' ? i18n('Video') : i18n('Photo')) + ' - ' + location + ' - ' + i18n('Albums') + ' - ' + SITE_NAME;
   const description = isBR && theMedia.description_pt ? theMedia.description_pt : theMedia.description;
+  const title = (description.split(' ').length > 10 ? description.split(' ').slice(0, 10).join(' ') + '…' : description) + ' - ' + location + ' - ' + i18n('Albums') + ' - ' + SITE_NAME;
   const image = theMedia.file_type === 'video' ? FILE_DOMAIN_500 + originalMedia.file : FILE_DOMAIN_500 + theMedia.file;
 
   const images = [{
@@ -140,6 +141,22 @@ export default async function Country({ params: { country, city, media } }) {
   const { mediaIndex, selectedMedia } = getSelectedMedia(media, theMedia);
   theMedia = selectedMedia;
 
+  const description = isBR && theMedia.description_pt ? theMedia.description_pt : theMedia.description;
+
+  const breadcrumbs = [{
+    name: i18n('Albums'),
+    item: host('/countries'),
+  }, {
+    name: i18n(countryData.name),
+    item: host('/countries/' + country),
+  }, {
+    name: isBR ? theCity.name_pt : theCity.name,
+    item: host('/countries/' + country + '/cities/' + city),
+  }, {
+    name: description.split(' ').length > 10 ? description.split(' ').slice(0, 10).join(' ') + '…' : description,
+    item: host('/countries/' + country + '/cities/' + city + '/medias/' + media[0]),
+  }];
+
   return <div className="container">
     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
       <Link href={ '/countries/' + country + '/cities/' + city + (mediaIndex ? '/medias/' + theMedia.id : '') }>
@@ -160,5 +177,7 @@ export default async function Country({ params: { country, city, media } }) {
         <InstagramMedia key={g.file} media={g} isBR={isBR} withoutLink expandGalleries fullQuality />
       </div>)}
     </div>
+
+    <StructuredBreadcrumbs breadcrumbs={breadcrumbs} />
   </div>
 }

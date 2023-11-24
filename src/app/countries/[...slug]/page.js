@@ -315,10 +315,10 @@ export default async function Country({ params: { slug }, searchParams }) {
 
   if (city) {
     currentPath += '/cities/' + city;
-    breadcrumbs.push({ name: i18n(cityData[city].name), item: currentPath, });
+    breadcrumbs.push({ name: isBR && cityData[city].name_pt ? cityData[city].name_pt : cityData[city].name, item: currentPath, });
   }
 
-  if (page) {
+  if (page && page > 1) {
     currentPath += '/page/' + page;
     breadcrumbs.push({ name: i18n('Page') + ' ' + page, item: currentPath, });
   }
