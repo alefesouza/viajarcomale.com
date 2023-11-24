@@ -58,7 +58,7 @@ export default async function Country({ params: { theHashtag }, searchParams }) 
 
   let photos = [];
 
-  // if (!cache.exists) {
+  if (!cache.exists) {
     const photosSnapshot = await db.collectionGroup('medias').where('hashtags', 'array-contains', hashtag).orderBy('order', sort).get();
 
     photosSnapshot.forEach((photo) => {
@@ -77,9 +77,9 @@ export default async function Country({ params: { theHashtag }, searchParams }) 
         last_update: (new Date().toISOString()).split('T')[0],
       });
     }
-  // } else {
-  //   photos = cache.data().photos;
-  // }
+  } else {
+    photos = cache.data().photos;
+  }
 
   if (isRandom) {
     photos = photos.map(value => ({ value, sort: Math.random() }))
