@@ -261,7 +261,7 @@
     });
   }
 
-  if (!window.matchMedia('(display-mode: standalone)').matches && !window.matchMedia('(display-mode: window-controls-overlay)').matches && navigator.language.startsWith('pt')) {
+  if (!window.matchMedia('(display-mode: standalone)').matches && !window.matchMedia('(display-mode: window-controls-overlay)').matches && navigator.language.startsWith('pt') && !window.location.origin.includes('viajarcomale.com.br')) {
     document.querySelector('#portuguese-language-switcher').style.display = 'block';
   }
 })();
