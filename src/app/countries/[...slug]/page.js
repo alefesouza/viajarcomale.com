@@ -404,7 +404,7 @@ export default async function Country({ params: { slug }, searchParams }) {
           {!isRandom && pageNumber > 1 && <Pagination base={paginationBase} currentPage={Number(page) || 1} pageNumber={pageNumber} total={totalPhotos} textPosition="bottom" />}
           
           <div className={ styles.instagram_highlights_items }>
-            {instagramPhotos.map(p => <InstagramMedia key={p.id} media={p} isBR={isBR} />)}
+            {instagramPhotos.map(p => <InstagramMedia key={p.id} media={p} isBR={isBR} expandGalleries={expandGalleries} />)}
           </div>
 
           {isRandom && <div style={{ textAlign: 'center', marginTop: 30 }}>
