@@ -9,7 +9,7 @@ export default function InstagramMedia({ media, expandGalleries, isBR, withoutLi
   const host = useHost();
 
   const mediaElement = media.file_type === 'video' ? <video src={FILE_DOMAIN + media.file + '#t=0.1'} controls /> : <img src={FILE_DOMAIN + media.file} srcSet={ `${(fullQuality ? FILE_DOMAIN : FILE_DOMAIN_500) + media.file} 500w` } alt={isBR ? media.description_pt : media.description} loading="lazy" />;
-  const link = host('/countries/' + media.country + '/cities/' + media.city + '/medias/' + media.id + (isMain ? '/1' : ''));
+  const link = host('/countries/' + media.country + '/cities/' + media.city + '/medias/' + media.id + (isMain ? '/1' : '') + (media.img_index ? '/' + media.img_index : ''));
 
   return <div key={ media.file } className={ styles.gallery_item + (media.gallery && media.gallery.length && ! expandGalleries ? ' ' + styles.is_gallery : '' ) }>
     {withoutLink ? mediaElement : <Link href={link}>
