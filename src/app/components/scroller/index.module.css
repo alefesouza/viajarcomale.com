@@ -94,6 +94,7 @@
   padding-top: 180px;
   cursor: pointer;
   display: none;
+  user-select: none;
 }
 
 .scroller_left_arrow {
@@ -104,4 +105,10 @@
 .scroller_right_arrow {
   right: 0;
   background: linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, black 100%);
+}
+
+.youtube_video {
+  width: 400px;
+  height: 225px;
+  object-fit: cover;
 }
