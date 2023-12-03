@@ -4,7 +4,7 @@ import useHost from '@/app/hooks/use-host';
 import Link from 'next/link';
 import { getFirestore, FieldValue } from 'firebase-admin/firestore';
 import styles from '../page.module.css';
-import { FILE_DOMAIN, FILE_DOMAIN_500, ITEMS_PER_PAGE, SITE_NAME } from '@/app/utils/constants';
+import { ITEMS_PER_PAGE, SITE_NAME } from '@/app/utils/constants';
 import Pagination from '@/app/components/pagination';
 import StructuredBreadcrumbs from '@/app/components/structured-breadcrumbs';
 import arrayShuffle from '@/app/utils/array-shuffle';
@@ -378,7 +378,7 @@ export default async function Country({ params: { slug }, searchParams }) {
     { instagramHighLights.length > 1 && sortPicker('highlights') }
 
     <div className={ styles.galleries }>
-      {instagramHighLights.length > 0 && <Scroller title="Instagram Highlights" items={instagramHighLights} isInstagramHighlights cityData={cityData} />}
+      {instagramHighLights.length > 0 && <Scroller title="Highlights" items={instagramHighLights} isInstagramHighlights cityData={cityData} />}
 
       { shortVideos.length > 1 && sortPicker('short') }
 
@@ -397,7 +397,7 @@ export default async function Country({ params: { slug }, searchParams }) {
       { instagramPhotos.length > 0 && <div className="container-fluid">
         <div className={ styles.instagram_photos }>
           <div className={ styles.instagram_photos_title }>
-            <h3>{i18n('Instagram Posts')}</h3>
+            <h3>{i18n('Posts')}</h3>
             <Link href={ `/countries/${country}${city ? '/cities/' + city : ''}${page ? '/page/' + page : ''}${!expandGalleries ? '/expand' : ''}` + (sort !== 'desc' ? '?sort=' + sort : '') + (sort === 'random' ? '&indexes=' + instagramPhotos.filter(p => !p.file_type).map(p => p[index]).join(',') : '')} scroll={false} prefetch={false}>{expandGalleries ? i18n('Minimize Galleries') : i18n('Expand Galleries')}</Link>
           </div>
 

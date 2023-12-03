@@ -8,7 +8,7 @@ customInitApp();
 
 export async function GET() {
   const host = useHost();
-  const lastmod = '2023-11-24';
+  const lastmod = '2023-12-03';
 
   const db = getFirestore();
   const sitemapRef = await db.collection('caches').doc('static_pages').collection('static_pages').doc(host('sitemap.xml').split('//')[1].replaceAll('/', '-')).get();
@@ -31,6 +31,12 @@ export async function GET() {
     mediasSnapshot.forEach(doc => {
       medias.push(doc.data());
     });
+    const locationsSnapshot = await db.collectionGroup('locations').get();
+    const locations = [];
+    locationsSnapshot.forEach(doc => {
+      locations.push(doc.data());
+    });
+    const highlights = medias.filter(m => m.type === 'instagram-highlight' && m.children);
 
     obj = {
       '@': {
@@ -73,6 +79,14 @@ export async function GET() {
           lastmod,
         }]),
       ])).flat(2),
+      ...highlights.map((m) => ({
+        loc: host('/countries/' + m.country + '/cities/' + m.city + '/highlights/' + m.id),
+        lastmod,
+      })),
+      ...locations.map((m) => ({
+        loc: host('/countries/' + m.country + '/cities/' + m.city + '/locations/' + m.slug),
+        lastmod,
+      })),
       ...hashtags.flatMap(h => [{
         loc: host('/hashtags/') + decodeURIComponent(h),
         lastmod,
@@ -89,7 +103,7 @@ export async function GET() {
       }, ...m.gallery.map((g, i) => ({
         loc: host('/countries/' + m.country + '/cities/' + m.city + '/medias/' + m.id + '/' + (i + 2)),
         lastmod,
-      }))])]
+      }))])],
     };
 
     await sitemapRef.ref.set({

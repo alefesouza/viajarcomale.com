@@ -15,8 +15,8 @@ const langs = {
     'Latest': 'Recentes',
     'Oldest': 'Antigas',
     'Random': 'Aleatório',
-    'Instagram Highlights': 'Destaques do Instagram',
-    'Instagram Posts': 'Posts do Instagram',
+    'Highlights': 'Destaques',
+    'Posts': 'Posts',
     'Expand Galleries': 'Expandir galerias',
     'Minimize Galleries': 'Minimizar galerias',
     'Next': 'Próximo',
@@ -35,6 +35,7 @@ const langs = {
     'Share': 'Compartilhar',
     'Photo': 'Foto',
     'Video': 'Vídeo',
+    'Location': 'Local',
 
     // Meta
     'Travel photos and links to Viajar com Alê social networks.': 'Fotos de viagens e links para as redes sociais do Viajar com Alê.',

@@ -84,7 +84,11 @@ export async function generateMetadata({ params: { country, city, media } }) {
   const location = (theCity ? isBR && theCity.name_pt ? theCity.name_pt + ' - ' : theCity.name + ' - ' : '') + i18n(countryData.name);
   const description = isBR && theMedia.description_pt ? theMedia.description_pt : theMedia.description;
   const title = (description.split(' ').length > 10 ? description.split(' ').slice(0, 10).join(' ') + '…' : description) + ' - ' + location + ' - ' + i18n('Albums') + ' - ' + SITE_NAME;
-  const image = theMedia.file_type === 'video' ? FILE_DOMAIN_500 + originalMedia.file : FILE_DOMAIN_500 + theMedia.file;
+  let image = theMedia.file_type === 'video' ? FILE_DOMAIN_500 + originalMedia.file : FILE_DOMAIN_500 + theMedia.file;
+
+  if (theMedia.type === 'instagram-story' && theMedia.file.includes('.mp4')) {
+    image = FILE_DOMAIN_500 + theMedia.file.replace('.mp4', '-thumb.png');
+  }
 
   const images = [{
     url: image,
@@ -152,14 +156,23 @@ export default async function Country({ params: { country, city, media } }) {
   }, {
     name: isBR ? theCity.name_pt : theCity.name,
     item: host('/countries/' + country + '/cities/' + city),
-  }, {
+  }];
+
+  if (theMedia.type === 'instagram-story') {
+    breadcrumbs.push({
+      name: i18n('Stories'),
+      item: host('/countries/' + country + '/cities/' + city + '/medias/' + media[0] + '/highlights/' + theMedia.highlight),
+    });
+  }
+
+  breadcrumbs.push({
     name: description.split(' ').length > 10 ? description.split(' ').slice(0, 10).join(' ') + '…' : description,
     item: host('/countries/' + country + '/cities/' + city + '/medias/' + media[0]),
-  }];
+  });
 
   return <div className="container">
     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-      <Link href={ '/countries/' + country + '/cities/' + city + (mediaIndex ? '/medias/' + theMedia.id : '') }>
+      <Link href={ '/countries/' + country + '/cities/' + city + (theMedia.type === 'instagram-story' ? '/highlights/' + theMedia.highlight : '') + (mediaIndex ? '/medias/' + theMedia.id : '') }>
         <img src="/images/back.svg" alt="Back Button" width="30px"></img>
       </Link>
 
@@ -171,7 +184,7 @@ export default async function Country({ params: { country, city, media } }) {
     </div>
 
     <div className={ styles.media }>
-      <InstagramMedia media={theMedia} isBR={isBR} withoutLink expandGalleries fullQuality isMain />
+      <InstagramMedia media={theMedia} isBR={isBR} withoutLink expandGalleries fullQuality isMain hasPoster={theCity.type === 'instagram-story'} />
 
       {theMedia.gallery && theMedia.gallery.length && theMedia.gallery.map(g => <div key={g.file} style={{ marginTop: 16 }}>
         <InstagramMedia key={g.file} media={g} isBR={isBR} withoutLink expandGalleries fullQuality />

@@ -1,0 +1,104 @@
+.country {
+  padding: 8px;
+  border: 1px solid #000000;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  cursor: pointer;
+}
+
+.country:hover {
+  background: #dddddd;
+}
+
+.country_flag {
+  font-size: 30px;
+}
+
+.country_selector {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+
+.instagram_highlights {
+
+}
+
+.instagram_highlights_items {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 10px;
+}
+
+.vertical_content {
+  width: 260px;
+  height: 462px;
+  object-fit: cover;
+}
+
+@media(min-width: 644px) {
+  .instagram_highlights_items {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  }
+
+  .vertical_content {
+    width: 300px;
+    height: 533px;
+  }
+}
+
+.galleries img, .galleries video {
+  max-width: 100%;
+}
+
+.gallery_item {
+  text-align: center;
+  position: relative;
+}
+
+.is_gallery::after {
+  content: url('/images/gallery.svg');
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  pointer-events: none;
+}
+
+.instagram_photos_title {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.sort_picker {
+  display: flex;
+  align-items: center;
+  margin-top: 24px; 
+}
+
+.item_description {
+
+}
+
+.item_hashtags {
+  margin-top: 4px;
+}
+
+.item_hashtags a {
+  margin-top: 4px;
+  color: #2096cc;
+}
+
+.item_hashtags a:hover {
+  text-decoration: underline;
+}
+
+.short_video_links {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}

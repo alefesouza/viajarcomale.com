@@ -110,9 +110,20 @@ export default async function Country({ params: { theHashtag }, searchParams }) 
   </div>);
 
   let instagramPhotos = photos.filter(p => p.type === 'instagram' || p.type === 'instagram-gallery');
+  const instagramStories = photos.filter(p => p.type === 'instagram-story');
   const shortVideos = photos.filter(p => p.type === 'short-video');
   const youtubeVideos = photos.filter(p => p.type === 'youtube');
   const _360photos = photos.filter(p => p.type === '360photo');
+
+  if (sort == 'desc') {
+    instagramStories.sort(function(a,b){
+      return new Date(b.date) - new Date(a.date);
+    });
+  } else if (sort == 'asc') {
+    instagramStories.sort(function(a,b){
+      return new Date(a.date) - new Date(b.date);
+    });
+  }
 
   let expandedList = [];
 
@@ -167,12 +178,16 @@ export default async function Country({ params: { theHashtag }, searchParams }) 
 
       { _360photos.length > 0 && <Scroller title="360 Photos" items={_360photos} is360Photos /> }
 
+      { instagramStories.length > 1 && sortPicker('stories') }
+
+      { instagramStories.length > 0 && <Scroller title="Stories" items={instagramStories} isStories /> }
+
       { instagramPhotos.filter(p => !p.file_type).length > 1 && sortPicker('photos') }
 
       { instagramPhotos.filter(p => !p.file_type).length > 0 && <div className="container-fluid">
         <div className={ styles.instagram_photos }>
           <div className={ styles.instagram_photos_title }>
-            <h3>{i18n('Instagram Posts')}</h3>
+            <h3>{i18n('Posts')}</h3>
             { !expandGalleries ? <Link href={ `/hashtags/${hashtag}/expand` + (sort !== 'desc' ? '?sort=' + sort : '')} scroll={false} prefetch={false}>{i18n('Expand Galleries')}</Link> : <Link href={ `/hashtags/${hashtag}` + (sort !== 'desc' ? '?sort=' + sort : '')} scroll={false} prefetch={false}>{i18n('Minimize Galleries')}</Link> }
           </div>
           
