@@ -82,7 +82,12 @@ export async function generateMetadata({ params: { country, city, media } }) {
   theMedia = selectedMedia;
 
   const location = (theCity ? isBR && theCity.name_pt ? theCity.name_pt + ' - ' : theCity.name + ' - ' : '') + i18n(countryData.name);
-  const description = isBR && theMedia.description_pt ? theMedia.description_pt : theMedia.description;
+  let description = isBR && theMedia.description_pt ? theMedia.description_pt : theMedia.description;
+
+  if (!description && theMedia.location_data) {
+    description = theMedia.location_data.name;
+  }
+
   const title = (description.split(' ').length > 10 ? description.split(' ').slice(0, 10).join(' ') + '…' : description) + ' - ' + location + ' - ' + i18n('Albums') + ' - ' + SITE_NAME;
   let image = theMedia.file_type === 'video' ? FILE_DOMAIN_500 + originalMedia.file : FILE_DOMAIN_500 + theMedia.file;
 
