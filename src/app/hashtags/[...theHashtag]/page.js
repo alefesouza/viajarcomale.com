@@ -8,6 +8,7 @@ import Scroller from '@/app/components/scroller';
 import { redirect } from 'next/dist/server/api-utils';
 import InstagramMedia from '@/app/components/instagram-media';
 import ShareButton from '@/app/components/share-button';
+import randomIntFromInterval from '@/app/utils/random-int';
 
 export async function generateMetadata({ params: { theHashtag } }) {
   // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -94,11 +95,17 @@ export default async function Country({ params: { theHashtag }, searchParams }) 
     [host('/hashtags/') + hashtag + ('?sort=' + sort)]: FieldValue.increment(1),
   }, {merge:true});
 
+  let newShuffle = randomIntFromInterval(1, 15);
+
+  if (newShuffle == searchParams.shuffle) {
+    newShuffle = randomIntFromInterval(1, 15);
+  }
+
   const sortPicker = (type) => (<div className="container-fluid">
     <div className={ styles.sort_picker }>
       <span>{i18n('Sorting')}:</span>
 
-      {[{name: 'Latest', value: 'desc'}, {name: 'Oldest', value: 'asc'}, {name: 'Random', value: 'random'}].map((o) => <Link key={o} href={ '?sort=' + o.value } scroll={false}><label><input type="radio" name={'sort-' + type } value={o.value} checked={sort === o.value} readOnly />{i18n(o.name)}</label></Link>)}
+      {[{name: 'Latest', value: 'desc'}, {name: 'Oldest', value: 'asc'}, {name: 'Random', value: 'random'}].map((o) => <Link key={o} href={ o.value === 'random' ? sort === 'random' ? '/hashtags/' + hashtag : '/hashtags/' + hashtag + '?sort=random&shuffle=' + newShuffle : o.value !== 'desc' ? '?sort=' + o.value : '/hashtags/' + hashtag } scroll={false}><label><input type="radio" name={'sort-' + type } value={o.value} checked={sort === o.value} readOnly />{i18n(o.name)}</label></Link>)}
     </div>
   </div>);
 

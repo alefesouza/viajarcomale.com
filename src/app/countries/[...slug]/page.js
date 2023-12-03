@@ -343,7 +343,7 @@ export default async function Country({ params: { slug }, searchParams }) {
       <div className={ styles.sort_picker }>
       <span>{i18n('Sorting')}:</span>
 
-      {[{name: 'Latest', value: 'desc'}, {name: 'Oldest', value: 'asc'}, {name: 'Random', value: 'random'}].map((o) => <Link key={o.value} href={ o.value === 'random' ? sort === 'random' ? '/' : paginationBase.split('?')[0].replace('/page/{page}', '') + '?sort=random&shuffle=' + newShuffle : '?sort=' + o.value } scroll={false} prefetch={false}><label><input type="radio" name={'sort-' + type } value={o.value} checked={sort === o.value} readOnly />{i18n(o.name)}</label></Link>)}
+      {[{name: 'Latest', value: 'desc'}, {name: 'Oldest', value: 'asc'}, {name: 'Random', value: 'random'}].map((o) => <Link key={o.value} href={ o.value === 'random' ? sort === 'random' ? paginationBase.split('?')[0].replace('/page/{page}', '') : paginationBase.split('?')[0].replace('/page/{page}', '') + '?sort=random&shuffle=' + newShuffle : o.value !== 'desc' ? '?sort=' + o.value :  paginationBase.split('?')[0].replace('/page/{page}', '') } scroll={false} prefetch={false}><label><input type="radio" name={'sort-' + type } value={o.value} checked={sort === o.value} readOnly />{i18n(o.name)}</label></Link>)}
     </div>
 
     {isRandom && <div style={{ textAlign: 'center', marginTop: 18 }}>
