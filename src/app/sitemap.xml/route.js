@@ -94,6 +94,10 @@ export async function GET() {
         loc: host('/hashtags/') + decodeURIComponent(h) + '/expand',
         lastmod,
       }]),
+      ...medias.filter(m => m.type === 'instagram-story').map((m) => ({
+        loc: host('/countries/' + m.country + '/cities/' + m.city + '/medias/' + m.id),
+        lastmod,
+      })),
       ...medias.filter(m => m.type === 'instagram').flatMap(m => [{
         loc: host('/countries/' + m.country + '/cities/' + m.city + '/medias/' + m.id),
         lastmod,
