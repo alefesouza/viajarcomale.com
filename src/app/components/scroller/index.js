@@ -19,9 +19,9 @@ export default function Scroller({ title, items, isShortVideos, isInstagramHighl
       <div className={ styles.scroller_left_arrow }>‹</div>
 
       <div className={ styles.scroller_items } data-scroller>
-        {items.map(p => <div key={ p.id } className={ styles.scroller_item + (is360Photos ? ' ' + styles.item_360_photo : '') + (isInstagramHighlights && p.children ? ' ' + styles.is_gallery : '') }>
+        {items.map(p => <div key={ p.id } className={ styles.scroller_item + (is360Photos ? ' ' + styles.item_360_photo : '') + (isInstagramHighlights ? ' ' + styles.is_gallery : '') }>
           <a href={isInstagramHighlights ? host('/countries/' + p.country + '/cities/' + p.city + '/highlights/' + p.id) : isShortVideos ? p.tiktok_link : p.link} target={isInstagramHighlights ? '_self' : '_blank'}>
-            {isStories && p.file.includes('.mp4') ? <video src={FILE_DOMAIN + p.file} controls poster={FILE_DOMAIN_500 + p.file.replace('.mp4', '-thumb.png')} /> : <img src={isYouTubeVideos ? p.image : FILE_DOMAIN + p.file} srcSet={ isYouTubeVideos ? p.image : `${FILE_DOMAIN_500 + p.file} 500w` } alt={isBR ? p.description_pt : p.description} className={!isYouTubeVideos && !is360Photos ? styles.vertical_content : isYouTubeVideos ? styles.youtube_video : ''} loading="lazy" />}
+            {isStories && p.file.includes('.mp4') ? <video src={FILE_DOMAIN + p.file} controls poster={FILE_DOMAIN + p.file.replace('.mp4', '-thumb.png')} /> : <img src={isYouTubeVideos ? p.image : FILE_DOMAIN + p.file} srcSet={ isYouTubeVideos ? p.image : `${FILE_DOMAIN_500 + p.file} 500w` } alt={isBR ? p.description_pt : p.description} className={!isYouTubeVideos && !is360Photos ? styles.vertical_content : isYouTubeVideos ? styles.youtube_video : ''} loading="lazy" />}
           </a>
 
           {isShortVideos && <div className={ styles.short_video_links }>
@@ -30,7 +30,7 @@ export default function Scroller({ title, items, isShortVideos, isInstagramHighl
             </a>)}
           </div>}
 
-          {isInstagramHighlights && p.children && <div className={ styles.external_links }>
+          {isInstagramHighlights && <div className={ styles.external_links }>
             {<a href={p.link} target="_blank">
               <img src={host('/logos/instagram.png')} alt="Instagram" />
             </a>}

@@ -45,7 +45,7 @@ export async function generateMetadata({ params: { country, city, location } }) 
   }
 
   const db = getFirestore();
-  const mediaRef = await db.collection('locations').doc(location + '-' + city).get();
+  const mediaRef = await db.collection('countries').doc(country).collection('locations').doc(location).get();
   const theMedia = mediaRef.data();
 
   const theLocation = (theCity ? isBR && theCity.name_pt ? theCity.name_pt + ' - ' : theCity.name + ' - ' : '') + i18n(countryData.name);
@@ -102,7 +102,7 @@ export default async function Highlight({ params: { country, city, location }, s
 
   let photos = [];
 
-  const mediaRef = await db.collection('locations').doc(location + '-' + city).get();
+  const mediaRef = await db.collection('countries').doc(country).collection('locations').doc(location).get();
   let theMedia = mediaRef.data();
 
   if (!cache.exists) {

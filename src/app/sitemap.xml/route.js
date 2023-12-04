@@ -8,7 +8,7 @@ customInitApp();
 
 export async function GET() {
   const host = useHost();
-  const lastmod = '2023-12-03';
+  const lastmod = '2023-12-04';
 
   const db = getFirestore();
   const sitemapRef = await db.collection('caches').doc('static_pages').collection('static_pages').doc(host('sitemap.xml').split('//')[1].replaceAll('/', '-')).get();
@@ -36,7 +36,7 @@ export async function GET() {
     locationsSnapshot.forEach(doc => {
       locations.push(doc.data());
     });
-    const highlights = medias.filter(m => m.type === 'instagram-highlight' && m.children);
+    const highlights = medias.filter(m => m.type === 'instagram-highlight');
 
     obj = {
       '@': {
