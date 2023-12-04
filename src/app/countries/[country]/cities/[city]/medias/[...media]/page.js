@@ -3,6 +3,7 @@ import useHost from '@/app/hooks/use-host';
 import { getFirestore } from 'firebase-admin/firestore';
 import styles from './page.module.css';
 import { FILE_DOMAIN, FILE_DOMAIN_500, SITE_NAME } from '@/app/utils/constants';
+import { serialize } from 'tinyduration'
 import { redirect } from 'next/navigation'
 import InstagramMedia from '@/app/components/instagram-media';
 import Link from 'next/link';
@@ -197,7 +198,7 @@ export default async function Country({ params: { country, city, media } }) {
       <InstagramMedia media={theMedia} isBR={isBR} withoutLink expandGalleries fullQuality isMain />
 
       {theMedia.gallery && theMedia.gallery.length && theMedia.gallery.map(g => <div key={g.file} style={{ marginTop: 16 }}>
-        <InstagramMedia key={g.file} media={g} isBR={isBR} withoutLink expandGalleries fullQuality />
+        {g.file.includes('.mp4') ? <InstagramMedia key={g.file} media={g} isBR={isBR} expandGalleries fullQuality isListing /> : <InstagramMedia key={g.file} media={g} isBR={isBR} expandGalleries fullQuality isListing />}
       </div>)}
     </div>
 
@@ -212,6 +213,7 @@ export default async function Country({ params: { country, city, media } }) {
         FILE_DOMAIN_500 + theMedia.file.replace('.mp4', '-thumb.png')
        ],
       "uploadDate": theMedia.date ? theMedia.date.replace(' ', 'T') + '+03:00' : theCity.end + 'T12:00:00+03:00',
+      "duration": serialize({ seconds: parseInt(theMedia.duration) }),
       "contentUrl": FILE_DOMAIN + theMedia.file
     }) }}></Script>}
   </div>

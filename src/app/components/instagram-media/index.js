@@ -10,7 +10,7 @@ export default function InstagramMedia({ media, expandGalleries, isBR, withoutLi
   const host = useHost();
   const i18n = useI18n();
 
-  const mediaElement = media.file_type === 'video' || media.file.includes('.mp4') ? <>{isListing ? <img src={FILE_DOMAIN_500 + media.file.replace('.mp4', '-thumb.png')} alt={isBR ? media.description_pt : media.description} loading="lazy" /> : <video src={FILE_DOMAIN + media.file} controls poster={(fullQuality ? FILE_DOMAIN : FILE_DOMAIN_500) + media.file.replace('.mp4', '-thumb.png')} />}</> : <img src={FILE_DOMAIN + media.file} srcSet={ `${(fullQuality ? FILE_DOMAIN : FILE_DOMAIN_500) + media.file} 500w` } alt={isBR ? media.description_pt : media.description} loading="lazy" />;
+  const mediaElement = media.file_type === 'video' || media.file.includes('.mp4') ? <>{isListing ? <img src={(fullQuality ? FILE_DOMAIN : FILE_DOMAIN_500) + media.file.replace('.mp4', '-thumb.png')} alt={isBR ? media.description_pt : media.description} loading="lazy" /> : <video src={FILE_DOMAIN + media.file} controls poster={(fullQuality ? FILE_DOMAIN : FILE_DOMAIN_500) + media.file.replace('.mp4', '-thumb.png')} />}</> : <img src={FILE_DOMAIN + media.file} srcSet={ `${(fullQuality ? FILE_DOMAIN : FILE_DOMAIN_500) + media.file} 500w` } alt={isBR ? media.description_pt : media.description} loading="lazy" />;
   const link = host('/countries/' + media.country + '/cities/' + media.city + '/medias/' + media.id + (isMain ? '/1' : '') + (media.img_index ? '/' + media.img_index : ''));
 
   return <div key={ media.file } className={ styles.gallery_item + (media.gallery && media.gallery.length && ! expandGalleries ? ' ' + styles.is_gallery : '' ) }>
