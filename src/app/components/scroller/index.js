@@ -39,7 +39,7 @@ export default function Scroller({ title, items, isShortVideos, isInstagramHighl
           </div>}
 
           {isStories && <div className={ styles.external_links }>
-            {<a href={'https://www.instagram.com/stories/highlights/' + p.highlight.replace('media-highlight', '') + '/'} target="_blank">
+            {<a href={'https://www.instagram.com/stories/highlights/' + p.highlight.replace('media-highlight-', '') + '/'} target="_blank">
               <img src={host('/logos/instagram.png')} alt="Instagram" />
             </a>}
 

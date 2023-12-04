@@ -110,7 +110,7 @@ export default async function Highlight({ params: { country, city, location }, s
 
     photosSnapshot.forEach((photo) => {
       const data = photo.data();
-      data.link = 'https://www.instagram.com/stories/highlights/' + data.highlight.replace('media-highlight', '') + '/';
+      data.link = 'https://www.instagram.com/stories/highlights/' + data.highlight.replace('media-highlight-', '') + '/';
 
       photos = [...photos, data];
     });
