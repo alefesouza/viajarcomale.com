@@ -176,7 +176,7 @@ export default async function Country({ params: { country, city, media } }) {
   }
 
   breadcrumbs.push({
-    name: (description.split(' ').length > 10 ? description.split(' ').slice(0, 10).join(' ') + '…' : description) || theMedia.location_data ? theMedia.location_data.name : '',
+    name: (description.split(' ').length > 10 ? description.split(' ').slice(0, 10).join(' ') + '…' : description) || (theMedia.location_data ? theMedia.location_data.name : ''),
     item: host('/countries/' + country + '/cities/' + city + '/medias/' + media[0]),
   });
 
