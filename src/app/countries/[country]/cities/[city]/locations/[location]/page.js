@@ -161,7 +161,7 @@ export default async function Highlight({ params: { country, city, location }, s
   return <div>
     <div className="container">
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <Link href={ '/countries/' + country + '/cities/' + city } id="back-button" className={ styles.history_back_button }>
+        <Link href={ '/countries/' + country + '/cities/' + city } id="back-button" className={ styles.history_back_button } scroll={false}>
           <img src="/images/back.svg" alt="Back Button" width="30px"></img>
         </Link>
 
@@ -183,7 +183,7 @@ export default async function Highlight({ params: { country, city, location }, s
           </div>
           
           <div className={ styles.instagram_highlights_items }>
-            {instagramStories.map(p => <InstagramMedia key={p.id} media={p} isBR={isBR} hasPoster />)}
+            {instagramStories.map(p => <InstagramMedia key={p.id} media={p} isBR={isBR} hasPoster isListing />)}
           </div>
         </div>
       </div>}

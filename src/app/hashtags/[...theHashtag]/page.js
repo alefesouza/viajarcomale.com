@@ -153,9 +153,9 @@ export default async function Country({ params: { theHashtag }, searchParams }) 
   return <div>
     <div className="container">
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <a href="#" id="back-button" className={ styles.history_back_button }>
+        <Link href="/" id="back-button" className={ styles.history_back_button } scroll={false}>
           <img src="/images/back.svg" alt="Back Button" width="30px"></img>
-        </a>
+        </Link>
 
         <ShareButton />
       </div>

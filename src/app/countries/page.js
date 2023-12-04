@@ -36,7 +36,7 @@ export default function Countries() {
 
   return <div className="container">
     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-      <Link href="/" id="back-button">
+      <Link href="/" id="back-button" scroll={false}>
         <img src={host('/images/back.svg')} alt="Back Button" width="30px"></img>
       </Link>
 
