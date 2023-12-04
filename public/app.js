@@ -73,17 +73,11 @@
   const firstPage = window.location.pathname;
 
   function onBackClick(e) {
-    e.preventDefault();
-
-    if (window.location.pathname === firstPage) {
-      if (e.target.href = '#') {
-        window.location.href = '/';
-        return;
-      } else {
-        window.location.href = e.target.href;
-        return;
-      }
+    if (window.location.pathname !== firstPage) {
+      return;
     }
+
+    e.preventDefault();
 
     history.back();
   }

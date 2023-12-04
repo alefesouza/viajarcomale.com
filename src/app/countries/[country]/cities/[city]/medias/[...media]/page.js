@@ -2,12 +2,13 @@ import useI18n from '@/app/hooks/use-i18n';
 import useHost from '@/app/hooks/use-host';
 import { getFirestore } from 'firebase-admin/firestore';
 import styles from './page.module.css';
-import { FILE_DOMAIN_500, SITE_NAME } from '@/app/utils/constants';
+import { FILE_DOMAIN, FILE_DOMAIN_500, SITE_NAME } from '@/app/utils/constants';
 import { redirect } from 'next/navigation'
 import InstagramMedia from '@/app/components/instagram-media';
 import Link from 'next/link';
 import ShareButton from '@/app/components/share-button';
 import StructuredBreadcrumbs from '@/app/components/structured-breadcrumbs';
+import Script from 'next/script';
 
 async function getCountry(country, city) {
   const db = getFirestore();
@@ -92,7 +93,7 @@ export async function generateMetadata({ params: { country, city, media } }) {
     description = '';
   }
 
-  const title = (description.split(' ').length > 10 ? description.split(' ').slice(0, 10).join(' ') + '…' : description) + ' - ' + location + ' - ' + i18n('Albums') + ' - ' + SITE_NAME;
+  const title = (description ? (description.split(' ').length > 10 ? description.split(' ').slice(0, 10).join(' ') + '…' : description) + ' - ' : '') + location + ' - ' + i18n('Albums') + ' - ' + SITE_NAME;
   let image = theMedia.file_type === 'video' ? FILE_DOMAIN_500 + originalMedia.file : FILE_DOMAIN_500 + theMedia.file;
 
   if (theMedia.type === 'instagram-story' && theMedia.file.includes('.mp4')) {
@@ -181,7 +182,7 @@ export default async function Country({ params: { country, city, media } }) {
 
   return <div className="container">
     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-      <Link href={ '/countries/' + country + '/cities/' + city + (theMedia.type === 'instagram-story' ? '/highlights/' + theMedia.highlight : '') + (mediaIndex ? '/medias/' + theMedia.id : '') } id="back-button" prefetch={false}>
+      <Link href={ '/countries/' + country + '/cities/' + city + (theMedia.type === 'instagram-story' ? '/highlights/' + theMedia.highlight : '') + (mediaIndex ? '/medias/' + theMedia.id : '') } id="back-button" scroll={false} prefetch={false}>
         <img src="/images/back.svg" alt="Back Button" width="30px"></img>
       </Link>
 
@@ -201,5 +202,17 @@ export default async function Country({ params: { country, city, media } }) {
     </div>
 
     <StructuredBreadcrumbs breadcrumbs={breadcrumbs} />
+
+    {theMedia.type === 'instagram-story' && theMedia.file.includes('.mp4') && <Script id="ld-video" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "VideoObject",
+      "name": theMedia.location_data ? theMedia.location_data.name : isBR && theCity.name_pt ? theCity.name_pt : theCity.name + ' - ' + i18n(countryData.name),
+      "description": theMedia.description,
+      "thumbnailUrl": [
+        FILE_DOMAIN_500 + theMedia.file.replace('.mp4', '-thumb.png')
+       ],
+      "uploadDate": theMedia.date.replace(' ', 'T') + '+03:00',
+      "contentUrl": FILE_DOMAIN + theMedia.file
+    }) }}></Script>}
   </div>
 }
