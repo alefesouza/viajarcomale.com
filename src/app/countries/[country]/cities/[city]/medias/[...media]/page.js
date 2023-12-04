@@ -87,7 +87,7 @@ export async function generateMetadata({ params: { country, city, media } }) {
   let description = isBR && theMedia.description_pt ? theMedia.description_pt : theMedia.description;
 
   if (!description && theMedia.location_data) {
-    description = theMedia.location_data.name;
+    description = theMedia.location_data[0].name;
   }
 
   if (!description) {
@@ -177,7 +177,7 @@ export default async function Country({ params: { country, city, media } }) {
   }
 
   breadcrumbs.push({
-    name: (description.split(' ').length > 10 ? description.split(' ').slice(0, 10).join(' ') + '…' : description) || (theMedia.location_data ? theMedia.location_data.name : ''),
+    name: (description && description.split(' ').length > 10 ? description.split(' ').slice(0, 10).join(' ') + '…' : description) || (theMedia.location_data ? theMedia.location_data[0].name : ''),
     item: host('/countries/' + country + '/cities/' + city + '/medias/' + media[0]),
   });
 
@@ -207,7 +207,7 @@ export default async function Country({ params: { country, city, media } }) {
     {theMedia.file.includes('.mp4') && <Script id="ld-video" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
       "@context": "https://schema.org",
       "@type": "VideoObject",
-      "name": theMedia.location_data ? theMedia.location_data.name : isBR && theCity.name_pt ? theCity.name_pt : theCity.name + ' - ' + i18n(countryData.name),
+      "name": theMedia.location_data ? theMedia.location_data[0].name : isBR && theCity.name_pt ? theCity.name_pt : theCity.name + ' - ' + i18n(countryData.name),
       "description": theMedia.description,
       "thumbnailUrl": [
         FILE_DOMAIN_500 + theMedia.file.replace('.mp4', '-thumb.png')

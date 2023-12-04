@@ -62,8 +62,8 @@ export default function Scroller({ title, items, isShortVideos, isInstagramHighl
             {isBR ? p.description_pt : p.description}
           </div>
 
-          {p.location && p.location_data && <div style={{marginTop: 4}} className={styles.location}>
-            {i18n('Location')}: <Link href={'/countries/' + p.country + '/cities/' + p.city + '/locations/' + p.location} prefetch={false}>{p.location_data.name}{p.location_data.alternative_names && ' (' + p.location_data.alternative_names.join(', ') + ')'}</Link>
+          {p.locations && p.location_data && <div style={{marginTop: 4}} className={styles.location}>
+            {i18n(p.location_data.length > 1 ? 'Locations' : 'Location')}: {p.location_data.map((location, i) => <><Link href={'/countries/' + p.country + '/cities/' + p.city + '/locations/' + location.slug} key={location.slug}>{location.name}{location.alternative_names && ' (' + location.alternative_names.join(', ') + ')'}</Link>{i < p.location_data.length - 1 ? ', ' : ''}</>)}
           </div>}
 
           {p.hashtags && <div className={ styles.item_hashtags }>
