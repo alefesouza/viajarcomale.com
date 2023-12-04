@@ -45,7 +45,7 @@ export async function generateMetadata({ params: { country, city, theLocation } 
     return {};
   }
 
-  const location = theLocation[0];
+  const location = decodeURIComponent(theLocation[0]);
 
   const db = getFirestore();
   const mediaRef = await db.collection('countries').doc(country).collection('locations').doc(location).get();

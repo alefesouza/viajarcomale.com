@@ -16,7 +16,7 @@ export async function GET() {
 
   let obj = {};
 
-  if (!allSitemap || allSitemap.a_should_update) {
+  // if (!allSitemap || allSitemap.a_should_update) {
     const countriesSnapshot = await db.collection('countries').get();
     let countries = [];
 
@@ -24,8 +24,6 @@ export async function GET() {
       countries = [...countries, country.data()];
     });
 
-    const allHashtagsRef = await db.collection('caches').doc('static_pages').collection('static_pages').doc('hashtags').get();
-    const hashtags = allHashtagsRef.data().hashtags;
     const mediasSnapshot = await db.collectionGroup('medias').get();
     const medias = [];
     mediasSnapshot.forEach(doc => {
@@ -35,6 +33,11 @@ export async function GET() {
     const locations = [];
     locationsSnapshot.forEach(doc => {
       locations.push(doc.data());
+    });
+    const hashtagsSnapshot = await db.collectionGroup('hashtags').get();
+    const hashtags = [];
+    hashtagsSnapshot.forEach(doc => {
+      hashtags.push(doc.data());
     });
     const highlights = medias.filter(m => m.type === 'instagram-highlight');
 
@@ -83,17 +86,22 @@ export async function GET() {
         loc: host('/countries/' + m.country + '/cities/' + m.city + '/highlights/' + m.id),
         lastmod,
       })),
-      ...locations.map((m) => ({
-        loc: host('/countries/' + m.country + '/cities/' + m.city + '/locations/' + m.slug),
+      ...locations.map(m => ({
+        loc: host('/countries/' + m.country + '/cities/' + m.city + '/locations/' + decodeURIComponent(m.slug)),
         lastmod,
       })),
-      ...hashtags.flatMap(h => [{
-        loc: host('/hashtags/') + decodeURIComponent(h),
+      ...locations.filter(m => m.totals.posts > 0).map(m => ({
+        loc: host('/countries/' + m.country + '/cities/' + m.city + '/locations/' + decodeURIComponent(m.slug) + '/expand'),
         lastmod,
-      }, {
-        loc: host('/hashtags/') + decodeURIComponent(h) + '/expand',
+      })),
+      ...hashtags.map(h => ({
+        loc: host('/hashtags/') + decodeURIComponent(h.name),
         lastmod,
-      }]),
+      })),
+      ...hashtags.filter(h => h.totals.posts > 0).map(h => ({
+        loc: host('/hashtags/') + decodeURIComponent(h.name) + '/expand',
+        lastmod,
+      })),
       ...medias.filter(m => m.type === 'instagram-story').map((m) => ({
         loc: host('/countries/' + m.country + '/cities/' + m.city + '/medias/' + m.id),
         lastmod,
@@ -114,7 +122,7 @@ export async function GET() {
       a_should_update: false,
       sitemap: JSON.stringify(obj),
     });
-  }
+  // }
 
   if (Object.keys(obj).length === 0) {
     obj = JSON.parse(allSitemap.sitemap);
