@@ -15,7 +15,6 @@ const langs = {
     'Latest': 'Recentes',
     'Oldest': 'Antigas',
     'Random': 'Aleatório',
-    'Highlights': 'Destaques',
     'Posts': 'Posts',
     'Expand Galleries': 'Expandir galerias',
     'Minimize Galleries': 'Minimizar galerias',
@@ -36,6 +35,7 @@ const langs = {
     'Photo': 'Foto',
     'Video': 'Vídeo',
     'Location': 'Local',
+    'Locations': 'Locais',
 
     // Meta
     'Travel photos and links to Viajar com Alê social networks.': 'Fotos de viagens e links para as redes sociais do Viajar com Alê.',

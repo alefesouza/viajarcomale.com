@@ -19,7 +19,6 @@ export default function InstagramMedia({ media, expandGalleries, isBR, withoutLi
 
       {(media.file_type === 'video' || media.file.includes('.mp4')) && hasPoster && isListing &&
       <div className={ styles.play_button }><img src="/images/play.svg" alt="Play" /></div>}
-
     </Link>}
 
     <div className={ styles.external_links }>
@@ -32,9 +31,9 @@ export default function InstagramMedia({ media, expandGalleries, isBR, withoutLi
     {!media.is_gallery ? <div>
       {isBR ? media.description_pt : media.description}
     </div> : null}
-
-    {media.location && media.location_data && <div style={{marginTop: 4}} className={styles.location}>
-      {i18n('Location')}: <Link href={'/countries/' + media.country + '/cities/' + media.city + '/locations/' + media.location}>{media.location_data.name}{media.location_data.alternative_names && ' (' + media.location_data.alternative_names.join(', ') + ')'}</Link>
+    
+    {!media.is_gallery && media.locations && media.location_data && <div style={{marginTop: 4}} className={styles.location}>
+      {i18n(media.location_data.length > 1 ? 'Locations' : 'Location')}: {media.location_data.map((location, i) => <><Link href={'/countries/' + media.country + '/cities/' + media.city + '/locations/' + location.slug} key={location.slug}>{location.name}{location.alternative_names && ' (' + location.alternative_names.join(', ') + ')'}</Link>{i < media.location_data.length - 1 ? ', ' : ''}</>)}
     </div>}
 
     {!media.is_gallery && media.hashtags && media.hashtags.length > 0 && <Hashtags hashtags={media.hashtags} />}

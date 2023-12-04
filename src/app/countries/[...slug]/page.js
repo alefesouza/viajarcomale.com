@@ -375,22 +375,22 @@ export default async function Country({ params: { slug }, searchParams }) {
       </ul>
     </div>
 
-    { instagramHighLights.length > 1 && sortPicker('highlights') }
+    { instagramHighLights.length > 1 && sortPicker('stories') }
 
     <div className={ styles.galleries }>
-      {instagramHighLights.length > 0 && <Scroller title="Highlights" items={instagramHighLights} isInstagramHighlights cityData={cityData} />}
+      {instagramHighLights.length > 0 && <Scroller title="Stories" items={instagramHighLights} isInstagramHighlights cityData={cityData} />}
 
       { shortVideos.length > 1 && sortPicker('short') }
 
-      { shortVideos.length > 0 && <Scroller title="Short Videos" items={shortVideos} isShortVideos /> }
+      { shortVideos.length > 0 && <Scroller title={i18n('Short Videos')} items={shortVideos} isShortVideos /> }
 
       { youtubeVideos.length > 1 && sortPicker('youtube') }
 
-      { youtubeVideos.length > 0 && <Scroller title="YouTube Videos" items={youtubeVideos} isYouTubeVideos /> }
+      { youtubeVideos.length > 0 && <Scroller title={i18n('YouTube Videos')} items={youtubeVideos} isYouTubeVideos /> }
 
       { _360photos.length > 1 && sortPicker('360photos') }
 
-      { _360photos.length > 0 && <Scroller title="360 Photos" items={_360photos} is360Photos /> }
+      { _360photos.length > 0 && <Scroller title={i18n('360 Photos')} items={_360photos} is360Photos /> }
 
       { instagramPhotos.filter(p => !p.file_type).length > 1 && sortPicker('photos') }
 

@@ -1,4 +1,4 @@
-import useI18n from '../../hooks/use-i18n';
+import useI18n from '@/app/hooks/use-i18n';
 import useHost from '@/app/hooks/use-host';
 import Link from 'next/link';
 import { getFirestore, FieldValue } from 'firebase-admin/firestore';
@@ -10,14 +10,51 @@ import InstagramMedia from '@/app/components/instagram-media';
 import ShareButton from '@/app/components/share-button';
 import randomIntFromInterval from '@/app/utils/random-int';
 
-export async function generateMetadata({ params: { theHashtag } }) {
+async function getCountry(country, city) {
+  const db = getFirestore();
+  const countryDoc = await db.collection('countries').doc(country).get();
+  const countryData = countryDoc.data();
+
+  if (city && !countryData.cities.find(c => c.slug === city)) {
+    return false;
+  }
+  
+  return countryData;
+}
+
+export async function generateMetadata({ params: { country, city, theLocation } }) {
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const i18n = useI18n();
-  
-  const hashtag = decodeURIComponent(theHashtag[0]);
-  const title = '#' + hashtag + ' - Hashtags' + ' - ' + SITE_NAME;
-  const description = i18n('Photos and videos taken by Viajar com Alê with the hashtag #:hashtag:.', {
-    hashtag,
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const host = useHost();
+  const isBR = host().includes('viajarcomale.com.br');
+
+  const countryData = await getCountry(country, city);
+
+  if (!countryData) {
+    return {};
+  }
+
+  let theCity = null;
+
+  if (city) {
+    theCity = countryData.cities.find(c => c.slug === city);
+  }
+
+  if (!theCity) {
+    return {};
+  }
+
+  const location = theLocation[0];
+
+  const db = getFirestore();
+  const mediaRef = await db.collection('countries').doc(country).collection('locations').doc(location).get();
+  const theMedia = mediaRef.data();
+
+  const finalLocation = (theCity ? isBR && theCity.name_pt ? theCity.name_pt + ' - ' : theCity.name + ' - ' : '') + i18n(countryData.name);
+  const title = theMedia.name + ' - ' + finalLocation + ' - ' + i18n('Albums') + ' - ' + SITE_NAME;
+  const description = i18n('Photos and videos taken by Viajar com Alê in :location:', {
+    location: theMedia.name,
   });
 
   return {
@@ -37,18 +74,26 @@ export async function generateMetadata({ params: { theHashtag } }) {
   }
 }
 
-export default async function Country({ params: { theHashtag }, searchParams }) {
+export default async function Country({ params: { country, city, theLocation }, searchParams }) {
   const i18n = useI18n();
   const host = useHost();
   const isBR = host().includes('viajarcomale.com.br');
 
-  const [queryHashtag, expand] = theHashtag;
-  const hashtag = decodeURIComponent(queryHashtag);
+  const [queryLocation, expand] = theLocation;
+  const location = decodeURIComponent(queryLocation);
 
   const expandGalleries = expand;
   let sort = searchParams.sort && ['asc', 'desc', 'random'].includes(searchParams.sort) && searchParams.sort || 'desc';
 
-  const cacheRef = `/caches/hashtags/hashtags/${hashtag}/sort/${sort === 'asc' ? 'asc' : 'desc'}`;
+  const countryData = await getCountry(country, city);
+
+  if (!countryData) {
+    redirect('/');
+  }
+
+  let theCity = countryData.cities.find(c => c.slug === city);
+
+  const cacheRef = `/caches/locations/locations/${location}/sort/${sort === 'asc' ? 'asc' : 'desc'}`;
 
   const db = getFirestore();
   const cache = await db.doc(cacheRef).get();
@@ -61,8 +106,11 @@ export default async function Country({ params: { theHashtag }, searchParams }) 
 
   let photos = [];
 
+  const mediaRef = await db.collection('countries').doc(country).collection('locations').doc(location).get();
+  let theMedia = mediaRef.data();
+
   if (!cache.exists) {
-    const photosSnapshot = await db.collectionGroup('medias').where('hashtags', 'array-contains', hashtag).orderBy('order', sort).get();
+    const photosSnapshot = await db.collection('countries').doc(country).collection('medias').where('locations', 'array-contains', location).orderBy('order', sort).get();
 
     photosSnapshot.forEach((photo) => {
       const data = photo.data();
@@ -92,7 +140,7 @@ export default async function Country({ params: { theHashtag }, searchParams }) 
   }
 
   db.collection('accesses').doc((new Date()).toISOString().split('T')[0]).set({
-    [host('/hashtags/') + hashtag + ('?sort=' + sort)]: FieldValue.increment(1),
+    [host('/locations/') + location + ('?sort=' + sort)]: FieldValue.increment(1),
   }, {merge:true});
 
   let newShuffle = randomIntFromInterval(1, 15);
@@ -105,7 +153,7 @@ export default async function Country({ params: { theHashtag }, searchParams }) 
     <div className={ styles.sort_picker }>
       <span>{i18n('Sorting')}:</span>
 
-      {[{name: 'Latest', value: 'desc'}, {name: 'Oldest', value: 'asc'}, {name: 'Random', value: 'random'}].map((o) => <Link key={o} href={ o.value === 'random' ? sort === 'random' ? '/hashtags/' + hashtag : '/hashtags/' + hashtag + '?sort=random&shuffle=' + newShuffle : o.value !== 'desc' ? '?sort=' + o.value : '/hashtags/' + hashtag } scroll={false} prefetch={false}><label><input type="radio" name={'sort-' + type } value={o.value} checked={sort === o.value} readOnly />{i18n(o.name)}</label></Link>)}
+      {[{name: 'Latest', value: 'desc'}, {name: 'Oldest', value: 'asc'}, {name: 'Random', value: 'random'}].map((o) => <Link key={o} href={ o.value === 'random' ? sort === 'random' ? '/locations/' + location : '/locations/' + location + '?sort=random&shuffle=' + newShuffle : o.value !== 'desc' ? '?sort=' + o.value : '/locations/' + location } scroll={false} prefetch={false}><label><input type="radio" name={'sort-' + type } value={o.value} checked={sort === o.value} readOnly />{i18n(o.name)}</label></Link>)}
     </div>
   </div>);
 
@@ -132,14 +180,14 @@ export default async function Country({ params: { theHashtag }, searchParams }) 
 
     if (item.gallery && item.gallery.length) {
       const gallery = item.gallery.map((g, i) => ({ ...item, ...g, is_gallery: true, img_index: i + 2 }));
-      const itemWithHashtag = gallery.findIndex(g => g.item_hashtags && g.item_hashtags.includes(hashtag));
+      const itemWithLocation = gallery.findIndex(g => g.item_locations && g.item_locations.includes(location));
 
-      if (itemWithHashtag > -1) {
-        delete gallery[itemWithHashtag].is_gallery;
-        expandedList[expandedList.length - 1] = gallery[itemWithHashtag];
+      if (itemWithLocation > -1) {
+        delete gallery[itemWithLocation].is_gallery;
+        expandedList[expandedList.length - 1] = gallery[itemWithLocation];
 
         item.file_type = 'image';
-        gallery[itemWithHashtag] = item;
+        gallery[itemWithLocation] = item;
       }
 
       if (expandGalleries) {
@@ -162,13 +210,13 @@ export default async function Country({ params: { theHashtag }, searchParams }) 
     </div>
     
     <div className="container-fluid">
-      <h2>#{decodeURIComponent(hashtag)}</h2>
+      <h2>{theMedia.name}{theMedia.alternative_names && ' (' + theMedia.alternative_names.join(', ') + ')'} - {isBR && theCity.name_pt ? theCity.name_pt : theCity.name} - {i18n(countryData.name)} {countryData.flag}</h2>
     </div>
 
     <div className={ styles.galleries }>
       { shortVideos.length > 1 && sortPicker('short') }
 
-      { shortVideos.length > 0 && <Scroller title={i18n('Short Video')} items={shortVideos} isShortVideos /> }
+      { shortVideos.length > 0 && <Scroller title={i18n('Short Videos')} items={shortVideos} isShortVideos /> }
 
       { youtubeVideos.length > 1 && sortPicker('youtube') }
 
@@ -188,7 +236,7 @@ export default async function Country({ params: { theHashtag }, searchParams }) 
         <div className={ styles.instagram_photos }>
           <div className={ styles.instagram_photos_title }>
             <h3>{i18n('Posts')}</h3>
-            { !expandGalleries ? <Link href={ `/hashtags/${hashtag}/expand` + (sort !== 'desc' ? '?sort=' + sort : '')} scroll={false} prefetch={false}>{i18n('Expand Galleries')}</Link> : <Link href={ `/hashtags/${hashtag}` + (sort !== 'desc' ? '?sort=' + sort : '')} scroll={false} prefetch={false}>{i18n('Minimize Galleries')}</Link> }
+            { !expandGalleries ? <Link href={ `/countries/${country}/cities/${city}/locations/${location}/expand` + (sort !== 'desc' ? '?sort=' + sort : '')} scroll={false} prefetch={false}>{i18n('Expand Galleries')}</Link> : <Link href={ `/countries/${country}/cities/${city}/locations/${location}` + (sort !== 'desc' ? '?sort=' + sort : '')} scroll={false} prefetch={false}>{i18n('Minimize Galleries')}</Link> }
           </div>
           
           <div className={ styles.instagram_highlights_items }>
