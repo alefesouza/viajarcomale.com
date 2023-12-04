@@ -152,7 +152,7 @@ export default async function Highlight({ params: { country, city, location }, s
     <div className={ styles.sort_picker }>
       <span>{i18n('Sorting')}:</span>
 
-      {[{name: 'Latest', value: 'desc'}, {name: 'Oldest', value: 'asc'}, {name: 'Random', value: 'random'}].map((o) => <Link key={o} href={ o.value === 'random' ? sort === 'random' ? basePath : basePath + '?sort=random&shuffle=' + newShuffle : o.value !== 'desc' ? '?sort=' + o.value : basePath } scroll={false}><label><input type="radio" name={'sort-' + type } value={o.value} checked={sort === o.value} readOnly />{i18n(o.name)}</label></Link>)}
+      {[{name: 'Latest', value: 'desc'}, {name: 'Oldest', value: 'asc'}, {name: 'Random', value: 'random'}].map((o) => <Link key={o} href={ o.value === 'random' ? sort === 'random' ? basePath : basePath + '?sort=random&shuffle=' + newShuffle : o.value !== 'desc' ? '?sort=' + o.value : basePath } scroll={false}><label><input type="radio" name={'sort-' + type } value={o.value} checked={sort === o.value} readOnly prefetch={false} />{i18n(o.name)}</label></Link>)}
     </div>
   </div>);
 
@@ -161,7 +161,7 @@ export default async function Highlight({ params: { country, city, location }, s
   return <div>
     <div className="container">
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <Link href={ '/countries/' + country + '/cities/' + city } className={ styles.history_back_button }>
+        <Link href={ '/countries/' + country + '/cities/' + city } id="back-button" className={ styles.history_back_button }>
           <img src="/images/back.svg" alt="Back Button" width="30px"></img>
         </Link>
 

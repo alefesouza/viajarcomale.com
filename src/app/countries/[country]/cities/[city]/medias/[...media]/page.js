@@ -88,6 +88,10 @@ export async function generateMetadata({ params: { country, city, media } }) {
     description = theMedia.location_data.name;
   }
 
+  if (!description) {
+    description = '';
+  }
+
   const title = (description.split(' ').length > 10 ? description.split(' ').slice(0, 10).join(' ') + '…' : description) + ' - ' + location + ' - ' + i18n('Albums') + ' - ' + SITE_NAME;
   let image = theMedia.file_type === 'video' ? FILE_DOMAIN_500 + originalMedia.file : FILE_DOMAIN_500 + theMedia.file;
 
@@ -177,7 +181,7 @@ export default async function Country({ params: { country, city, media } }) {
 
   return <div className="container">
     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-      <Link href={ '/countries/' + country + '/cities/' + city + (theMedia.type === 'instagram-story' ? '/highlights/' + theMedia.highlight : '') + (mediaIndex ? '/medias/' + theMedia.id : '') }>
+      <Link href={ '/countries/' + country + '/cities/' + city + (theMedia.type === 'instagram-story' ? '/highlights/' + theMedia.highlight : '') + (mediaIndex ? '/medias/' + theMedia.id : '') } id="back-button" prefetch={false}>
         <img src="/images/back.svg" alt="Back Button" width="30px"></img>
       </Link>
 

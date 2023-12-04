@@ -72,12 +72,17 @@
 
   const firstPage = window.location.pathname;
 
-  function onHashtagBackClick(e) {
+  function onBackClick(e) {
     e.preventDefault();
 
     if (window.location.pathname === firstPage) {
-      window.location.href = '/';
-      return;
+      if (e.target.href = '#') {
+        window.location.href = '/';
+        return;
+      } else {
+        window.location.href = e.target.href;
+        return;
+      }
     }
 
     history.back();
@@ -160,11 +165,11 @@
     document.querySelector('#language-switcher').href = languageSwitcherLink;
     document.querySelector('#portuguese-language-switcher a').href = languageSwitcherLink;
 
-    const hashtagBackButton = document.querySelector('#history-back-button');
+    const backButton = document.querySelector('#back-button');
 
-    if (hashtagBackButton) {
-      hashtagBackButton.removeEventListener('click', onHashtagBackClick);
-      hashtagBackButton.addEventListener('click', onHashtagBackClick);
+    if (backButton) {
+      backButton.removeEventListener('click', onBackClick);
+      backButton.addEventListener('click', onBackClick);
     }
 
     if (window.matchMedia('(display-mode: standalone)').matches || window.matchMedia('(display-mode: window-controls-overlay)').matches) {
