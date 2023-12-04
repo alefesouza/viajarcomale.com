@@ -96,7 +96,7 @@ export async function generateMetadata({ params: { country, city, media } }) {
   const title = (description ? (description.split(' ').length > 10 ? description.split(' ').slice(0, 10).join(' ') + '…' : description) + ' - ' : '') + location + ' - ' + i18n('Albums') + ' - ' + SITE_NAME;
   let image = theMedia.file_type === 'video' ? FILE_DOMAIN_500 + originalMedia.file : FILE_DOMAIN_500 + theMedia.file;
 
-  if (theMedia.type === 'instagram-story' && theMedia.file.includes('.mp4')) {
+  if (theMedia.file.includes('.mp4')) {
     image = FILE_DOMAIN_500 + theMedia.file.replace('.mp4', '-thumb.png');
   }
 
@@ -194,7 +194,7 @@ export default async function Country({ params: { country, city, media } }) {
     </div>
 
     <div className={ styles.media }>
-      <InstagramMedia media={theMedia} isBR={isBR} withoutLink expandGalleries fullQuality isMain hasPoster={theCity.type === 'instagram-story'} />
+      <InstagramMedia media={theMedia} isBR={isBR} withoutLink expandGalleries fullQuality isMain />
 
       {theMedia.gallery && theMedia.gallery.length && theMedia.gallery.map(g => <div key={g.file} style={{ marginTop: 16 }}>
         <InstagramMedia key={g.file} media={g} isBR={isBR} withoutLink expandGalleries fullQuality />
@@ -203,7 +203,7 @@ export default async function Country({ params: { country, city, media } }) {
 
     <StructuredBreadcrumbs breadcrumbs={breadcrumbs} />
 
-    {theMedia.type === 'instagram-story' && theMedia.file.includes('.mp4') && <Script id="ld-video" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+    {theMedia.file.includes('.mp4') && <Script id="ld-video" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
       "@context": "https://schema.org",
       "@type": "VideoObject",
       "name": theMedia.location_data ? theMedia.location_data.name : isBR && theCity.name_pt ? theCity.name_pt : theCity.name + ' - ' + i18n(countryData.name),
@@ -211,7 +211,7 @@ export default async function Country({ params: { country, city, media } }) {
       "thumbnailUrl": [
         FILE_DOMAIN_500 + theMedia.file.replace('.mp4', '-thumb.png')
        ],
-      "uploadDate": theMedia.date.replace(' ', 'T') + '+03:00',
+      "uploadDate": theMedia.date ? theMedia.date.replace(' ', 'T') + '+03:00' : theCity.end + 'T12:00:00+03:00',
       "contentUrl": FILE_DOMAIN + theMedia.file
     }) }}></Script>}
   </div>

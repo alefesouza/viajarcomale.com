@@ -192,7 +192,7 @@ export default async function Country({ params: { theHashtag }, searchParams }) 
           </div>
           
           <div className={ styles.instagram_highlights_items }>
-            {instagramPhotos.map(p => <InstagramMedia key={p.id} media={p} isBR={isBR} expandGalleries={expandGalleries} />)}
+            {instagramPhotos.map(p => <InstagramMedia key={p.id} media={p} isBR={isBR} expandGalleries={expandGalleries} isListing />)}
           </div>
         </div>
       </div>}
