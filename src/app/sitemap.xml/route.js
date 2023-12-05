@@ -86,7 +86,7 @@ export async function GET() {
       const theLoc = host(loc) + extra;
 
       return {
-        loc: isBR ? (theLoc.replace(enName, ptName)) : theLoc,
+        loc: isBR ? (theLoc.replace(enName, ptName || enName)) : theLoc,
         'xhtml:link': [{
           '@': {
             rel: 'alternate',
@@ -97,7 +97,7 @@ export async function GET() {
           '@': {
             rel: 'alternate',
             hreflang: 'pt',
-            href: ('https://viajarcomale.com.br' + loc + extra).replace(enName, ptName),
+            href: ('https://viajarcomale.com.br' + loc + extra).replace(enName, ptName || enName),
           },
         }],
         lastmod,
