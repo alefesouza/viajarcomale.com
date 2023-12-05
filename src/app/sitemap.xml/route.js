@@ -60,7 +60,7 @@ export async function GET() {
         const theCity = theCountry.cities.find(c => c.slug == media.city)
         const shortDescription = (description && description.split(' ').length > 10 ? description.split(' ').slice(0, 10).join(' ') + '…' : description) || (media.location_data ? media.location_data[0].name : '');
         const location = (theCity ? isBR && theCity.name_pt ? theCity.name_pt + ' - ' : theCity.name + ' - ' : '') + i18n(theCountry.name);
-        const title = shortDescription + (index ? ' - Item ' + position : '') + ' - ' + location + ' - ' + SITE_NAME;
+        const title = shortDescription + (position ? ' - Item ' + position : '') + ' - ' + location + ' - ' + SITE_NAME;
         
         return { 'video:video': [{
           'video:thumbnail_loc': FILE_DOMAIN_500 + item.file.replace('.mp4', '-thumb.png'),
