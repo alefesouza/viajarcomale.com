@@ -9,6 +9,7 @@ import { headers } from 'next/headers';
 import Top from './components/top';
 import Footer from './components/footer';
 import Autocomplete from './components/autocomplete';
+import Link from 'next/link';
 
 export async function generateMetadata() {
   // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -112,6 +113,24 @@ export default function RootLayout({ children }) {
         <div id="loader-spinner">
           <span className="loader"></span>
         </div>
+
+        <nav className="navbar navbar-expand-lg navbar-light">
+          <div className="container" style={{ display: 'flex', alignItems: 'center', paddingLeft: 0, paddingRight: 0 }}>
+            <Link className="navbar-brand" href="/">
+              <img src="/icons/96x96.png" width={48} height={48} alt="Logo" />
+              Viajar com Alê
+            </Link>
+
+            <ul className="navbar-nav">
+              <li className={'nav-item' + (headersList.get('x-pathname') === '/' ? ' active' : '')}>
+                <Link className="nav-link" href="/">{i18n('Home')}</Link>
+              </li>
+              <li className={'nav-item' + (headersList.get('x-pathname') === '/countries' ? ' active' : '')}>
+                <Link className="nav-link" href="/countries">{i18n('Albums')}</Link>
+              </li>
+            </ul>
+          </div>
+        </nav>
 
         <header className="container">
           <div id="title-bar">

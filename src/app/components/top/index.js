@@ -11,7 +11,7 @@ export default function Top() {
       <img src={ host('profile-photo.jpg') } srcSet={ host('profile-photo-2x.jpg') + ' 2x' } width={96} height={96} alt="Profile photo" className="profile_picture" />
     </Link>
 
-    <h2 className="profile_name">{SITE_NAME}</h2>
+    <Link href={ host('/') }><h2 className="profile_name">{SITE_NAME}</h2></Link>
 
     <span className="profile_description">
       {countries.map(c => <Link href={'/countries/' + c.slug} key={c.name} prefetch={false}>{c.flag}</Link>)}

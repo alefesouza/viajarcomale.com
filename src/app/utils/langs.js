@@ -1,6 +1,7 @@
 const langs = {
   'pt-BR': {
     // Home
+    'Home': 'Início',
     'Albums': 'Álbuns',
     '360 Photos': 'Fotos 360',
     'Add to Home Screen': 'Adicionar à tela inicial',

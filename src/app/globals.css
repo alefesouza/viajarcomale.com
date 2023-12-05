@@ -51,7 +51,6 @@ body {
   flex-direction: column;
   padding-left: 0;
   margin-bottom: 0;
-  border-radius: var(--bs-list-group-border-radius);
 }
 
 .list-group-item {
@@ -148,7 +147,7 @@ a {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 64px;
+  padding-top: 48px;
   margin-bottom: 32px;
 }
 
@@ -401,8 +400,8 @@ a {
   }
 }
 
-.window-controls-overlay .profile {
-  padding-top: calc(env(titlebar-area-height, 50px) + 64px);
+.window-controls-overlay .navbar {
+  padding-top: env(titlebar-area-height, 50px);
 }
 
 .window-controls-overlay #loader-spinner {
@@ -412,4 +411,66 @@ a {
 .window-controls-overlay #visited-countries-modal > div {
   max-height: calc(95% - calc(env(titlebar-area-height, 50px)));
   margin-top: calc(env(titlebar-area-height, 50px) / 2);
+}
+
+.navbar {
+    position: relative;
+    display: -ms-flexbox;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    padding: 0rem 1rem;
+    background: linear-gradient(to right, rgba(248, 249, 250, .0), rgba(248, 249, 250, .15), rgba(248, 249, 250, .0));
+}
+
+.navbar-light .navbar-brand {
+  color: rgba(0,0,0,.9);
+}
+
+.navbar-brand {
+  display: inline-block;
+  padding-top: 0.3125rem;
+  padding-bottom: 0.3125rem;
+  margin-right: 1rem;
+  font-size: 1.25rem;
+  line-height: inherit;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.navbar-light .navbar-nav .nav-link {
+  color: rgba(0,0,0,.5);
+}
+
+.navbar-expand-lg .navbar-nav .nav-link {
+  padding-right: 0.5rem;
+  padding-left: 0.5rem;
+}
+
+.navbar-nav .nav-link {
+  padding-right: 0;
+  padding-left: 0;
+}
+
+.nav-link {
+  display: block;
+  padding: 0.5rem 1rem;
+}
+
+.navbar-nav {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    padding-left: 0;
+    margin-bottom: 0;
+    list-style: none;
+    margin-top: 0;
+}
+
+.navbar-light .navbar-nav .active>.nav-link, .navbar-light .navbar-nav .nav-link.active, .navbar-light .navbar-nav .nav-link.show, .navbar-light .navbar-nav .show>.nav-link {
+  color: rgba(0,0,0,.9);
 }

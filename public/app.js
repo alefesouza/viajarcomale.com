@@ -146,6 +146,24 @@
     }, 1000);
   }
 
+  function onNavbarLinkClick() {
+    const navLinks = [...document.querySelectorAll('.navbar .nav-link')];
+    
+    navLinks.forEach((item) => {
+      item.parentElement.classList.remove('active');
+    });
+
+    this.parentElement.classList.add('active');
+  }
+
+  function initNavbarLinkClick() {
+    const navLinks = [...document.querySelectorAll('.navbar .nav-link')];
+
+    navLinks.forEach((item) => {
+      item.addEventListener('click', onNavbarLinkClick);
+    });
+  }
+
   function setupLinks(tag) {
     const currentUrl = window.location.href;
 
@@ -176,6 +194,20 @@
       item.removeEventListener('click', onShuffleClick);
       item.addEventListener('click', onShuffleClick);
     });
+
+    initNavbarLinkClick();
+
+    const navLinks = [...document.querySelectorAll('.navbar .nav-link')];
+    
+    navLinks.forEach((item) => {
+      item.parentElement.classList.remove('active');
+    });
+    
+    if (window.location.pathname == '/') {
+      document.querySelector('.navbar .nav-item:nth-child(1)').classList.add('active')
+    } else if (window.location.pathname == '/countries') {
+      document.querySelector('.navbar .nav-item:nth-child(2)').classList.add('active')
+    }
 
     firstAccess = false;
   }
@@ -263,4 +295,6 @@
   if (!window.matchMedia('(display-mode: standalone)').matches && !window.matchMedia('(display-mode: window-controls-overlay)').matches && navigator.language.startsWith('pt') && !window.location.origin.includes('viajarcomale.com.br')) {
     document.querySelector('#portuguese-language-switcher').style.display = 'block';
   }
+  
+  initNavbarLinkClick();
 })();
