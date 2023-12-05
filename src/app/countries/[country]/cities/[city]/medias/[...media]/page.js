@@ -58,7 +58,7 @@ export async function generateMetadata({ params: { country, city, media } }) {
   const countryData = await getCountry(country, city);
 
   if (!countryData) {
-    return {};
+    redirect('/');
   }
 
   let theCity = null;
@@ -68,12 +68,16 @@ export async function generateMetadata({ params: { country, city, media } }) {
   }
 
   if (!theCity) {
-    return {};
+    redirect('/');
   }
 
   const db = getFirestore();
   const mediaRef = await db.collection('countries').doc(country).collection('medias').doc(media[0]).get();
   let theMedia = mediaRef.data();
+
+  if (!theMedia) {
+    redirect('/');
+  }
 
   if (theMedia.gallery && theMedia.gallery.length) {
     theMedia.gallery = theMedia.gallery.map((g, i) => ({ ...theMedia, ...g, is_gallery: true, img_index: i + 2 }));

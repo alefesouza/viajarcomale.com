@@ -31,7 +31,7 @@ export async function generateMetadata({ params: { country, city, highlight } })
   const countryData = await getCountry(country, city);
 
   if (!countryData) {
-    return {};
+    redirect('/');
   }
 
   let theCity = null;
@@ -41,7 +41,7 @@ export async function generateMetadata({ params: { country, city, highlight } })
   }
 
   if (!theCity) {
-    return {};
+    redirect('/');
   }
 
   const db = getFirestore();

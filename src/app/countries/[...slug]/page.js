@@ -69,7 +69,7 @@ export async function generateMetadata({ params: { slug }, searchParams }) {
   const countryData = await getCountry(db, slug, searchParams);
 
   if (!countryData) {
-    return {};
+    redirect('/');
   }
 
   let { city } = getDataFromRoute(slug, searchParams);
