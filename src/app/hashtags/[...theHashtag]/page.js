@@ -5,7 +5,7 @@ import { getFirestore, FieldValue } from 'firebase-admin/firestore';
 import styles from './page.module.css';
 import { SITE_NAME } from '@/app/utils/constants';
 import Scroller from '@/app/components/scroller';
-import { redirect } from 'next/dist/server/api-utils';
+import { redirect } from 'next/navigation';
 import InstagramMedia from '@/app/components/instagram-media';
 import ShareButton from '@/app/components/share-button';
 import randomIntFromInterval from '@/app/utils/random-int';
