@@ -25,7 +25,7 @@ export default function InstagramMedia({ media, expandGalleries, isBR, withoutLi
       <a href={media.link + (media.img_index ? '?img_index=' + media.img_index : '')} target="_blank">
         <img src={host('/logos/instagram.png')} alt={isBR ? media.description_pt : media.description} />
       </a>
-      <ShareButton text={isBR ? media.description_pt : media.description} url={link + (media.img_index ? '/' + media.img_index : '')} />
+      <ShareButton text={isBR ? media.description_pt : media.description} url={link} />
     </div>
 
     <div>
