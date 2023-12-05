@@ -81,85 +81,105 @@ export async function GET() {
         }],
       };
     }
+    
+    const makeLoc = (loc, extra = '') => {
+      return {
+        loc: host(loc) + extra,
+        'xhtml:link': [{
+          '@': {
+            rel: 'alternate',
+            hreflang: 'en',
+            href: 'https://viajarcomale.com' + loc + extra,
+          },
+        }, {
+          '@': {
+            rel: 'alternate',
+            hreflang: 'pt',
+            href: 'https://viajarcomale.com.br' + loc + extra,
+          },
+        }],
+        lastmod,
+      }
+    }
 
     obj = {
       '@': {
         xmlns: 'http://www.sitemaps.org/schemas/sitemap/0.9',
         'xmlns:image': 'http://www.google.com/schemas/sitemap-image/1.1',
         'xmlns:video': 'http://www.google.com/schemas/sitemap-video/1.1',
+        'xmlns:xhtml': 'http://www.w3.org/1999/xhtml',
       },
       url: [{
-        loc: host('/'),
-        lastmod,
+        ...makeLoc('/')
       }, {
-        loc: host('/countries'),
+        ...makeLoc('/countries'),
         lastmod,
       },
       ...countries.flatMap(c => [{
-          loc: host('/countries/' + c.slug),
+        ...makeLoc('/countries/' + c.slug),
           lastmod,
         }, {
-          loc: host('/countries/' + c.slug + '/expand'),
+          ...makeLoc('/countries/' + c.slug + '/expand'),
           lastmod,
         },
         ...Array.from({ length: Math.ceil((c?.totals?.instagram_photos / ITEMS_PER_PAGE) - 1) }, (_, i) => [{
-          loc: host('/countries/' + c.slug + '/page/' + (i + 2)),
+          ...makeLoc('/countries/' + c.slug + '/page/' + (i + 2)),
           lastmod,
         }, {
-          loc: host('/countries/' + c.slug + '/page/' + (i + 2) + '/expand'),
+          ...makeLoc('/countries/' + c.slug + '/page/' + (i + 2) + '/expand'),
           lastmod,
         }]),
       ]),
       ...countries.map(c => c.cities.map(city => [{
-          loc: host('/countries/' + c.slug + '/cities/' + city.slug),
+        ...makeLoc('/countries/' + c.slug + '/cities/' + city.slug),
           lastmod,
         }, {
-          loc: host('/countries/' + c.slug + '/cities/' + city.slug + '/expand'),
+          ...makeLoc('/countries/' + c.slug + '/cities/' + city.slug + '/expand'),
           lastmod,
         },
         ...Array.from({ length: Math.ceil((city?.totals?.instagram_photos / ITEMS_PER_PAGE) - 1) }, (_, i) => [{
-          loc: host('/countries/' + c.slug + '/cities/' + city.slug + '/page/' + (i + 2)),
+          ...makeLoc('/countries/' + c.slug + '/cities/' + city.slug + '/page/' + (i + 2)),
           lastmod,
         }, {
-          loc: host('/countries/' + c.slug + '/cities/' + city.slug + '/page/' + (i + 2) + '/expand'),
+          ...makeLoc('/countries/' + c.slug + '/cities/' + city.slug + '/page/' + (i + 2) + '/expand'),
           lastmod,
         }]),
       ])).flat(2),
       ...highlights.map((m) => ({
-        loc: host('/countries/' + m.country + '/cities/' + m.city + '/highlights/' + m.id),
+        ...makeLoc('/countries/' + m.country + '/cities/' + m.city + '/highlights/' + m.id),
         lastmod,
       })),
       ...locations.map(m => ({
-        loc: host('/countries/' + m.country + '/cities/' + m.city + '/locations/' + decodeURIComponent(m.slug)),
+        ...makeLoc('/countries/' + m.country + '/cities/' + m.city + '/locations/', decodeURIComponent(m.slug)),
         lastmod,
       })),
       ...locations.filter(m => m.totals.posts > 0).map(m => ({
-        loc: host('/countries/' + m.country + '/cities/' + m.city + '/locations/' + decodeURIComponent(m.slug) + '/expand'),
+        ...makeLoc('/countries/' + m.country + '/cities/' + m.city + '/locations/', decodeURIComponent(m.slug) + '/expand'),
         lastmod,
       })),
       ...hashtags.map(h => ({
-        loc: host('/hashtags/') + decodeURIComponent(h.name),
+        ...makeLoc('/hashtags/', decodeURIComponent(h.name)),
         lastmod,
       })),
       ...hashtags.filter(h => h.totals.posts > 0).map(h => ({
-        loc: host('/hashtags/') + decodeURIComponent(h.name) + '/expand',
+        ...makeLoc('/hashtags/', decodeURIComponent(h.name) + '/expand'),
         lastmod,
       })),
       ...medias.filter(m => m.type === 'instagram-story').map((m) => ({
-        loc: host('/countries/' + m.country + '/cities/' + m.city + '/medias/' + m.id),
+        ...makeLoc('/countries/' + m.country + '/cities/' + m.city + '/medias/' + m.id),
         ...mediaProcessing(m, null),
         lastmod,
       })),
       ...medias.filter(m => m.type === 'instagram').flatMap(m => [{
-        loc: host('/countries/' + m.country + '/cities/' + m.city + '/medias/' + m.id),
+        ...makeLoc('/countries/' + m.country + '/cities/' + m.city + '/medias/' + m.id),
         lastmod,
       }, {
-        loc: host('/countries/' + m.country + '/cities/' + m.city + '/medias/' + m.id + '/1'),
+        ...makeLoc('/countries/' + m.country + '/cities/' + m.city + '/medias/' + m.id + '/1'),
         ...mediaProcessing(m, null),
         lastmod,
       },
       ...m.gallery.map((g, i) => ({
-          loc: host('/countries/' + m.country + '/cities/' + m.city + '/medias/' + m.id + '/' + (i + 2)),
+          ...makeLoc('/countries/' + m.country + '/cities/' + m.city + '/medias/' + m.id + '/' + (i + 2)),
           ...mediaProcessing(m, g),
           lastmod,
         }))
