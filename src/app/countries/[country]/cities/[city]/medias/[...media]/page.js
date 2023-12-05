@@ -10,6 +10,7 @@ import Link from 'next/link';
 import ShareButton from '@/app/components/share-button';
 import StructuredBreadcrumbs from '@/app/components/structured-breadcrumbs';
 import Script from 'next/script';
+import Pagination from '@/app/components/pagination';
 
 async function getCountry(country, city) {
   const db = getFirestore();
@@ -151,9 +152,11 @@ export default async function Country({ params: { country, city, media } }) {
   const db = getFirestore();
   const mediaRef = await db.collection('countries').doc(country).collection('medias').doc(media[0]).get();
   let theMedia = mediaRef.data();
+  let galleryLength = 0;
 
   if (theMedia.gallery && theMedia.gallery.length) {
     theMedia.gallery = theMedia.gallery.map((g, i) => ({ ...theMedia, ...g, is_gallery: true, img_index: i + 2 }));
+    galleryLength = theMedia.gallery.length;
   }
 
   const { mediaIndex, selectedMedia } = getSelectedMedia(media, theMedia);
@@ -179,10 +182,14 @@ export default async function Country({ params: { country, city, media } }) {
     });
   }
 
+  const basePath = '/countries/' + country + '/cities/' + city + '/medias/' + media[0];
+
   breadcrumbs.push({
     name: (description && description.split(' ').length > 10 ? description.split(' ').slice(0, 10).join(' ') + '…' : description) || (theMedia.location_data ? theMedia.location_data[0].name : ''),
-    item: host('/countries/' + country + '/cities/' + city + '/medias/' + media[0]),
+    item: host(basePath),
   });
+
+  const paginationBase = basePath + '/{page}';
 
   return <div className="container">
     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -199,6 +206,8 @@ export default async function Country({ params: { country, city, media } }) {
 
     <div className={ styles.media }>
       <InstagramMedia media={theMedia} isBR={isBR} withoutLink expandGalleries fullQuality isMain />
+
+      {media[1] && galleryLength > 0 && <div style={{marginTop: 24}}><Pagination base={paginationBase} currentPage={Number(media[1]) || 1} pageNumber={galleryLength} isGallery total={5} /></div>}
 
       {theMedia.gallery && theMedia.gallery.length && theMedia.gallery.map(g => <div key={g.file} style={{ marginTop: 16 }}>
         {g.file.includes('.mp4') ? <InstagramMedia key={g.file} media={g} isBR={isBR} expandGalleries fullQuality isListing /> : <InstagramMedia key={g.file} media={g} isBR={isBR} expandGalleries fullQuality isListing />}
