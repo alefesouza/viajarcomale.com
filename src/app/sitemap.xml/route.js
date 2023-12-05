@@ -1,14 +1,16 @@
 import {parse} from 'js2xmlparser';
-import useHost from '../hooks/use-host';
+import useHost from '@/app/hooks/use-host';
+import useI18n from '@/app/hooks/use-i18n';
 import { getFirestore, FieldValue } from 'firebase-admin/firestore';
 import { getStorage } from 'firebase-admin/storage';
-import { FILE_DOMAIN, FILE_DOMAIN_500, ITEMS_PER_PAGE } from '../utils/constants';
+import { FILE_DOMAIN, FILE_DOMAIN_500, ITEMS_PER_PAGE, SITE_NAME } from '../utils/constants';
 import { customInitApp } from '../firebase';
 
 customInitApp();
 
 export async function GET() {
   const host = useHost();
+  const i18n = useI18n();
   const isBR = host().includes('viajarcomale.com.br');
   const lastmod = '2023-12-04';
 
@@ -56,11 +58,14 @@ export async function GET() {
         const description = isBR && media.description_pt ? media.description_pt : media.description;
         const theCountry = countries.find(c => c.slug == media.country)
         const theCity = theCountry.cities.find(c => c.slug == media.city)
+        const shortDescription = (description && description.split(' ').length > 10 ? description.split(' ').slice(0, 10).join(' ') + '…' : description) || (media.location_data ? media.location_data[0].name : '');
+        const location = (theCity ? isBR && theCity.name_pt ? theCity.name_pt + ' - ' : theCity.name + ' - ' : '') + i18n(theCountry.name);
+        const title = shortDescription + ' - ' + location + ' - ' + i18n('Albums') + ' - ' + SITE_NAME;
         
         return { 'video:video': [{
           'video:thumbnail_loc': FILE_DOMAIN_500 + item.file.replace('.mp4', '-thumb.png'),
           'video:content_loc': FILE_DOMAIN + item.file,
-          'video:title': (description && description.split(' ').length > 10 ? description.split(' ').slice(0, 10).join(' ') + '…' : description) || (media.location_data ? media.location_data[0].name : ''),
+          'video:title': title,
           'video:description': description,
           'video:duration': parseInt(item.duration),
           'video:publication_date': media.date ? media.date.replace(' ', 'T') + '+03:00' : theCity.end + 'T12:00:00+03:00',
