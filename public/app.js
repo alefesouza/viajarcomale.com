@@ -225,7 +225,7 @@
           }
 
           const warning = '360 photos are really cool but they are heavy too, it can take up to 1 minute to load';
-          const ptWarning = 'Fotos 360 são muito legais porém ela também são muito pesadas, pode levar até 1 minuto para carregar';
+          const ptWarning = 'Fotos 360 são muito legais porém elas também são muito pesadas, pode levar até 1 minuto para carregar';
 
           alert(window.location.origin.includes('viajarcomale.com.br') ? ptWarning : warning);
 
