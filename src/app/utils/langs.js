@@ -56,6 +56,8 @@ const langs = {
     'Paraguay': 'Paraguai',
     'France': 'França',
     'Luxembourg': 'Luxemburgo',
+    'Belgium': 'Bélgica',
+    'United Kingdom': 'Reino Unido',
 
     // Manifest
     'Access Viajar com Alê Albums': 'Acessar os álbuns do Viajar com Alê',

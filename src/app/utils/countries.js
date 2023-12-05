@@ -74,6 +74,16 @@ const countries = [
       name: 'Luxembourg',
       slug: 'luxembourg',
   },
+  {
+      flag: '🇧🇪',
+      name: 'Belgium',
+      slug: 'belgium',
+  },
+  {
+      flag: '🇬🇧',
+      name: 'United Kingdom',
+      slug: 'united-kingdom',
+  },
 ];
 
 export default countries;
