@@ -36,6 +36,6 @@ export default function InstagramMedia({ media, expandGalleries, isBR, withoutLi
       {i18n(media.location_data.length > 1 ? 'Locations' : 'Location')}: {media.location_data.map((location, i) => <><Link href={'/countries/' + media.country + '/cities/' + media.city + '/locations/' + location.slug} key={location.slug}>{location.name}{location.alternative_names && ' (' + location.alternative_names.join(', ') + ')'}</Link>{i < media.location_data.length - 1 ? ', ' : ''}</>)}
     </div>}
 
-    {!media.is_gallery && media.hashtags && media.hashtags.length > 0 && <Hashtags hashtags={media.hashtags} />}
+    {!media.is_gallery && media.hashtags && media.hashtags.length > 0 && <Hashtags hashtags={isBR && media.hashtags_pt ? media.hashtags_pt : media.hashtags} />}
   </div>
 }

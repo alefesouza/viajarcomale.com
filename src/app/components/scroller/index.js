@@ -4,6 +4,7 @@ import Link from 'next/link';
 import styles from './index.module.css';
 import { FILE_DOMAIN, FILE_DOMAIN_500 } from '@/app/utils/constants';
 import ShareButton from '../share-button';
+import Hashtags from '../hashtags';
 
 export default function Scroller({ title, items, isShortVideos, isInstagramHighlights, isYouTubeVideos, is360Photos, cityData, isStories }) {
   const i18n = useI18n();
@@ -66,9 +67,7 @@ export default function Scroller({ title, items, isShortVideos, isInstagramHighl
             {i18n(p.location_data.length > 1 ? 'Locations' : 'Location')}: {p.location_data.map((location, i) => <><Link href={'/countries/' + p.country + '/cities/' + p.city + '/locations/' + location.slug} key={location.slug}>{location.name}{location.alternative_names && ' (' + location.alternative_names.join(', ') + ')'}</Link>{i < p.location_data.length - 1 ? ', ' : ''}</>)}
           </div>}
 
-          {p.hashtags && <div className={ styles.item_hashtags }>
-            Hashtags: {p.hashtags.reverse().map(h => <span key={h}><Link href={`/hashtags/${h}`} key={h} prefetch={false}>#{h}</Link> </span>)}
-          </div>}
+          {p.hashtags && p.hashtags.length > 0 && <Hashtags hashtags={isBR && p.hashtags_pt ? p.hashtags_pt : p.hashtags} />}
         </div>)}
       </div>
 

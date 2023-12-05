@@ -69,7 +69,7 @@ export default function RootLayout({ children }) {
         <link rel="alternate" hrefLang="x-default" href={ 'https://viajarcomale.com' + headersList.get('x-pathname') } />
 
         <link rel="shortcut icon" href={ host('favicon.ico') } />
-        <link rel="canonical" href={ new URL(pathname, host().includes('viajarcomale.com.br') ? 'https://viajarcomale.com.br' : 'https://viajarcomale.com').toString() } />
+        {!pathname.includes('/hashtags/') && <link rel="canonical" href={ new URL(pathname, isBR ? 'https://viajarcomale.com.br' : 'https://viajarcomale.com').toString() } />}
 
         <link rel="manifest" href={ host('manifest.json') } />
         <link rel="image_src" href={ host('profile-photo-2x.jpg') } />

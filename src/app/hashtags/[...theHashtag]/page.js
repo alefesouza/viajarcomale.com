@@ -13,12 +13,26 @@ import randomIntFromInterval from '@/app/utils/random-int';
 export async function generateMetadata({ params: { theHashtag } }) {
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const i18n = useI18n();
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const host = useHost();
+  const isBR = host().includes('viajarcomale.com.br');
   
   const hashtag = decodeURIComponent(theHashtag[0]);
   const title = '#' + hashtag + ' - Hashtags' + ' - ' + SITE_NAME;
   const description = i18n('Photos and videos taken by Viajar com Alê with the hashtag #:hashtag:.', {
     hashtag,
   });
+
+  const db = getFirestore();
+  const hashtagPtSnapshot = await db.collection('hashtags').where('name_pt', '==', hashtag).get();
+  let hashtagPt = null;
+
+  hashtagPtSnapshot.forEach(doc => {
+    hashtagPt = doc.data();
+  });
+
+  const enUrl = 'https://viajarcomale.com/hashtags/' + (hashtagPt ? hashtagPt.name : hashtag);
+  const ptUrl = 'https://viajarcomale.com.br/hashtags/' + (hashtagPt ? hashtagPt.name_pt : hashtag);
 
   return {
     title,
@@ -34,6 +48,13 @@ export async function generateMetadata({ params: { theHashtag } }) {
     other: {
       title,
     },
+    alternates: {
+      canonical: isBR ? ptUrl : enUrl,
+      languages: {
+        'en': enUrl,
+        'pt': ptUrl,
+      },
+    },
   }
 }
 
@@ -47,14 +68,25 @@ export default async function Country({ params: { theHashtag }, searchParams }) 
   }
 
   const [queryHashtag, expand] = theHashtag;
-  const hashtag = decodeURIComponent(queryHashtag);
+  let hashtag = decodeURIComponent(queryHashtag);
+
+  const db = getFirestore();
+  const hashtagPtSnapshot = await db.collection('hashtags').where('name_pt', '==', hashtag).get();
+  let hashtagPt = null;
+
+  hashtagPtSnapshot.forEach(doc => {
+    hashtagPt = doc.data();
+  });
+
+  if (hashtagPt) {
+    hashtag = hashtagPt.name;
+  }
 
   const expandGalleries = expand;
   let sort = searchParams.sort && ['asc', 'desc', 'random'].includes(searchParams.sort) && searchParams.sort || 'desc';
 
   const cacheRef = `/caches/hashtags/hashtags/${hashtag}/sort/${sort === 'asc' ? 'asc' : 'desc'}`;
 
-  const db = getFirestore();
   const cache = await db.doc(cacheRef).get();
 
   let isRandom = sort === 'random';
@@ -166,7 +198,7 @@ export default async function Country({ params: { theHashtag }, searchParams }) 
     </div>
     
     <div className="container-fluid">
-      <h2>#{decodeURIComponent(hashtag)}</h2>
+      <h2>#{decodeURIComponent(hashtagPt ? hashtagPt.name_pt : hashtag)}</h2>
     </div>
 
     <div className={ styles.galleries }>

@@ -82,9 +82,11 @@ export async function GET() {
       };
     }
     
-    const makeLoc = (loc, extra = '') => {
+    const makeLoc = (loc, extra = '', enName = '', ptName = '') => {
+      const theLoc = host(loc) + extra;
+
       return {
-        loc: host(loc) + extra,
+        loc: isBR ? (theLoc.replace(enName, ptName)) : theLoc,
         'xhtml:link': [{
           '@': {
             rel: 'alternate',
@@ -95,7 +97,7 @@ export async function GET() {
           '@': {
             rel: 'alternate',
             hreflang: 'pt',
-            href: 'https://viajarcomale.com.br' + loc + extra,
+            href: ('https://viajarcomale.com.br' + loc + extra).replace(enName, ptName),
           },
         }],
         lastmod,
@@ -113,75 +115,57 @@ export async function GET() {
         ...makeLoc('/')
       }, {
         ...makeLoc('/countries'),
-        lastmod,
       },
       ...countries.flatMap(c => [{
         ...makeLoc('/countries/' + c.slug),
-          lastmod,
         }, {
           ...makeLoc('/countries/' + c.slug + '/expand'),
-          lastmod,
         },
         ...Array.from({ length: Math.ceil((c?.totals?.instagram_photos / ITEMS_PER_PAGE) - 1) }, (_, i) => [{
           ...makeLoc('/countries/' + c.slug + '/page/' + (i + 2)),
-          lastmod,
         }, {
           ...makeLoc('/countries/' + c.slug + '/page/' + (i + 2) + '/expand'),
-          lastmod,
         }]),
       ]),
       ...countries.map(c => c.cities.map(city => [{
         ...makeLoc('/countries/' + c.slug + '/cities/' + city.slug),
-          lastmod,
         }, {
           ...makeLoc('/countries/' + c.slug + '/cities/' + city.slug + '/expand'),
-          lastmod,
         },
         ...Array.from({ length: Math.ceil((city?.totals?.instagram_photos / ITEMS_PER_PAGE) - 1) }, (_, i) => [{
           ...makeLoc('/countries/' + c.slug + '/cities/' + city.slug + '/page/' + (i + 2)),
-          lastmod,
         }, {
           ...makeLoc('/countries/' + c.slug + '/cities/' + city.slug + '/page/' + (i + 2) + '/expand'),
-          lastmod,
         }]),
       ])).flat(2),
       ...highlights.map((m) => ({
         ...makeLoc('/countries/' + m.country + '/cities/' + m.city + '/highlights/' + m.id),
-        lastmod,
       })),
       ...locations.map(m => ({
         ...makeLoc('/countries/' + m.country + '/cities/' + m.city + '/locations/', decodeURIComponent(m.slug)),
-        lastmod,
       })),
       ...locations.filter(m => m.totals.posts > 0).map(m => ({
         ...makeLoc('/countries/' + m.country + '/cities/' + m.city + '/locations/', decodeURIComponent(m.slug) + '/expand'),
-        lastmod,
       })),
       ...hashtags.map(h => ({
-        ...makeLoc('/hashtags/', decodeURIComponent(h.name)),
-        lastmod,
+        ...makeLoc('/hashtags/', decodeURIComponent(h.name), h.name, h.name_pt),
       })),
       ...hashtags.filter(h => h.totals.posts > 0).map(h => ({
-        ...makeLoc('/hashtags/', decodeURIComponent(h.name) + '/expand'),
-        lastmod,
+        ...makeLoc('/hashtags/', decodeURIComponent(h.name) + '/expand', h.name, h.name_pt),
       })),
       ...medias.filter(m => m.type === 'instagram-story').map((m) => ({
         ...makeLoc('/countries/' + m.country + '/cities/' + m.city + '/medias/' + m.id),
         ...mediaProcessing(m, null),
-        lastmod,
       })),
       ...medias.filter(m => m.type === 'instagram').flatMap(m => [{
         ...makeLoc('/countries/' + m.country + '/cities/' + m.city + '/medias/' + m.id),
-        lastmod,
       }, {
         ...makeLoc('/countries/' + m.country + '/cities/' + m.city + '/medias/' + m.id + '/1'),
         ...mediaProcessing(m, null),
-        lastmod,
       },
       ...m.gallery.map((g, i) => ({
           ...makeLoc('/countries/' + m.country + '/cities/' + m.city + '/medias/' + m.id + '/' + (i + 2)),
           ...mediaProcessing(m, g, (i + 2)),
-          lastmod,
         }))
       ])],
     };
