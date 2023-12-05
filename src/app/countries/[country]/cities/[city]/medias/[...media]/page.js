@@ -133,6 +133,10 @@ export default async function Country({ params: { country, city, media } }) {
   const host = useHost();
   const isBR = host().includes('viajarcomale.com.br');
 
+  if (media.length > 2) {
+    redirect(`/countries/${country}/cities/${city}/medias/${media[0]}/${media[1]}`);
+  }
+
   const countryData = await getCountry(country, city);
 
   if (!countryData) {

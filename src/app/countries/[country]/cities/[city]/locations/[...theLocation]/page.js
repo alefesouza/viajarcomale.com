@@ -29,6 +29,10 @@ export async function generateMetadata({ params: { country, city, theLocation } 
   const host = useHost();
   const isBR = host().includes('viajarcomale.com.br');
 
+  if (theLocation.length > 2 || (theLocation[1] && theLocation[1] !== 'expand')) {
+    redirect(`/countries/${country}/cities/${city}/locations/${theLocation[0]}`);
+  }
+
   const countryData = await getCountry(country, city);
 
   if (!countryData) {

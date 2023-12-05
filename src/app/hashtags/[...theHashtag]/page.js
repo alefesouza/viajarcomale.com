@@ -42,6 +42,10 @@ export default async function Country({ params: { theHashtag }, searchParams }) 
   const host = useHost();
   const isBR = host().includes('viajarcomale.com.br');
 
+  if (theHashtag.length > 2 || (theHashtag[1] && theHashtag[1] !== 'expand')) {
+    redirect(`/hashtags/${theHashtag[0]}`);
+  }
+
   const [queryHashtag, expand] = theHashtag;
   const hashtag = decodeURIComponent(queryHashtag);
 

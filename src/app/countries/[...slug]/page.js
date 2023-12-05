@@ -106,6 +106,10 @@ export default async function Country({ params: { slug }, searchParams }) {
   const i18n = useI18n();
   const host = useHost();
   const isBR = host().includes('viajarcomale.com.br');
+  
+  if (slug.length > 6) {
+    redirect(`/countries/${slug[0]}`);
+  }
 
   if (searchParams.shuffle) {
     const theShuffle = parseInt(searchParams.shuffle);
