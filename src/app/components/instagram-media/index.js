@@ -28,11 +28,11 @@ export default function InstagramMedia({ media, expandGalleries, isBR, withoutLi
       <ShareButton text={isBR ? media.description_pt : media.description} url={link + (media.img_index ? '/' + media.img_index : '')} />
     </div>
 
-    {!media.is_gallery ? <div>
-      {isBR ? media.description_pt : media.description}
-    </div> : null}
+    <div>
+      {isBR ? media.description_pt : media.description} {(media.img_index ? '- Item ' + media.img_index : '')}
+    </div>
     
-    {!media.is_gallery && media.locations && media.location_data && <div style={{marginTop: 4}} className={styles.location}>
+    {!media.is_gallery && media.locations && media.location_data && media.location_data[0] && <div style={{marginTop: 4}} className={styles.location}>
       {i18n(media.location_data.length > 1 ? 'Locations' : 'Location')}: {media.location_data.map((location, i) => <><Link href={'/countries/' + media.country + '/cities/' + media.city + '/locations/' + location.slug} key={location.slug}>{location.name}{location.alternative_names && ' (' + location.alternative_names.join(', ') + ')'}</Link>{i < media.location_data.length - 1 ? ', ' : ''}</>)}
     </div>}
 

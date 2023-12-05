@@ -80,7 +80,6 @@ export async function generateMetadata({ params: { country, city, media } }) {
   
   const { selectedMedia } = getSelectedMedia(media, theMedia);
 
-  const originalMedia = theMedia;
   theMedia = selectedMedia;
 
   const location = (theCity ? isBR && theCity.name_pt ? theCity.name_pt + ' - ' : theCity.name + ' - ' : '') + i18n(countryData.name);
@@ -94,8 +93,8 @@ export async function generateMetadata({ params: { country, city, media } }) {
     description = '';
   }
 
-  const title = (description ? (description.split(' ').length > 10 ? description.split(' ').slice(0, 10).join(' ') + '…' : description) + ' - ' : '') + location + ' - ' + SITE_NAME;
-  let image = theMedia.file_type === 'video' ? FILE_DOMAIN_500 + originalMedia.file : FILE_DOMAIN_500 + theMedia.file;
+  const title = (description ? (description.split(' ').length > 10 ? description.split(' ').slice(0, 10).join(' ') + '…' : description) + ' - ' : '') + (media[1] ? 'Item ' + media[1] + ' - ' : '') + location + ' - ' + SITE_NAME;
+  let image = FILE_DOMAIN_500 + theMedia.file;
 
   if (theMedia.file.includes('.mp4')) {
     image = FILE_DOMAIN_500 + theMedia.file.replace('.mp4', '-thumb.png');
@@ -211,7 +210,7 @@ export default async function Country({ params: { country, city, media } }) {
     {theMedia.file.includes('.mp4') && <Script id="ld-video" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
       "@context": "https://schema.org",
       "@type": "VideoObject",
-      "name": theMedia.location_data ? theMedia.location_data[0].name : isBR && theCity.name_pt ? theCity.name_pt : theCity.name + ' - ' + i18n(countryData.name),
+      "name": theMedia.location_data && theMedia.location_data[0] ? theMedia.location_data[0].name : isBR && theCity.name_pt ? theCity.name_pt : theCity.name + ' - ' + i18n(countryData.name),
       "description": theMedia.description,
       "thumbnailUrl": [
         FILE_DOMAIN_500 + theMedia.file.replace('.mp4', '-thumb.png')

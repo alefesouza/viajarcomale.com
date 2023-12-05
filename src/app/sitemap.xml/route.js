@@ -22,7 +22,7 @@ export async function GET() {
 
   let obj = {};
 
-  if (!cacheExists[0]) {
+  // if (!cacheExists[0]) {
     const countriesSnapshot = await db.collection('countries').get();
     let countries = [];
 
@@ -47,7 +47,7 @@ export async function GET() {
     });
     const highlights = medias.filter(m => m.type === 'instagram-highlight');
 
-    const mediaProcessing = (media, gallery) => {
+    const mediaProcessing = (media, gallery, position) => {
       const item = gallery || media;
 
       if (!item) {
@@ -60,7 +60,7 @@ export async function GET() {
         const theCity = theCountry.cities.find(c => c.slug == media.city)
         const shortDescription = (description && description.split(' ').length > 10 ? description.split(' ').slice(0, 10).join(' ') + '…' : description) || (media.location_data ? media.location_data[0].name : '');
         const location = (theCity ? isBR && theCity.name_pt ? theCity.name_pt + ' - ' : theCity.name + ' - ' : '') + i18n(theCountry.name);
-        const title = shortDescription + ' - ' + location + ' - ' + SITE_NAME;
+        const title = shortDescription + (index ? ' - Item ' + position : '') + ' - ' + location + ' - ' + SITE_NAME;
         
         return { 'video:video': [{
           'video:thumbnail_loc': FILE_DOMAIN_500 + item.file.replace('.mp4', '-thumb.png'),
@@ -180,19 +180,19 @@ export async function GET() {
       },
       ...m.gallery.map((g, i) => ({
           ...makeLoc('/countries/' + m.country + '/cities/' + m.city + '/medias/' + m.id + '/' + (i + 2)),
-          ...mediaProcessing(m, g),
+          ...mediaProcessing(m, g, (i + 2)),
           lastmod,
         }))
       ])],
     };
 
     storage.bucket('viajarcomale.appspot.com').file(reference).save(JSON.stringify(obj));
-  }
+  // }
 
-  if (cacheExists[0]) {
-    const contents = await storage.bucket('viajarcomale.appspot.com').file(reference).download();
-    obj = JSON.parse(contents);
-  }
+  // if (cacheExists[0]) {
+  //   const contents = await storage.bucket('viajarcomale.appspot.com').file(reference).download();
+  //   obj = JSON.parse(contents);
+  // }
 
   db.collection('accesses').doc((new Date()).toISOString().split('T')[0]).set({
     [host('/sitemap.xml')]: FieldValue.increment(1),
