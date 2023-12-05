@@ -6,7 +6,7 @@ customInitApp();
 
 export async function GET() {
   const host = useHost();
-  const isBR = host().includes('viajarcomale.com.br');
+  const isBR = true;
   const db = getFirestore();
   const allHashtagsRef = await db.collection('caches').doc('static_pages').collection('static_pages').doc('hashtags').get();
   const allHashtags = allHashtagsRef.data();
@@ -41,7 +41,7 @@ export async function GET() {
     [host('/api/hashtags')]: FieldValue.increment(1),
   }, {merge:true});
 
-  return new Response(JSON.stringify(hashtags), {
+  return new Response(JSON.stringify(theHashtags), {
     headers: { 'Content-Type': 'application/json' },
   });
 }
