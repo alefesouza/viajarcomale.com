@@ -156,7 +156,7 @@ export default async function Country({ params: { country, city, media } }) {
 
   if (theMedia.gallery && theMedia.gallery.length) {
     theMedia.gallery = theMedia.gallery.map((g, i) => ({ ...theMedia, ...g, is_gallery: true, img_index: i + 2 }));
-    galleryLength = theMedia.gallery.length;
+    galleryLength = theMedia.gallery.length + 1;
   }
 
   const { mediaIndex, selectedMedia } = getSelectedMedia(media, theMedia);

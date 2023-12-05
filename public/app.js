@@ -73,7 +73,7 @@
   const firstPage = window.location.pathname;
 
   function onBackClick(e) {
-    if (window.location.pathname !== firstPage) {
+    if (window.location.pathname === firstPage) {
       return;
     }
 
