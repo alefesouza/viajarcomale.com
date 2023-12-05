@@ -181,14 +181,14 @@ a {
 
 #portuguese-language-switcher {   
   position: absolute;
-  top: 89px;
+  top: 138px;
   display: none;
 }
 
 @media(min-width: 644px) {
   #portuguese-language-switcher {   
     position: absolute;
-    top: 37px;
+    top: 95px;
   }
 }
 
