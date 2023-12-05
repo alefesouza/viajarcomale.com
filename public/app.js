@@ -70,10 +70,14 @@
     loadingSpinner.style.display = 'block';
   }
 
-  const firstPage = window.location.pathname;
+  let firstPage = window.location.pathname;
 
   function onBackClick(e) {
+    console.log(firstPage)
     if (window.location.pathname === firstPage) {
+      firstPage = e.target.parentElement.pathname;
+
+    console.log(firstPage)
       return;
     }
 
