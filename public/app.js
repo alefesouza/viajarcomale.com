@@ -215,6 +215,25 @@
   function setupScroller() {
     const highlightVideoItems = document.querySelectorAll('[data-scroller]');
 
+    if (!localStorage.getItem('360-warning')) {
+      const _360photos = document.querySelectorAll('.photo-360');
+
+      [..._360photos].forEach(item => {
+        item.onclick = function() {
+          if (localStorage.getItem('360-warning')) {
+            return;
+          }
+
+          const warning = '360 photos are really cool but they are heavy too, it can take up to 1 minute to load';
+          const ptWarning = 'Fotos 360 são muito legais porém ela também são muito pesadas, pode levar até 1 minuto para carregar';
+
+          alert(window.location.origin.includes('viajarcomale.com.br') ? ptWarning : warning);
+
+          localStorage.setItem('360-warning', 'true');
+        }
+      });
+    }
+
     Array.from(highlightVideoItems).forEach((scroller) => {
       const highlightScrollLeft = scroller.previousElementSibling;
       const highlightScrollRight = scroller.nextElementSibling;

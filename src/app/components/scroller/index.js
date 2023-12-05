@@ -20,7 +20,7 @@ export default function Scroller({ title, items, isShortVideos, isInstagramHighl
 
       <div className={ styles.scroller_items } data-scroller>
         {items.map(p => <div key={ p.id } className={ styles.scroller_item + (is360Photos ? ' ' + styles.item_360_photo : '') + (isInstagramHighlights ? ' ' + styles.is_gallery : '') }>
-          <a href={isInstagramHighlights ? host('/countries/' + p.country + '/cities/' + p.city + '/highlights/' + p.id) : isShortVideos ? p.tiktok_link : isStories ? host('/countries/' + p.country + '/cities/' + p.city + '/medias/' + p.id) : p.link} target={isInstagramHighlights || isStories ? '_self' : '_blank'} style={{ display: 'block', position: 'relative' }}>
+          <a href={isInstagramHighlights ? host('/countries/' + p.country + '/cities/' + p.city + '/highlights/' + p.id) : isShortVideos ? p.tiktok_link : isStories ? host('/countries/' + p.country + '/cities/' + p.city + '/medias/' + p.id) : p.link} target={isInstagramHighlights || isStories ? '_self' : '_blank'} style={{ display: 'block', position: 'relative' }} className={(is360Photos ? ' photo-360 ' + styles.item_360_photo : '')}>
             {isStories && p.file.includes('.mp4') ? <img src={FILE_DOMAIN_500 + p.file.replace('.mp4', '-thumb.png')} alt={isBR ? p.description_pt : p.description} className={ styles.video_thumbnail } loading="lazy" /> : <img src={isYouTubeVideos ? p.image : FILE_DOMAIN + p.file} srcSet={ isYouTubeVideos ? p.image : `${FILE_DOMAIN_500 + p.file} 500w` } alt={isBR ? p.description_pt : p.description} className={!isYouTubeVideos && !is360Photos ? styles.vertical_content : isYouTubeVideos ? styles.youtube_video : ''} loading="lazy" />}
 
             {(p.file_type === 'video' || p?.file?.includes('.mp4')) && isStories &&

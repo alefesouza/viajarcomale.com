@@ -118,7 +118,7 @@ export default function RootLayout({ children }) {
           <div className="container" style={{ display: 'flex', alignItems: 'center', paddingLeft: 0, paddingRight: 0 }}>
             <Link className="navbar-brand" href="/">
               <img src="/icons/96x96.png" width={48} height={48} alt="Logo" />
-              Viajar com Alê
+              {SITE_NAME}
             </Link>
 
             <ul className="navbar-nav">
