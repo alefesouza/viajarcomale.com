@@ -12,7 +12,7 @@ export async function GET() {
   const host = useHost();
   const i18n = useI18n();
   const isBR = host().includes('viajarcomale.com.br');
-  const lastmod = '2023-12-04';
+  const lastmod = '2023-12-05';
 
   const db = getFirestore();
   const reference = host('sitemap.json').split('//')[1].replaceAll('/', '-');
@@ -22,7 +22,7 @@ export async function GET() {
 
   let obj = {};
 
-  // if (!cacheExists[0]) {
+  if (!cacheExists[0]) {
     const countriesSnapshot = await db.collection('countries').get();
     let countries = [];
 
@@ -187,12 +187,12 @@ export async function GET() {
     };
 
     storage.bucket('viajarcomale.appspot.com').file(reference).save(JSON.stringify(obj));
-  // }
+  }
 
-  // if (cacheExists[0]) {
-  //   const contents = await storage.bucket('viajarcomale.appspot.com').file(reference).download();
-  //   obj = JSON.parse(contents);
-  // }
+  if (cacheExists[0]) {
+    const contents = await storage.bucket('viajarcomale.appspot.com').file(reference).download();
+    obj = JSON.parse(contents);
+  }
 
   db.collection('accesses').doc((new Date()).toISOString().split('T')[0]).set({
     [host('/sitemap.xml')]: FieldValue.increment(1),
