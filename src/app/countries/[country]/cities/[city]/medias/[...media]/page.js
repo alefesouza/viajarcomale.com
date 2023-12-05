@@ -228,5 +228,17 @@ export default async function Country({ params: { country, city, media } }) {
       "duration": serialize({ seconds: parseInt(theMedia.duration) }),
       "contentUrl": FILE_DOMAIN + theMedia.file
     }) }}></Script>}
+
+    <Script id="ld-image" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+      "@context": "https://schema.org/",
+      "@type": "ImageObject",
+      "contentUrl": FILE_DOMAIN + (theMedia.file.includes('.mp4') ? theMedia.file.replace('.mp4', '-thumb.png') : theMedia.file),
+      "creditText": "Viajar com Alê",
+      "creator": {
+        "@type": "Person",
+        "name": "Alefe Souza"
+       },
+      "copyrightNotice": "Viajar com Alê - @viajarcomale"
+    }) }}></Script>
   </div>
 }
