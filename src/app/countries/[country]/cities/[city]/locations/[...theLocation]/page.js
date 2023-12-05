@@ -52,7 +52,7 @@ export async function generateMetadata({ params: { country, city, theLocation } 
   const theMedia = mediaRef.data();
 
   const finalLocation = (theCity ? isBR && theCity.name_pt ? theCity.name_pt + ' - ' : theCity.name + ' - ' : '') + i18n(countryData.name);
-  const title = theMedia.name + ' - ' + finalLocation + ' - ' + i18n('Albums') + ' - ' + SITE_NAME;
+  const title = theMedia.name + ' - ' + finalLocation + ' - ' + SITE_NAME;
   const description = i18n('Photos and videos taken by Viajar com Alê in :location:', {
     location: theMedia.name,
   });

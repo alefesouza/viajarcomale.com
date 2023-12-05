@@ -60,13 +60,13 @@ export async function GET() {
         const theCity = theCountry.cities.find(c => c.slug == media.city)
         const shortDescription = (description && description.split(' ').length > 10 ? description.split(' ').slice(0, 10).join(' ') + '…' : description) || (media.location_data ? media.location_data[0].name : '');
         const location = (theCity ? isBR && theCity.name_pt ? theCity.name_pt + ' - ' : theCity.name + ' - ' : '') + i18n(theCountry.name);
-        const title = shortDescription + ' - ' + location + ' - ' + i18n('Albums') + ' - ' + SITE_NAME;
+        const title = shortDescription + ' - ' + location + ' - ' + SITE_NAME;
         
         return { 'video:video': [{
           'video:thumbnail_loc': FILE_DOMAIN_500 + item.file.replace('.mp4', '-thumb.png'),
           'video:content_loc': FILE_DOMAIN + item.file,
           'video:title': title,
-          'video:description': description,
+          'video:description': description || '',
           'video:duration': parseInt(item.duration),
           'video:publication_date': media.date ? media.date.replace(' ', 'T') + '+03:00' : theCity.end + 'T12:00:00+03:00',
           'video:family_friendly': 'yes',

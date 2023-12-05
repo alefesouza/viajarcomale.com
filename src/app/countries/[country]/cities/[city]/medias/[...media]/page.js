@@ -94,7 +94,7 @@ export async function generateMetadata({ params: { country, city, media } }) {
     description = '';
   }
 
-  const title = (description ? (description.split(' ').length > 10 ? description.split(' ').slice(0, 10).join(' ') + '…' : description) + ' - ' : '') + location + ' - ' + i18n('Albums') + ' - ' + SITE_NAME;
+  const title = (description ? (description.split(' ').length > 10 ? description.split(' ').slice(0, 10).join(' ') + '…' : description) + ' - ' : '') + location + ' - ' + SITE_NAME;
   let image = theMedia.file_type === 'video' ? FILE_DOMAIN_500 + originalMedia.file : FILE_DOMAIN_500 + theMedia.file;
 
   if (theMedia.file.includes('.mp4')) {
