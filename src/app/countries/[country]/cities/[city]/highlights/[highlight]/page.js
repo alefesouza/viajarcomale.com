@@ -61,8 +61,8 @@ export async function generateMetadata({ params: { country, city, highlight } })
 
   const images = [{
     url: image,
-    width: theMedia.width,
-    height: theMedia.height,
+    width: 500,
+    height: Math.round((theMedia.height / theMedia.width) * 500),
     type: 'image/jpg',
   }];
   
