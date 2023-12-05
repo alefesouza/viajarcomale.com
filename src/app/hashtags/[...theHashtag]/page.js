@@ -128,7 +128,7 @@ export default async function Country({ params: { theHashtag }, searchParams }) 
   }
 
   db.collection('accesses').doc((new Date()).toISOString().split('T')[0]).set({
-    [host('/hashtags/') + hashtag + ('?sort=' + sort)]: FieldValue.increment(1),
+    [host('/hashtags/') + decodeURIComponent(queryHashtag) + ('?sort=' + sort)]: FieldValue.increment(1),
   }, {merge:true});
 
   let newShuffle = randomIntFromInterval(1, 15);
