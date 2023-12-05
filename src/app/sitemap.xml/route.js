@@ -1,22 +1,26 @@
 import {parse} from 'js2xmlparser';
 import useHost from '../hooks/use-host';
 import { getFirestore, FieldValue } from 'firebase-admin/firestore';
-import { ITEMS_PER_PAGE } from '../utils/constants';
+import { getStorage } from 'firebase-admin/storage';
+import { FILE_DOMAIN, FILE_DOMAIN_500, ITEMS_PER_PAGE } from '../utils/constants';
 import { customInitApp } from '../firebase';
 
 customInitApp();
 
 export async function GET() {
   const host = useHost();
+  const isBR = host().includes('viajarcomale.com.br');
   const lastmod = '2023-12-04';
 
   const db = getFirestore();
-  const sitemapRef = await db.collection('caches').doc('static_pages').collection('static_pages').doc(host('sitemap.xml').split('//')[1].replaceAll('/', '-')).get();
-  const allSitemap = sitemapRef.data();
+  const reference = host('sitemap.json').split('//')[1].replaceAll('/', '-');
+
+  const storage = getStorage();
+  const cacheExists = await storage.bucket('viajarcomale.appspot.com').file(reference).exists();
 
   let obj = {};
 
-  // if (!allSitemap || allSitemap.a_should_update) {
+  if (!cacheExists[0]) {
     const countriesSnapshot = await db.collection('countries').get();
     let countries = [];
 
@@ -41,9 +45,43 @@ export async function GET() {
     });
     const highlights = medias.filter(m => m.type === 'instagram-highlight');
 
+    const mediaProcessing = (media, gallery) => {
+      const item = gallery || media;
+
+      if (!item) {
+        return {};
+      }
+
+      if (item.file.includes('.mp4')) {
+        const description = isBR && media.description_pt ? media.description_pt : media.description;
+        const theCountry = countries.find(c => c.slug == media.country)
+        const theCity = theCountry.cities.find(c => c.slug == media.city)
+        
+        return { 'video:video': [{
+          'video:thumbnail_loc': FILE_DOMAIN_500 + item.file.replace('.mp4', '-thumb.png'),
+          'video:content_loc': FILE_DOMAIN + item.file,
+          'video:title': (description && description.split(' ').length > 10 ? description.split(' ').slice(0, 10).join(' ') + '…' : description) || (media.location_data ? media.location_data[0].name : ''),
+          'video:description': description,
+          'video:duration': parseInt(item.duration),
+          'video:publication_date': media.date ? media.date.replace(' ', 'T') + '+03:00' : theCity.end + 'T12:00:00+03:00',
+          'video:family_friendly': 'yes',
+          'video:requires_subscription': 'no',
+          'video:live': 'no',
+        }]};
+      }
+
+      return {
+        'image:image': [{
+          'image:loc': FILE_DOMAIN + item.file,
+        }],
+      };
+    }
+
     obj = {
       '@': {
         xmlns: 'http://www.sitemaps.org/schemas/sitemap/0.9',
+        'xmlns:image': 'http://www.google.com/schemas/sitemap-image/1.1',
+        'xmlns:video': 'http://www.google.com/schemas/sitemap-video/1.1',
       },
       url: [{
         loc: host('/'),
@@ -104,6 +142,7 @@ export async function GET() {
       })),
       ...medias.filter(m => m.type === 'instagram-story').map((m) => ({
         loc: host('/countries/' + m.country + '/cities/' + m.city + '/medias/' + m.id),
+        ...mediaProcessing(m, null),
         lastmod,
       })),
       ...medias.filter(m => m.type === 'instagram').flatMap(m => [{
@@ -111,21 +150,23 @@ export async function GET() {
         lastmod,
       }, {
         loc: host('/countries/' + m.country + '/cities/' + m.city + '/medias/' + m.id + '/1'),
+        ...mediaProcessing(m, null),
         lastmod,
-      }, ...m.gallery.map((g, i) => ({
-        loc: host('/countries/' + m.country + '/cities/' + m.city + '/medias/' + m.id + '/' + (i + 2)),
-        lastmod,
-      }))])],
+      },
+      ...m.gallery.map((g, i) => ({
+          loc: host('/countries/' + m.country + '/cities/' + m.city + '/medias/' + m.id + '/' + (i + 2)),
+          ...mediaProcessing(m, g),
+          lastmod,
+        }))
+      ])],
     };
 
-    await sitemapRef.ref.set({
-      a_should_update: false,
-      sitemap: JSON.stringify(obj),
-    });
-  // }
+    storage.bucket('viajarcomale.appspot.com').file(reference).save(JSON.stringify(obj));
+  }
 
-  if (Object.keys(obj).length === 0) {
-    obj = JSON.parse(allSitemap.sitemap);
+  if (cacheExists[0]) {
+    const contents = await storage.bucket('viajarcomale.appspot.com').file(reference).download();
+    obj = JSON.parse(contents);
   }
 
   db.collection('accesses').doc((new Date()).toISOString().split('T')[0]).set({
