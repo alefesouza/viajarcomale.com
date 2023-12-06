@@ -11,7 +11,7 @@ export default function VisitedCountries() {
 
   return (
     <div
-      style={{ cursor: 'pointer', marginBottom: 50, width: '100%', maxWidth: '1400px', marginLeft: 'auto', marginRight: 'auto' }}
+      style={{ cursor: 'pointer', marginBottom: 20, width: '100%', maxWidth: 1300, marginLeft: 'auto', marginRight: 'auto' }}
     >
       <Chart
         chartType="GeoChart"
