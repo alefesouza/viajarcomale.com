@@ -157,9 +157,7 @@ export default function RootLayout({ children }) {
           {children}
         </main>
 
-        <footer className="container">
-          <Footer />
-        </footer>
+        <Footer />
 
         <Script async src={ host('app.js') } />
 

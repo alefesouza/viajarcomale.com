@@ -413,11 +413,6 @@ a {
   top: calc(env(titlebar-area-height, 0) + 10px);
 }
 
-.window-controls-overlay #visited-countries-modal > div {
-  max-height: calc(95% - calc(env(titlebar-area-height, 50px)));
-  margin-top: calc(env(titlebar-area-height, 50px) / 2);
-}
-
 .navbar {
     position: relative;
     display: -ms-flexbox;
