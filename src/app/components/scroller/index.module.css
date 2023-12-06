@@ -59,7 +59,7 @@
 }
 
 .item_360_photo img {
-  max-width: 100%;
+  width: 300px;
 }
 
 .item_360_photo {
@@ -74,6 +74,10 @@
 
   .item_360_photo {
     flex: 0 0 400px;
+  }
+
+  .item_360_photo img {
+    width: 400px;
   }
 }
 

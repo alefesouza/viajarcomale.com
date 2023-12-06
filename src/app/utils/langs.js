@@ -37,6 +37,7 @@ const langs = {
     'Video': 'Vídeo',
     'Location': 'Local',
     'Locations': 'Locais',
+    '360 photos are really cool but they are heavy too, it can take up to 1 minute to load.': 'Fotos 360 são muito legais porém elas também são pesadas, pode levar até 1 minuto para carregar.',
 
     // Meta
     'Travel photos and links to Viajar com Alê social networks.': 'Fotos de viagens e links para as redes sociais do Viajar com Alê.',
