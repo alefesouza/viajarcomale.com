@@ -12,7 +12,7 @@ export async function GET() {
   const host = useHost();
   const i18n = useI18n();
   const isBR = host().includes('viajarcomale.com.br');
-  const lastmod = '2023-12-05';
+  const lastmod = '2023-12-06';
 
   const db = getFirestore();
   const reference = host('sitemap.json').split('//')[1].replaceAll('/', '-');
