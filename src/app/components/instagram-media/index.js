@@ -18,7 +18,7 @@ export default function InstagramMedia({ media, expandGalleries, isBR, withoutLi
       {mediaElement}
 
       {(media.file_type === 'video' || media.file.includes('.mp4')) && isListing &&
-      <div className={ styles.play_button }><img src="/images/play.svg" alt="Play" /></div>}
+      <div className={ styles.play_button }><img src="/images/play.svg" alt={i18n('Play Button')} /></div>}
     </Link>}
 
     <div className={ styles.external_links }>

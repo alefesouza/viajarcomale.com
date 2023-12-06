@@ -202,7 +202,7 @@ export default async function Country({ params: { country, city, media } }) {
   return <div className="container">
     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
       <Link href={ '/countries/' + country + '/cities/' + city + (theMedia.type === 'instagram-story' ? '/highlights/' + theMedia.highlight : '') + (mediaIndex ? '/medias/' + theMedia.id : '') } id="back-button" scroll={false} prefetch={false}>
-        <img src="/images/back.svg" alt="Back Button" width="30px"></img>
+        <img src="/images/back.svg" alt={i18n('Back')} width="30px"></img>
       </Link>
 
       <ShareButton />

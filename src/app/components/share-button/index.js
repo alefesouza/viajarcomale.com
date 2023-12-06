@@ -24,5 +24,5 @@ export default function ShareButton({ text, url }) {
     });
   }
 
-  return <img src="/images/share.svg" alt="Share Button" title={i18n('Share')} width="30px" style={{ cursor: 'pointer' }} onClick={onShareClick}></img>
+  return <div role="button" onClick={onShareClick}><img src="/images/share.svg" alt={i18n('Share')} title={i18n('Share')} width="30px" style={{ cursor: 'pointer' }}></img></div>
 }

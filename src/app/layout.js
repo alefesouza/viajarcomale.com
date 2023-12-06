@@ -127,7 +127,7 @@ export default function RootLayout({ children }) {
         <nav className="navbar">
           <div className="container" style={{ display: 'flex', alignItems: 'center', paddingLeft: 0, paddingRight: 0 }}>
             <Link className="navbar-brand" href="/">
-              <img src="/icons/96x96.png" width={48} height={48} alt="Logo" />
+              <img src="/icons/96x96.png" width={48} height={48} alt={i18n('Viajar com Alê Icon')} />
               {SITE_NAME}
             </Link>
 
@@ -137,7 +137,7 @@ export default function RootLayout({ children }) {
 
         <header className="container">
           <div id="title-bar">
-            <img src={ host('/icons/72x72.png') } alt="Viajar com Alê Icon" width={36} height={36}></img>
+            <img src={ host('/icons/72x72.png') } alt={i18n('Viajar com Alê Icon')} width={36} height={36}></img>
 
             <span>{SITE_NAME}</span>
 

@@ -38,7 +38,7 @@ export default function Scroller({ title, items, isShortVideos, isInstagramHighl
 
           {isInstagramHighlights && <div className={ styles.external_links }>
             {<a href={p.link} target="_blank">
-              <img src={host('/logos/instagram.png')} alt="Instagram" />
+              <img src={host('/logos/instagram.png')} alt={i18n('Instagram Icon')} />
             </a>}
 
             <ShareButton text={isBR && cityData[p.city].name_pt ? cityData[p.city].name_pt : cityData[p.city].name} url={host('/countries/' + p.country + '/cities/' + p.city + '/highlights/' + p.id)} />
@@ -46,7 +46,7 @@ export default function Scroller({ title, items, isShortVideos, isInstagramHighl
 
           {isStories && <div className={ styles.external_links }>
             {<a href={'https://www.instagram.com/stories/highlights/' + p.highlight.replace('media-highlight-', '') + '/'} target="_blank">
-              <img src={host('/logos/instagram.png')} alt="Instagram" />
+              <img src={host('/logos/instagram.png')} alt={i18n('Instagram Icon')} />
             </a>}
 
             <ShareButton text={isBR ? p.description_pt : p.description} url={host('/countries/' + p.country + '/cities/' + p.city + '/medias/' + p.id)} />

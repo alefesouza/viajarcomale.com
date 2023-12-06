@@ -39,6 +39,16 @@ const langs = {
     'Locations': 'Locais',
     '360 photos are really cool but they are heavy too, it can take up to 1 minute to load.': 'Fotos 360 são muito legais porém elas também são pesadas, pode levar até 1 minuto para carregar.',
 
+    // Alt
+    'Viajar com Alê Icon': 'Ícone do Viajar com Alê',
+    'Instagram Icon': 'Ícone do Instagram',
+    'TikTok Icon': 'Ícone do TikTok',
+    'YouTube Icon': 'Ícone do YouTube',
+    'ASExplore Icon': 'Ícone do ASExplore',
+    'Back': 'Voltar',
+    'Share': 'Compartilhar',
+    'Profile Photo': 'Foto do perfil',
+
     // Meta
     'Travel photos and links to Viajar com Alê social networks.': 'Fotos de viagens e links para as redes sociais do Viajar com Alê.',
     'Travel with Alefe': 'Viajar com Alefe',
