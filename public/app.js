@@ -76,8 +76,6 @@
     console.log(firstPage)
     if (window.location.pathname === firstPage) {
       firstPage = e.target.parentElement.pathname;
-
-    console.log(firstPage)
       return;
     }
 
@@ -247,7 +245,7 @@
       }
       
       if (scroller.scrollLeft + scroller.clientWidth < scroller.scrollWidth) {
-        highlightScrollRight.style.display = 'block';
+        highlightScrollRight.style.display = 'flex';
       }
 
       highlightScrollLeft.onclick = function () {
@@ -266,11 +264,11 @@
         }
 
         if (this.scrollLeft > 0) {
-          highlightScrollLeft.style.display = 'block';
+          highlightScrollLeft.style.display = 'flex';
         }
         
         if (scroller.scrollLeft + scroller.clientWidth < scroller.scrollWidth) {
-          highlightScrollRight.style.display = 'block';
+          highlightScrollRight.style.display = 'flex';
         }
       };
     });

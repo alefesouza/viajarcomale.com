@@ -92,10 +92,10 @@
   padding: 20px;
   text-align: center;
   z-index: 1;
-  padding-top: 180px;
   cursor: pointer;
   display: none;
   user-select: none;
+  align-items: center;
 }
 
 .scroller_left_arrow {
