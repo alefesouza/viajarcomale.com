@@ -17,7 +17,7 @@ export async function generateMetadata({ params: { theHashtag } }) {
   const host = useHost();
   const isBR = host().includes('viajarcomale.com.br');
   
-  const hashtag = decodeURIComponent(theHashtag[0]);
+  const hashtag = decodeURIComponent(theHashtag[0]).normalize('NFD').replace(/[\u0300-\u036f]/g, '');
   const title = '#' + hashtag + ' - Hashtags' + ' - ' + SITE_NAME;
   const description = i18n('Photos and videos taken by Viajar com Alê with the hashtag #:hashtag:.', {
     hashtag,
@@ -84,7 +84,7 @@ export default async function Country({ params: { theHashtag }, searchParams }) 
   }
 
   const [queryHashtag, expand] = theHashtag;
-  let hashtag = decodeURIComponent(queryHashtag);
+  let hashtag = decodeURIComponent(queryHashtag).normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 
   const db = getFirestore();
   const hashtagPtSnapshot = await db.collection('hashtags').where('name_pt', '==', hashtag).get();
