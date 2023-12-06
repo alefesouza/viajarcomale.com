@@ -169,20 +169,17 @@ export default async function Country({ params: { country, city, media } }) {
   const description = isBR && theMedia.description_pt ? theMedia.description_pt : theMedia.description;
 
   const breadcrumbs = [{
-    name: i18n('Albums'),
-    item: host('/countries'),
-  }, {
     name: i18n(countryData.name),
     item: host('/countries/' + country),
   }, {
-    name: isBR ? theCity.name_pt : theCity.name,
+    name: isBR && theCity.name_pt ? theCity.name_pt : theCity.name,
     item: host('/countries/' + country + '/cities/' + city),
   }];
 
   if (theMedia.type === 'instagram-story') {
     breadcrumbs.push({
       name: i18n('Stories'),
-      item: host('/countries/' + country + '/cities/' + city + '/medias/' + media[0] + '/highlights/' + theMedia.highlight),
+      item: host('/countries/' + country + '/cities/' + city + '/highlights/' + theMedia.highlight),
     });
   }
 

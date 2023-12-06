@@ -310,9 +310,6 @@ export default async function Country({ params: { slug }, searchParams }) {
   let currentPath = host('/countries/' + countryData.slug);
 
   const breadcrumbs = [{
-    name: i18n('Albums'),
-    item: host('/countries'),
-  }, {
     name: i18n(countryData.name),
     item: currentPath,
   }];
