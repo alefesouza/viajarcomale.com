@@ -223,13 +223,15 @@
       const _360photos = document.querySelectorAll('.photo-360');
 
       [..._360photos].forEach(item => {
-        item.onclick = function() {
+        item.onclick = function(e) {
           if (localStorage.getItem('360-warning')) {
             return;
           }
 
-          const warning = '360 photos are really cool but they are heavy too, it can take up to 1 minute to load';
-          const ptWarning = 'Fotos 360 são muito legais porém elas também são muito pesadas, pode levar até 1 minuto para carregar';
+          e.preventDefault();
+
+          const warning = '360 photos are really cool but they are heavy too, it can take up to 1 minute to load, click again to open the photo';
+          const ptWarning = 'Fotos 360 são muito legais porém elas também são muito pesadas, pode levar até 1 minuto para carregar, clique novamente para abrir a foto';
 
           alert(window.location.origin.includes('viajarcomale.com.br') ? ptWarning : warning);
 
