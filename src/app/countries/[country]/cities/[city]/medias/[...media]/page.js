@@ -24,14 +24,14 @@ async function getCountry(country, city) {
   return countryData;
 }
 
-function getSelectedMedia(media, theMedia) {
+function getSelectedMedia(media, theMedia, country, city) {
   let mediaIndex = null;
 
   if (media[1]) {
     mediaIndex = parseInt(media[1]);
 
     if (mediaIndex != media[1] || mediaIndex < 1 || (!theMedia.gallery && mediaIndex > 1) || mediaIndex > theMedia.gallery.length + 1) {
-      redirect('/');
+      redirect('/countries/' + country + '/cities/' + city + '/medias/' + media[0]);
     }
 
     if (mediaIndex !== 1) {
@@ -83,7 +83,7 @@ export async function generateMetadata({ params: { country, city, media } }) {
     theMedia.gallery = theMedia.gallery.map((g, i) => ({ ...theMedia, ...g, is_gallery: true, img_index: i + 2 }));
   }
   
-  const { selectedMedia } = getSelectedMedia(media, theMedia);
+  const { selectedMedia } = getSelectedMedia(media, theMedia, country, city);
 
   theMedia = selectedMedia;
 
@@ -163,7 +163,7 @@ export default async function Country({ params: { country, city, media } }) {
     galleryLength = theMedia.gallery.length + 1;
   }
 
-  const { mediaIndex, selectedMedia } = getSelectedMedia(media, theMedia);
+  const { mediaIndex, selectedMedia } = getSelectedMedia(media, theMedia, country, city);
   theMedia = selectedMedia;
 
   const description = isBR && theMedia.description_pt ? theMedia.description_pt : theMedia.description;
@@ -189,6 +189,13 @@ export default async function Country({ params: { country, city, media } }) {
     name: (description && description.split(' ').length > 10 ? description.split(' ').slice(0, 10).join(' ') + '…' : description) || (theMedia.location_data ? theMedia.location_data[0].name : ''),
     item: host(basePath),
   });
+
+  if (media[1]) {
+    breadcrumbs.push({
+      name: 'Item ' + media[1],
+      item: host(basePath) + media[1],
+    });
+  }
 
   const paginationBase = basePath + '/{page}';
 
