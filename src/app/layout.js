@@ -10,6 +10,7 @@ import Top from './components/top';
 import Footer from './components/footer';
 import Autocomplete from './components/autocomplete';
 import Link from 'next/link';
+import NavbarLinks from './components/navbar-links';
 
 export async function generateMetadata() {
   // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -123,21 +124,14 @@ export default function RootLayout({ children }) {
           <span className="loader"></span>
         </div>
 
-        <nav className="navbar navbar-expand-lg navbar-light">
+        <nav className="navbar">
           <div className="container" style={{ display: 'flex', alignItems: 'center', paddingLeft: 0, paddingRight: 0 }}>
             <Link className="navbar-brand" href="/">
               <img src="/icons/96x96.png" width={48} height={48} alt="Logo" />
               {SITE_NAME}
             </Link>
 
-            <ul className="navbar-nav">
-              <li className={'nav-item' + (headersList.get('x-pathname') === '/' ? ' active' : '')}>
-                <Link className="nav-link" href="/">{i18n('Home')}</Link>
-              </li>
-              <li className={'nav-item' + (headersList.get('x-pathname') === '/countries' ? ' active' : '')}>
-                <Link className="nav-link" href="/countries">{i18n('Albums')}</Link>
-              </li>
-            </ul>
+            <NavbarLinks />
           </div>
         </nav>
 
@@ -146,6 +140,8 @@ export default function RootLayout({ children }) {
             <img src={ host('/icons/72x72.png') } alt="Viajar com Alê Icon" width={36} height={36}></img>
 
             <span>{SITE_NAME}</span>
+
+            <NavbarLinks />
           </div>
 
           <div id="portuguese-language-switcher">

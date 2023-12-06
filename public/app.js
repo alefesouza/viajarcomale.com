@@ -199,16 +199,18 @@
 
     initNavbarLinkClick();
 
-    const navLinks = [...document.querySelectorAll('.navbar .nav-link')];
+    const navLinks = [...document.querySelectorAll('.navbar .nav-link'), ...document.querySelectorAll('#title-bar .nav-link')];
     
     navLinks.forEach((item) => {
       item.parentElement.classList.remove('active');
     });
     
     if (window.location.pathname == '/') {
-      document.querySelector('.navbar .nav-item:nth-child(1)').classList.add('active')
+      document.querySelector('.navbar .nav-item:nth-child(1)').classList.add('active');
+      document.querySelector('#title-bar .nav-item:nth-child(1)').classList.add('active');
     } else if (window.location.pathname == '/countries') {
-      document.querySelector('.navbar .nav-item:nth-child(2)').classList.add('active')
+      document.querySelector('.navbar .nav-item:nth-child(2)').classList.add('active');
+      document.querySelector('#title-bar .nav-item:nth-child(2)').classList.add('active');
     }
 
     firstAccess = false;

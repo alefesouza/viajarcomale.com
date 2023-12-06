@@ -369,8 +369,21 @@ a {
   left: env(titlebar-area-x, 0);
   top: env(titlebar-area-y, 0);
   height: env(titlebar-area-height, 50px);
-  width: env(titlebar-area-width, 100%);
+  width: 30%;
   z-index: 3;
+  left: calc(env(titlebar-area-width) + env(titlebar-area-x) - 30vw);
+}
+
+@media(min-width: 768px) {
+  .window-controls-overlay .autocomplete {
+    width: 40%;
+  }
+}
+
+@media(min-width: 1024px) {
+  .window-controls-overlay .autocomplete {
+    width: 30%;
+  }
 }
 
 .window-controls-overlay .autocomplete [class$=indicatorContainer] {
@@ -383,25 +396,17 @@ a {
 }
 
 .window-controls-overlay .autocomplete > div {
-  width: 50%;
+  width: 100%;
   -webkit-app-region: no-drag;
   app-region: no-drag;
 }
 
-@media(min-width: 768px) {
-  .window-controls-overlay .autocomplete > div {
-    width: 40%;
-  }
-}
-
-@media(min-width: 1024px) {
-  .window-controls-overlay .autocomplete > div {
-    width: 30%;
-  }
-}
-
 .window-controls-overlay .navbar {
-  padding-top: env(titlebar-area-height, 50px);
+  display: none;
+}
+
+.window-controls-overlay .profile {
+  padding-top: calc(env(titlebar-area-height, 50px) + 48px);
 }
 
 .window-controls-overlay #loader-spinner {
@@ -424,11 +429,8 @@ a {
     background: linear-gradient(to right, rgba(248, 249, 250, .0), rgba(248, 249, 250, .15), rgba(248, 249, 250, .0));
 }
 
-.navbar-light .navbar-brand {
-  color: rgba(0,0,0,.9);
-}
-
 .navbar-brand {
+  color: rgba(0,0,0,.9);
   display: inline-block;
   padding-top: 0.3125rem;
   padding-bottom: 0.3125rem;
@@ -441,18 +443,13 @@ a {
   gap: 8px;
 }
 
-.navbar-light .navbar-nav .nav-link {
+.navbar-nav .nav-link {
   color: rgba(0,0,0,.5);
 }
 
-.navbar-expand-lg .navbar-nav .nav-link {
+.navbar-nav .nav-link {
   padding-right: 0.5rem;
   padding-left: 0.5rem;
-}
-
-.navbar-nav .nav-link {
-  padding-right: 0;
-  padding-left: 0;
 }
 
 .nav-link {
@@ -471,6 +468,10 @@ a {
     margin-top: 0;
 }
 
-.navbar-light .navbar-nav .active>.nav-link, .navbar-light .navbar-nav .nav-link.active, .navbar-light .navbar-nav .nav-link.show, .navbar-light .navbar-nav .show>.nav-link {
+.navbar-nav .nav-item.active .nav-link {
   color: rgba(0,0,0,.9);
+}
+
+.window-controls-overlay .navbar-nav {
+  -webkit-app-region: no-drag;
 }
