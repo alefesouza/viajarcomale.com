@@ -220,7 +220,7 @@ export default async function Country({ params: { theHashtag }, searchParams }) 
     <div className={ styles.galleries }>
       { shortVideos.length > 1 && sortPicker('short') }
 
-      { shortVideos.length > 0 && <Scroller title={i18n('Short Video')} items={shortVideos} isShortVideos /> }
+      { shortVideos.length > 0 && <Scroller title={i18n('Short Videos')} items={shortVideos} isShortVideos /> }
 
       { youtubeVideos.length > 1 && sortPicker('youtube') }
 

@@ -144,13 +144,13 @@ export async function GET() {
       ...locations.map(m => ({
         ...makeLoc('/countries/' + m.country + '/cities/' + m.city + '/locations/', decodeURIComponent(m.slug)),
       })),
-      ...locations.filter(m => m.totals.posts > 0).map(m => ({
+      ...locations.filter(m => m?.totals?.posts > 0).map(m => ({
         ...makeLoc('/countries/' + m.country + '/cities/' + m.city + '/locations/', decodeURIComponent(m.slug) + '/expand'),
       })),
       ...hashtags.map(h => ({
         ...makeLoc('/hashtags/', decodeURIComponent(h.name), h.name, h.name_pt),
       })),
-      ...hashtags.filter(h => h.totals.posts > 0).map(h => ({
+      ...hashtags.filter(h => h?.totals?.posts > 0).map(h => ({
         ...makeLoc('/hashtags/', decodeURIComponent(h.name) + '/expand', h.name, h.name_pt),
       })),
       ...medias.filter(m => m.type === 'instagram-story').map((m) => ({
