@@ -16,6 +16,9 @@ export async function generateMetadata() {
   const i18n = useI18n();
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const host = useHost();
+  const isBR = host().includes('viajarcomale.com.br');
+  const headersList = headers();
+  const pathname = headersList.get('x-pathname');
  
   const title = SITE_NAME;
   const description = i18n('Travel photos and links to Viajar com Alê social networks.');
@@ -43,6 +46,14 @@ export async function generateMetadata() {
       title,
       image: images[0].url,
     },
+    alternates: {
+      canonical: new URL(pathname, isBR ? 'https://viajarcomale.com.br' : 'https://viajarcomale.com').toString(),
+      languages: {
+        'x-default': 'https://viajarcomale.com' + headersList.get('x-pathname'),
+        'en': 'https://viajarcomale.com' + headersList.get('x-pathname'),
+        'pt': 'https://viajarcomale.com.br' + headersList.get('x-pathname'),
+      },
+    },
   }
 }
 
@@ -51,7 +62,6 @@ export default function RootLayout({ children }) {
   const i18n = useI18n();
   const isBR = host().includes('viajarcomale.com.br');
   const headersList = headers();
-  const pathname = headersList.get('x-pathname');
 
   return (
     <html lang={ i18n('en') }>
@@ -59,17 +69,11 @@ export default function RootLayout({ children }) {
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-        <meta name="keywords" content="vlog, travel, traveling, viajar, viagens, alefe souza, fotos, photos, blog de viagens, instagram de viagens, canal de viagens, travel blog, travel instagram, travel channel, canal do youtube de viagens, travel youtube channel" />
         <meta name="author" content="Alefe Souza" />
 
         <meta name="theme-color" content="#2096cc" />
 
-        <link rel="alternate" hrefLang="en-US" href={ 'https://viajarcomale.com' + headersList.get('x-pathname') } />
-        <link rel="alternate" hrefLang="pt-BR" href={ 'https://viajarcomale.com.br' + headersList.get('x-pathname') } />
-        <link rel="alternate" hrefLang="x-default" href={ 'https://viajarcomale.com' + headersList.get('x-pathname') } />
-
         <link rel="shortcut icon" href={ host('favicon.ico') } />
-        {!pathname.includes('/hashtags/') && <link rel="canonical" href={ new URL(pathname, isBR ? 'https://viajarcomale.com.br' : 'https://viajarcomale.com').toString() } />}
 
         <link rel="manifest" href={ host('manifest.json') } />
         <link rel="image_src" href={ host('profile-photo-2x.jpg') } />

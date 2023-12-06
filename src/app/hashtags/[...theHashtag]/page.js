@@ -26,13 +26,28 @@ export async function generateMetadata({ params: { theHashtag } }) {
   const db = getFirestore();
   const hashtagPtSnapshot = await db.collection('hashtags').where('name_pt', '==', hashtag).get();
   let hashtagPt = null;
+  let hashtagEn = null;
 
   hashtagPtSnapshot.forEach(doc => {
     hashtagPt = doc.data();
   });
 
-  const enUrl = 'https://viajarcomale.com/hashtags/' + (hashtagPt ? hashtagPt.name : hashtag);
-  const ptUrl = 'https://viajarcomale.com.br/hashtags/' + (hashtagPt ? hashtagPt.name_pt : hashtag);
+  if (!hashtagPt) {
+    const hashtagEnSnapshot = await db.collection('hashtags').where('name', '==', hashtag).get();
+
+    hashtagEnSnapshot.forEach(doc => {
+      hashtagEn = doc.data();
+    });
+  }
+
+  if (!hashtagPt && !hashtagEn) {
+    redirect('/');
+  }
+
+  const finalHashtag = hashtagPt || hashtagEn;
+
+  const enUrl = 'https://viajarcomale.com/hashtags/' + finalHashtag.name;
+  const ptUrl = 'https://viajarcomale.com.br/hashtags/' + (finalHashtag.name_pt ? finalHashtag.name_pt : finalHashtag.name);
 
   return {
     title,
@@ -51,6 +66,7 @@ export async function generateMetadata({ params: { theHashtag } }) {
     alternates: {
       canonical: isBR ? ptUrl : enUrl,
       languages: {
+        'x-default': enUrl,
         'en': enUrl,
         'pt': ptUrl,
       },
