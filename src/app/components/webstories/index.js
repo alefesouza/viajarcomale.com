@@ -1,7 +1,9 @@
+import useI18n from '@/app/hooks/use-i18n';
 import useHost from '@/app/hooks/use-host';
 import { FILE_DOMAIN, SITE_NAME } from '@/app/utils/constants';
 
 export default function WebStories({title, storyTitle, items, cover}) {
+  const i18n = useI18n();
   const host = useHost();
   const isBR = host().includes('viajarcomale.com.br');
 
@@ -25,7 +27,7 @@ export default function WebStories({title, storyTitle, items, cover}) {
     poster-portrait-src={theCover}
   >
     <amp-story-auto-analytics gtag-id={process.env.NEXT_GA_TRACKING}></amp-story-auto-analytics>
-    <amp-story-page id="cover" auto-advance-after="1.5s">
+    <amp-story-page id="cover" auto-advance-after="2s">
       <amp-story-grid-layer template="fill">
         <amp-img src={theCover}
             width={firstItem.width} height={firstItem.height}
@@ -36,6 +38,9 @@ export default function WebStories({title, storyTitle, items, cover}) {
         <div style={{...textStyles, fontSize: storyTitle.length > 35 ? 20 : storyTitle.length > 30 ? 24 : 32}}>{storyTitle}</div>
         <div style={{...textStyles, fontSize: 18}}>{SITE_NAME} - @viajarcomale</div>
       </amp-story-grid-layer>
+      <amp-story-page-outlink layout="nodisplay">
+        <a href="" className="cover-link">{i18n('Open')}</a>
+      </amp-story-page-outlink>
     </amp-story-page>
     {items.map((item) => <amp-story-page key={item.id} id={item.id} auto-advance-after={item.file.includes('.mp4') ? item.id + '-video' : '5s'}>
       <amp-story-grid-layer template="fill">
@@ -52,6 +57,9 @@ export default function WebStories({title, storyTitle, items, cover}) {
       <amp-story-grid-layer template="vertical">
         <div style={{...textStyles, color: '#fff', background: 'none', position: 'absolute', top: 18, left: 5}}>@viajarcomale</div>
       </amp-story-grid-layer>
+      <amp-story-page-outlink layout="nodisplay">
+        <a href={host('/countries/' + item.country + '/cities/' + item.city + '/medias/' + item.id)} target="_blank">{i18n('Open')}</a>
+      </amp-story-page-outlink>
     </amp-story-page>)}
     <amp-story-bookend src={host('webstories-bookends.json')} layout="nodisplay"></amp-story-bookend>
   </amp-story>

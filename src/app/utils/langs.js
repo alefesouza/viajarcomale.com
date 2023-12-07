@@ -40,6 +40,7 @@ const langs = {
     'Locations': 'Locais',
     '360 photos are really cool but they are heavy too, it can take up to 1 minute to load.': 'Fotos 360 são muito legais porém elas também são pesadas, pode levar até 1 minuto para carregar.',
     'Open in Stories format': 'Abrir em formato de Stories',
+    'Open': 'Abrir',
 
     // Alt
     'Viajar com Alê Icon': 'Ícone do Viajar com Alê',
