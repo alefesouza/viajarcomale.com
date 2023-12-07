@@ -1,0 +1,16 @@
+{
+  "bookendVersion": "v1.0",
+  "components": [],
+  "shareProviders": [
+    "system",
+    "whatsapp",
+    { "provider": "twitter", "text": "", "app_id": "" },
+    { "provider": "facebook", "app_id": "2951171431683266" },
+    "email",
+    "sms",
+    "tumblr",
+    "linkedin",
+    "pinterest",
+    "line"
+  ]
+}

@@ -52,6 +52,7 @@ export default function WebStories({title, storyTitle, items, cover}) {
       <amp-story-grid-layer template="vertical">
         <div style={{...textStyles, color: '#fff', background: 'none', position: 'absolute', top: 18, left: 5}}>@viajarcomale</div>
       </amp-story-grid-layer>
+      <amp-story-bookend src={host('webstories-bookends.json')} layout="nodisplay"></amp-story-bookend>
     </amp-story-page>)}
   </amp-story>
 }
