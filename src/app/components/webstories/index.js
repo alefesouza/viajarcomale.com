@@ -5,11 +5,11 @@ export default function WebStories({title, storyTitle, items, cover}) {
   const host = useHost();
   const isBR = host().includes('viajarcomale.com.br');
 
-  const firstItem = items[0] || {};
+  const firstItem = cover ? items.find(c => c.file.includes('.jpg')) || items[0] : items[0] || {};
   const theCover = cover || FILE_DOMAIN + firstItem?.file?.replace('.mp4', '-thumb.png');
 
   const textStyles = {
-    background: 'rgba(255, 255, 255, .7)',
+    background: 'rgba(255, 255, 255, .9)',
     width: 'auto',
     padding: '2px 10px',
     borderRadius: '5px',
@@ -33,8 +33,8 @@ export default function WebStories({title, storyTitle, items, cover}) {
         </amp-img>
       </amp-story-grid-layer>
       <amp-story-grid-layer template="vertical">
-        <h1 style={textStyles}>{storyTitle}</h1>
-        <div style={textStyles}>{SITE_NAME} - @viajarcomale</div>
+        <div style={{...textStyles, fontSize: storyTitle.length > 35 ? 20 : storyTitle.length > 30 ? 24 : 32}}>{storyTitle}</div>
+        <div style={{...textStyles, fontSize: 18}}>{SITE_NAME} - @viajarcomale</div>
       </amp-story-grid-layer>
     </amp-story-page>
     {items.map((item) => <amp-story-page key={item.id} id={item.id} auto-advance-after={item.file.includes('.mp4') ? item.id + '-video' : '5s'}>
