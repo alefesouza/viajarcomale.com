@@ -6,7 +6,7 @@ customInitApp();
 
 export async function GET() {
   const host = useHost();
-  const isBR = true;
+  const isBR = host().includes('viajarcomale.com.br');
   const db = getFirestore();
   const allHashtagsRef = await db.collection('caches').doc('static_pages').collection('static_pages').doc('hashtags').get();
   const allHashtags = allHashtagsRef.data();

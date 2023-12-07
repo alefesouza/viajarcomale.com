@@ -8,6 +8,7 @@ import { redirect } from 'next/navigation';
 import InstagramMedia from '@/app/components/instagram-media';
 import ShareButton from '@/app/components/share-button';
 import randomIntFromInterval from '@/app/utils/random-int';
+import WebStories from '@/app/components/webstories';
 
 async function getCountry(country, city) {
   const db = getFirestore();
@@ -21,12 +22,19 @@ async function getCountry(country, city) {
   return countryData;
 }
 
-export async function generateMetadata({ params: { country, city, highlight } }) {
+export async function generateMetadata({ params: { country, city, theHighlight } }) {
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const i18n = useI18n();
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const host = useHost();
   const isBR = host().includes('viajarcomale.com.br');
+  const isWebStories = theHighlight[1] === 'webstories';
+
+  if (theHighlight.length > 2 || (theHighlight[1] && theHighlight[1] !== 'webstories')) {
+    redirect(`/countries/${country}/cities/${city}/highlights/${theHighlight[0]}`);
+  }
+
+  const highlight = theHighlight[0];
 
   const countryData = await getCountry(country, city);
 
@@ -53,7 +61,7 @@ export async function generateMetadata({ params: { country, city, highlight } })
   }
   
   const location = (theCity ? isBR && theCity.name_pt ? theCity.name_pt + ' - ' : theCity.name + ' - ' : '') + i18n(countryData.name);
-  const title = i18n('Stories') + ' - ' + location + ' - ' + SITE_NAME;
+  const title = i18n('Stories') + ' - ' + location + ' - ' + (isWebStories ? ' Web Stories - ' : '') + SITE_NAME;
   const image = FILE_DOMAIN_500 + theMedia.file;
   const description = i18n('Viajar com Alê stories in :location:', {
     location: isBR && theCity.name_pt ? theCity.name_pt : theCity.name,
@@ -83,17 +91,29 @@ export async function generateMetadata({ params: { country, city, highlight } })
       title,
       image,
     },
+    icons: {
+      // Why Next.js doesn't just allow us to create custom <link> tags directly...
+      other: {
+        rel: 'amphtml',
+        url: host('/countries/' + country + '/cities/' + city + '/highlights/' + highlight + '/webstories'),
+      },
+    },
   }
 }
 
-export default async function Highlight({ params: { country, city, highlight }, searchParams }) {
+export default async function Highlight({ params: { country, city, theHighlight }, searchParams }) {
   const i18n = useI18n();
   const host = useHost();
   const isBR = host().includes('viajarcomale.com.br');
 
+  const highlight = theHighlight[0];
   const highlightId = decodeURIComponent(highlight);
 
   let sort = searchParams.sort && ['asc', 'desc', 'random'].includes(searchParams.sort) && searchParams.sort || 'desc';
+
+  if (!searchParams.sort && theHighlight && theHighlight[1] === 'webstories') {
+    sort = 'asc';
+  }
 
   const cacheRef = `/caches/highlights/highlights/${highlightId}/sort/${sort === 'asc' ? 'asc' : 'desc'}`;
 
@@ -155,6 +175,15 @@ export default async function Highlight({ params: { country, city, highlight }, 
     [host('/highlights/') + highlightId + ('?sort=' + sort)]: FieldValue.increment(1),
   }, {merge:true});
 
+  let instagramStories = photos.filter(p => p.type === 'instagram-story' );
+
+  if (theHighlight && theHighlight[1] === 'webstories') {
+    const location = (theCity ? isBR && theCity.name_pt ? theCity.name_pt + ' - ' : theCity.name + ' - ' : '') + i18n(countryData.name);
+    const title = i18n('Stories') + ' - ' + location;
+
+    return <WebStories title={title} storyTitle={location} items={instagramStories} />
+  }
+  
   let newShuffle = randomIntFromInterval(1, 15);
 
   if (newShuffle == searchParams.shuffle) {
@@ -171,8 +200,6 @@ export default async function Highlight({ params: { country, city, highlight }, 
     </div>
   </div>);
 
-  let instagramStories = photos.filter(p => p.type === 'instagram-story' );
-
   return <div>
     <div className="container">
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -180,12 +207,19 @@ export default async function Highlight({ params: { country, city, highlight }, 
           <img src="/images/back.svg" alt={i18n('Back')} width="30px"></img>
         </Link>
 
-        <ShareButton />
+        <div style={{display: 'flex', gap: 16}}>
+          {<a href={host('/countries/' + country + '/cities/' + city + '/highlights/' + highlightId + '/webstories')} target="_blank" title={i18n('Play')}>
+            <img src={host('/images/play.svg')} width={30} height={30} alt={i18n('Play')} />
+          </a>}
+          <ShareButton />
+        </div>
       </div>
     </div>
     
     <div className="container-fluid">
       <h2>{i18n('Stories')} - {isBR && theCity.name_pt ? theCity.name_pt : theCity.name} - {i18n(countryData.name)} {countryData.flag}</h2>
+
+      <a href={host('/countries/' + country + '/cities/' + city + '/highlights/' + highlight + '/webstories')} target="_blank" style={{ textDecoration: 'underline' }}>{i18n('Open in Stories format')}</a>
     </div>
 
     <div className={ styles.galleries }>

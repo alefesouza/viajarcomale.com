@@ -9,6 +9,7 @@ import { redirect } from 'next/navigation';
 import InstagramMedia from '@/app/components/instagram-media';
 import ShareButton from '@/app/components/share-button';
 import randomIntFromInterval from '@/app/utils/random-int';
+import WebStories from '@/app/components/webstories';
 
 async function getCountry(country, city) {
   const db = getFirestore();
@@ -28,8 +29,9 @@ export async function generateMetadata({ params: { country, city, theLocation } 
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const host = useHost();
   const isBR = host().includes('viajarcomale.com.br');
+  const isWebStories = theLocation[1] === 'webstories';
 
-  if (theLocation.length > 2 || (theLocation[1] && theLocation[1] !== 'expand')) {
+  if (theLocation.length > 2 || (theLocation[1] && theLocation[1] !== 'expand' && theLocation[1] !== 'webstories')) {
     redirect(`/countries/${country}/cities/${city}/locations/${theLocation[0]}`);
   }
 
@@ -56,7 +58,7 @@ export async function generateMetadata({ params: { country, city, theLocation } 
   const theMedia = mediaRef.data();
 
   const finalLocation = (theCity ? isBR && theCity.name_pt ? theCity.name_pt + ' - ' : theCity.name + ' - ' : '') + i18n(countryData.name);
-  const title = theMedia.name + ' - ' + finalLocation + ' - ' + SITE_NAME;
+  const title = theMedia.name + ' - ' + finalLocation + ' - ' + (isWebStories ? ' Web Stories - ' : '') + SITE_NAME;
   const description = i18n('Photos and videos taken by Viajar com Alê in :location:', {
     location: theMedia.name,
   });
@@ -75,6 +77,13 @@ export async function generateMetadata({ params: { country, city, theLocation } 
     other: {
       title,
     },
+    icons: {
+      // Why Next.js doesn't just allow us to create custom <link> tags directly...
+      other: {
+        rel: 'amphtml',
+        url: host('/countries/' + country + '/cities/' + city + '/locations/' + location + '/webstories'),
+      },
+    },
   }
 }
 
@@ -88,6 +97,10 @@ export default async function Country({ params: { country, city, theLocation }, 
 
   const expandGalleries = expand;
   let sort = searchParams.sort && ['asc', 'desc', 'random'].includes(searchParams.sort) && searchParams.sort || 'desc';
+
+  if (!searchParams.sort && expand === 'webstories') {
+    sort = 'asc';
+  }
 
   const countryData = await getCountry(country, city);
 
@@ -179,6 +192,13 @@ export default async function Country({ params: { country, city, theLocation }, 
     });
   }
 
+  if (expand == 'webstories') {
+    const finalLocation = (theCity ? isBR && theCity.name_pt ? theCity.name_pt + ' - ' : theCity.name + ' - ' : '') + i18n(countryData.name);
+    const title = theMedia.name + ' - ' + finalLocation;
+    
+    return <WebStories title={title} storyTitle={theMedia.name} items={instagramStories} webStoriesHref={host('/countries/' + country + '/cities/' + city + '/locations/' + location + '/webstories')} />
+  }
+
   let expandedList = [];
 
   instagramPhotos.forEach((item) => {
@@ -234,7 +254,7 @@ export default async function Country({ params: { country, city, theLocation }, 
 
       { instagramStories.length > 1 && sortPicker('stories') }
 
-      { instagramStories.length > 0 && <Scroller title="Stories" items={instagramStories} isStories /> }
+      { instagramStories.length > 0 && <Scroller title="Stories" items={instagramStories} isStories webStoriesHref={host('/countries/' + country + '/cities/' + city + '/locations/' + location + '/webstories')} /> }
 
       { instagramPhotos.filter(p => !p.file_type).length > 1 && sortPicker('photos') }
 

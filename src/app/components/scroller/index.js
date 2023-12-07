@@ -6,15 +6,16 @@ import { FILE_DOMAIN, FILE_DOMAIN_500 } from '@/app/utils/constants';
 import ShareButton from '../share-button';
 import Hashtags from '../hashtags';
 
-export default function Scroller({ title, items, isShortVideos, isInstagramHighlights, isYouTubeVideos, is360Photos, cityData, isStories }) {
+export default function Scroller({ title, items, isShortVideos, isInstagramHighlights, isYouTubeVideos, is360Photos, cityData, isStories, webStoriesHref }) {
   const i18n = useI18n();
   const host = useHost();
   const isBR = host().includes('viajarcomale.com.br');
 
   return (<div>
-    <div className="container-fluid">
+    <div className={'container-fluid' + (isStories ? ' ' + styles.stories_title : '')}>
       <h3 style={{ marginBlockEnd: is360Photos ? '0em' : '' }}>{i18n(title)}</h3>
       {is360Photos && <div style={{ marginBlockEnd: '1em' }}>{i18n('360 photos are really cool but they are heavy too, it can take up to 1 minute to load.')}</div>}
+      {isStories && <a href={webStoriesHref} target="_blank">{i18n('Open in Stories format')}</a>}
     </div>
 
     <div style={{ position: 'relative' }}>
@@ -37,6 +38,10 @@ export default function Scroller({ title, items, isShortVideos, isInstagramHighl
           </div>}
 
           {isInstagramHighlights && <div className={ styles.external_links }>
+            {<a href={host('/countries/' + p.country + '/cities/' + p.city + '/highlights/' + p.id + '/webstories')} target="_blank" title={i18n('Play')}>
+              <img src={host('/images/play.svg')} width={32} height={32} alt={i18n('Play')} />
+            </a>}
+
             {<a href={p.link} target="_blank">
               <img src={host('/logos/instagram.png')} alt={i18n('Instagram Icon')} />
             </a>}

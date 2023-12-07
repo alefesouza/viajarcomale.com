@@ -9,6 +9,7 @@ import { redirect } from 'next/navigation';
 import InstagramMedia from '@/app/components/instagram-media';
 import ShareButton from '@/app/components/share-button';
 import randomIntFromInterval from '@/app/utils/random-int';
+import WebStories from '@/app/components/webstories';
 
 export async function generateMetadata({ params: { theHashtag } }) {
   // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -16,9 +17,14 @@ export async function generateMetadata({ params: { theHashtag } }) {
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const host = useHost();
   const isBR = host().includes('viajarcomale.com.br');
+  const isWebStories = theHashtag[1] === 'webstories';
   
+  if (theHashtag.length > 2 || (theHashtag[1] && theHashtag[1] !== 'expand' && theHashtag[1] !== 'webstories')) {
+    redirect(`/hashtags/${theHashtag[0]}`);
+  }
+
   const hashtag = decodeURIComponent(theHashtag[0]).normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-  const title = '#' + hashtag + ' - Hashtags' + ' - ' + SITE_NAME;
+  const title = '#' + hashtag + ' - Hashtags' + ' - ' + (isWebStories ? ' Web Stories - ' : '') + SITE_NAME;
   const description = i18n('Photos and videos taken by Viajar com Alê with the hashtag #:hashtag:.', {
     hashtag,
   });
@@ -71,6 +77,13 @@ export async function generateMetadata({ params: { theHashtag } }) {
         'pt': ptUrl,
       },
     },
+    icons: {
+      // Why Next.js doesn't just allow us to create custom <link> tags directly...
+      other: {
+        rel: 'amphtml',
+        url: host('/hashtags/' + hashtag + '/webstories'),
+      },
+    },
   }
 }
 
@@ -78,10 +91,6 @@ export default async function Country({ params: { theHashtag }, searchParams }) 
   const i18n = useI18n();
   const host = useHost();
   const isBR = host().includes('viajarcomale.com.br');
-
-  if (theHashtag.length > 2 || (theHashtag[1] && theHashtag[1] !== 'expand')) {
-    redirect(`/hashtags/${theHashtag[0]}`);
-  }
 
   const [queryHashtag, expand] = theHashtag;
   let hashtag = decodeURIComponent(queryHashtag).normalize('NFD').replace(/[\u0300-\u036f]/g, '');
@@ -100,6 +109,10 @@ export default async function Country({ params: { theHashtag }, searchParams }) 
 
   const expandGalleries = expand;
   let sort = searchParams.sort && ['asc', 'desc', 'random'].includes(searchParams.sort) && searchParams.sort || 'desc';
+
+  if (!searchParams.sort && expand === 'webstories') {
+    sort = 'asc';
+  }
 
   const cacheRef = `/caches/hashtags/hashtags/${hashtag}/sort/${sort === 'asc' ? 'asc' : 'desc'}`;
 
@@ -177,6 +190,10 @@ export default async function Country({ params: { theHashtag }, searchParams }) 
     });
   }
 
+  if (expand == 'webstories') {
+    return <WebStories title={`#${hashtag} - Hashtags`} storyTitle={`#${hashtag}`} items={instagramStories} />
+  }
+
   let expandedList = [];
 
   instagramPhotos.forEach((item) => {
@@ -232,7 +249,7 @@ export default async function Country({ params: { theHashtag }, searchParams }) 
 
       { instagramStories.length > 1 && sortPicker('stories') }
 
-      { instagramStories.length > 0 && <Scroller title="Stories" items={instagramStories} isStories /> }
+      { instagramStories.length > 0 && <Scroller title="Stories" items={instagramStories} isStories webStoriesHref={host('/hashtags/' + hashtag + '/webstories')} /> }
 
       { instagramPhotos.filter(p => !p.file_type).length > 1 && sortPicker('photos') }
 

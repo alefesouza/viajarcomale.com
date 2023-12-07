@@ -73,6 +73,10 @@
   gap: 20px;
 }
 
+.instagram_photos_title a {
+  text-decoration: underline;
+}
+
 .sort_picker {
   display: flex;
   align-items: center;

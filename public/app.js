@@ -59,6 +59,10 @@
   function showSpinner(e) {
     const link = e?.target?.href || e?.target?.parentElement?.href;
 
+    if ((e?.target?.parentElement?.target || e?.target?.target) === '_blank') {
+      return;
+    }
+
     if (e?.metaKey || !link) {
       return;
     }

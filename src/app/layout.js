@@ -64,11 +64,12 @@ export default function RootLayout({ children }) {
   const isBR = host().includes('viajarcomale.com.br');
   const headersList = headers();
   const pathname = headersList.get('x-pathname');
+  const isAMP = pathname.includes('/webstories');
 
   return (
-    <html lang={ i18n('en') }>
+    <html lang={ i18n('en') } amp={isAMP ? 'true' : null}>
 
-      <head>
+      {!isAMP && <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
 
         <meta name="author" content="Alefe Souza" />
@@ -113,9 +114,42 @@ export default function RootLayout({ children }) {
         j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
         })(window,document,'script','dataLayer','${process.env.NEXT_GTM_TRACKING}');`}}></Script>
-      </head>
+      </head>}
 
-      <body>
+      {isAMP && <>
+        <head>
+          <meta charset="utf-8" />
+          <script async src="https://cdn.ampproject.org/v0.js"></script>
+          <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1" />
+          <style amp-boilerplate dangerouslySetInnerHTML={{__html: `
+          body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}
+          `}}>
+          </style>
+          <script async custom-element="amp-story" src="https://cdn.ampproject.org/v0/amp-story-1.0.js"></script>
+          <script async custom-element="amp-analytics" src="https://cdn.ampproject.org/v0/amp-analytics-0.1.js"></script>
+          <noscript><style amp-boilerplate dangerouslySetInnerHTML={{__html: `
+          body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}
+          `}}></style></noscript>
+        </head>
+        <body>
+          <amp-analytics type="gtag" data-credentials="include">
+          <Script type="application/json" id="amp-analytics" dangerouslySetInnerHTML={{__html:`
+            {
+              "vars" : {
+                "gtag_id": "${process.env.NEXT_GA_TRACKING}",
+                "config" : {
+                  "${process.env.NEXT_GA_TRACKING}": { "groups": "default" }
+                }
+              }
+            }
+          `}}>
+          </Script>
+          </amp-analytics>
+          {children}
+        </body>
+      </>}
+
+      {!isAMP && <body>
         <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KG98M7XG" height="0" width="0" style={{ display: 'none', visibility: 'hidden'}}></iframe></noscript>
 
         <div className="background"></div>
@@ -170,7 +204,7 @@ export default function RootLayout({ children }) {
             gtag('config', '${process.env.NEXT_GA_TRACKING}');
           `}}>
         </Script>
-      </body>
+      </body>}
     </html>
   )
 }
