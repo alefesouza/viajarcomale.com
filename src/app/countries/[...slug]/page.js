@@ -358,7 +358,7 @@ export default async function Country({ params: { slug }, searchParams }) {
     <div className="container">
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <Link href="/countries" id="back-button" scroll={false}>
-          <img src={host('/images/back.svg')} alt={i18n('Back')} width="30px"></img>
+          <img src={host('/images/back.svg')} alt={i18n('Back')} width="32px"></img>
         </Link>
 
         <ShareButton />

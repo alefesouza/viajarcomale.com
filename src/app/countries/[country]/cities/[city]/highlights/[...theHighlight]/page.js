@@ -204,7 +204,7 @@ export default async function Highlight({ params: { country, city, theHighlight 
     <div className="container">
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <Link href={ '/countries/' + country + '/cities/' + city } id="back-button" className={ styles.history_back_button } scroll={false}>
-          <img src="/images/back.svg" alt={i18n('Back')} width="30px"></img>
+          <img src="/images/back.svg" alt={i18n('Back')} width="32px"></img>
         </Link>
 
         <div style={{display: 'flex', gap: 16}}>
