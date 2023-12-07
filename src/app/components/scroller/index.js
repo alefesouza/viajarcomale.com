@@ -38,7 +38,7 @@ export default function Scroller({ title, items, isShortVideos, isInstagramHighl
           </div>}
 
           {isInstagramHighlights && <div className={ styles.external_links }>
-            {<a href={host('/countries/' + p.country + '/cities/' + p.city + '/highlights/' + p.id + '/webstories')} target="_blank" title={i18n('Play')}>
+            {<a href={host('/webstories/countries/' + p.country + '/cities/' + p.city + '/highlights/' + p.id)} target="_blank" title={i18n('Play')}>
               <img src={host('/images/play.svg')} width={32} height={32} alt={i18n('Play')} />
             </a>}
 

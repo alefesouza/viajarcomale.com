@@ -81,7 +81,7 @@ export async function generateMetadata({ params: { country, city, theLocation } 
       // Why Next.js doesn't just allow us to create custom <link> tags directly...
       other: {
         rel: 'amphtml',
-        url: host('/countries/' + country + '/cities/' + city + '/locations/' + location + '/webstories'),
+        url: host('/webstories/countries/' + country + '/cities/' + city + '/locations/' + location),
       },
     },
   }
@@ -196,7 +196,7 @@ export default async function Country({ params: { country, city, theLocation }, 
     const finalLocation = (theCity ? isBR && theCity.name_pt ? theCity.name_pt + ' - ' : theCity.name + ' - ' : '') + i18n(countryData.name);
     const title = theMedia.name + ' - ' + finalLocation;
     
-    return <WebStories title={title} storyTitle={theMedia.name} items={instagramStories} webStoriesHref={host('/countries/' + country + '/cities/' + city + '/locations/' + location + '/webstories')} />
+    return <WebStories title={title} storyTitle={theMedia.name} items={instagramStories} webStoriesHref={host('/webstories/countries/' + country + '/cities/' + city + '/locations/' + location)} />
   }
 
   let expandedList = [];
@@ -254,7 +254,7 @@ export default async function Country({ params: { country, city, theLocation }, 
 
       { instagramStories.length > 1 && sortPicker('stories') }
 
-      { instagramStories.length > 0 && <Scroller title="Stories" items={instagramStories} isStories webStoriesHref={host('/countries/' + country + '/cities/' + city + '/locations/' + location + '/webstories')} /> }
+      { instagramStories.length > 0 && <Scroller title="Stories" items={instagramStories} isStories webStoriesHref={host('/webstories/countries/' + country + '/cities/' + city + '/locations/' + location)} /> }
 
       { instagramPhotos.filter(p => !p.file_type).length > 1 && sortPicker('photos') }
 

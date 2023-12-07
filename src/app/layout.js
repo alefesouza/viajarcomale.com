@@ -20,7 +20,8 @@ export async function generateMetadata() {
   const isBR = host().includes('viajarcomale.com.br');
   const headersList = headers();
   const pathname = headersList.get('x-pathname').replace('/webstories', '');
- 
+  const isWebStories = headersList.get('x-pathname').includes('/webstories');
+
   const title = SITE_NAME;
   const description = i18n('Travel photos and links to Viajar com Alê social networks.');
   const images = [{
@@ -50,9 +51,9 @@ export async function generateMetadata() {
     alternates: {
       canonical: new URL(pathname, isBR ? 'https://viajarcomale.com.br' : 'https://viajarcomale.com').toString(),
       languages: {
-        'x-default': 'https://viajarcomale.com' + headersList.get('x-pathname'),
-        'en': 'https://viajarcomale.com' + headersList.get('x-pathname'),
-        'pt': 'https://viajarcomale.com.br' + headersList.get('x-pathname'),
+        'x-default': 'https://viajarcomale.com' + (isWebStories ? '/webstories' : '') + pathname,
+        'en': 'https://viajarcomale.com' + (isWebStories ? '/webstories' : '') + pathname,
+        'pt': 'https://viajarcomale.com.br' + (isWebStories ? '/webstories' : '') + pathname,
       },
     },
   }
@@ -67,8 +68,6 @@ export default function RootLayout({ children }) {
   const isAMP = pathname.includes('/webstories');
 
   const sharedTags = <>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-
     <meta name="author" content="Alefe Souza" />
 
     <meta name="theme-color" content="#2096cc" />
@@ -104,6 +103,7 @@ export default function RootLayout({ children }) {
     <html lang={ i18n('en') } amp={isAMP ? 'true' : null}>
 
       {!isAMP && <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
         {sharedTags}
 
         {pathname === '/' &&
@@ -123,31 +123,18 @@ export default function RootLayout({ children }) {
       {isAMP && <>
         <head>
           {sharedTags}
-          <script async src="https://cdn.ampproject.org/v0.js"></script>
+          <script async src="https://cdn.ampproject.org/v0.js" className="amp-asset"></script>
           <style amp-boilerplate dangerouslySetInnerHTML={{__html: `
           body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}
-          `}}>
+          `}} className="amp-asset">
           </style>
-          <script async custom-element="amp-story" src="https://cdn.ampproject.org/v0/amp-story-1.0.js"></script>
-          <script async custom-element="amp-analytics" src="https://cdn.ampproject.org/v0/amp-analytics-0.1.js"></script>
+          <script async custom-element="amp-story" src="https://cdn.ampproject.org/v0/amp-story-1.0.js" className="amp-asset"></script>
+          <script async custom-element="amp-story-auto-analytics" src="https://cdn.ampproject.org/v0/amp-story-auto-analytics-0.1.js"></script>
           <noscript><style amp-boilerplate dangerouslySetInnerHTML={{__html: `
           body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}
-          `}}></style></noscript>
+          `}} className="amp-asset"></style></noscript>
         </head>
         <body>
-          <amp-analytics type="gtag" data-credentials="include">
-          <Script type="application/json" id="amp-analytics" dangerouslySetInnerHTML={{__html:`
-            {
-              "vars" : {
-                "gtag_id": "${process.env.NEXT_GA_TRACKING}",
-                "config" : {
-                  "${process.env.NEXT_GA_TRACKING}": { "groups": "default" }
-                }
-              }
-            }
-          `}}>
-          </Script>
-          </amp-analytics>
           {children}
         </body>
       </>}

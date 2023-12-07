@@ -52,8 +52,8 @@ export async function generateMetadata({ params: { theHashtag } }) {
 
   const finalHashtag = hashtagPt || hashtagEn;
 
-  const enUrl = 'https://viajarcomale.com/hashtags/' + finalHashtag.name;
-  const ptUrl = 'https://viajarcomale.com.br/hashtags/' + (finalHashtag.name_pt ? finalHashtag.name_pt : finalHashtag.name);
+  const enUrl = 'https://viajarcomale.com' + (isWebStories ? '/webstories' : '') + '/hashtags/' + finalHashtag.name;
+  const ptUrl = 'https://viajarcomale.com.br' + (isWebStories ? '/webstories' : '') + '/hashtags/' + (finalHashtag.name_pt ? finalHashtag.name_pt : finalHashtag.name);
 
   return {
     title,
@@ -70,7 +70,7 @@ export async function generateMetadata({ params: { theHashtag } }) {
       title,
     },
     alternates: {
-      canonical: isBR ? ptUrl : enUrl,
+      canonical: (isBR ? ptUrl : enUrl).replace('/webstories', '/'),
       languages: {
         'x-default': enUrl,
         'en': enUrl,
@@ -81,7 +81,7 @@ export async function generateMetadata({ params: { theHashtag } }) {
       // Why Next.js doesn't just allow us to create custom <link> tags directly...
       other: {
         rel: 'amphtml',
-        url: host('/hashtags/' + hashtag + '/webstories'),
+        url: host('/webstories/hashtags/' + hashtag),
       },
     },
   }
@@ -249,7 +249,7 @@ export default async function Country({ params: { theHashtag }, searchParams }) 
 
       { instagramStories.length > 1 && sortPicker('stories') }
 
-      { instagramStories.length > 0 && <Scroller title="Stories" items={instagramStories} isStories webStoriesHref={host('/hashtags/' + hashtag + '/webstories')} /> }
+      { instagramStories.length > 0 && <Scroller title="Stories" items={instagramStories} isStories webStoriesHref={host('/webstories/hashtags/' + hashtag)} /> }
 
       { instagramPhotos.filter(p => !p.file_type).length > 1 && sortPicker('photos') }
 

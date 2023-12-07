@@ -95,7 +95,7 @@ export async function generateMetadata({ params: { country, city, theHighlight }
       // Why Next.js doesn't just allow us to create custom <link> tags directly...
       other: {
         rel: 'amphtml',
-        url: host('/countries/' + country + '/cities/' + city + '/highlights/' + highlight + '/webstories'),
+        url: host('/webstories/countries/' + country + '/cities/' + city + '/highlights/' + highlight),
       },
     },
   }
@@ -208,7 +208,7 @@ export default async function Highlight({ params: { country, city, theHighlight 
         </Link>
 
         <div style={{display: 'flex', gap: 16}}>
-          {<a href={host('/countries/' + country + '/cities/' + city + '/highlights/' + highlightId + '/webstories')} target="_blank" title={i18n('Play')}>
+          {<a href={host('/webstories/countries/' + country + '/cities/' + city + '/highlights/' + highlightId)} target="_blank" title={i18n('Play')}>
             <img src={host('/images/play.svg')} width={30} height={30} alt={i18n('Play')} />
           </a>}
           <ShareButton />
@@ -219,7 +219,7 @@ export default async function Highlight({ params: { country, city, theHighlight 
     <div className="container-fluid">
       <h2>{i18n('Stories')} - {isBR && theCity.name_pt ? theCity.name_pt : theCity.name} - {i18n(countryData.name)} {countryData.flag}</h2>
 
-      <a href={host('/countries/' + country + '/cities/' + city + '/highlights/' + highlight + '/webstories')} target="_blank" style={{ textDecoration: 'underline' }}>{i18n('Open in Stories format')}</a>
+      <a href={host('/webstories/countries/' + country + '/cities/' + city + '/highlights/' + highlight)} target="_blank" style={{ textDecoration: 'underline' }}>{i18n('Open in Stories format')}</a>
     </div>
 
     <div className={ styles.galleries }>
