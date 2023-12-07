@@ -18,7 +18,7 @@ export default function WebStories({title, storyTitle, items}) {
   
   return <amp-story
     standalone
-    title={`${title} - Web Stories - ${SITE_NAME}`}
+    title={title}
     publisher={SITE_NAME}
     publisher-logo-src={host('/icons/92x92.png')}
     poster-portrait-src={FILE_DOMAIN + firstItem?.file?.replace('.mp4', '-thumb.png')}
