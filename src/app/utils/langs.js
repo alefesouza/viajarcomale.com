@@ -8,6 +8,7 @@ const langs = {
     'Hashtag Search': 'Busca de hashtags',
     '#food': '#comida',
     '#observationdeck': '#mirante',
+    '#favorites': '#favoritos',
 
     // Albums
     'Select Country': 'Selecione o país',

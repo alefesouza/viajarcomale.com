@@ -11,7 +11,7 @@ export default function Autocomplete() {
   const router = useRouter()
   const i18n = useI18nClient();
   
-  const featuredHashtags = [i18n('#food'), i18n('#observationdeck')];
+  const featuredHashtags = [i18n('#favorites'), i18n('#food'), i18n('#observationdeck')];
   const featuredOptions = featuredHashtags.map((item) => ({ label: item, value: item }));
   const [allOptions, setAllOptions] = useState(featuredOptions);
   const [allHashtags, setAllHashtags] = useState(featuredOptions);
