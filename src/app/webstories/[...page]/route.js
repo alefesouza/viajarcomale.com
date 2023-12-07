@@ -1,8 +1,11 @@
+import useHost from '@/app/hooks/use-host';
+
 // Remove Next.js assets from Web Stories pages.
 export async function GET(req) {
-  const { origin, pathname } = new URL(req.url);
+  const host = useHost();
+  const { pathname } = new URL(req.url);
 
-  const request = await fetch(origin + pathname.replace('/webstories', '') + '/webstories');
+  const request = await fetch(host(pathname.replace('/webstories', '') + '/webstories'));
   const data = await request.text();
 
   let $ = require('cheerio').load(data);

@@ -77,13 +77,14 @@ export async function generateMetadata({ params: { country, city, theLocation } 
     other: {
       title,
     },
+    ...theMedia?.totals?.stories > 0 ? {
     icons: {
       // Why Next.js doesn't just allow us to create custom <link> tags directly...
       other: {
         rel: 'amphtml',
         url: host('/webstories/countries/' + country + '/cities/' + city + '/locations/' + location),
       },
-    },
+    } } : null,
   }
 }
 
