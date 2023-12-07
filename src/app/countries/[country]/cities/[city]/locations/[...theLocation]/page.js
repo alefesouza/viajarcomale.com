@@ -198,7 +198,7 @@ export default async function Country({ params: { country, city, theLocation }, 
     const finalLocation = (theCity ? isBR && theCity.name_pt ? theCity.name_pt + ' - ' : theCity.name + ' - ' : '') + i18n(countryData.name);
     const title = theMedia.name + ' - ' + finalLocation;
     
-    return <WebStories title={title} storyTitle={theMedia.name} items={instagramStories} webStoriesHref={host('/webstories/countries/' + country + '/cities/' + city + '/locations/' + location)} />
+    return <WebStories title={title} storyTitle={theMedia.name} items={instagramStories} cacheRef={cacheRef} />
   }
 
   let expandedList = [];

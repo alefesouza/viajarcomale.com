@@ -193,7 +193,7 @@ export default async function Country({ params: { theHashtag }, searchParams }) 
   }
 
   if (expand == 'webstories') {
-    return <WebStories title={`#${hashtagPt ? hashtagPt.name_pt : hashtag} - Hashtags`} storyTitle={`#${hashtagPt ? hashtagPt.name_pt : hashtag}`} items={instagramStories} />
+    return <WebStories title={`#${hashtagPt ? hashtagPt.name_pt : hashtag} - Hashtags`} storyTitle={`#${hashtagPt ? hashtagPt.name_pt : hashtag}`} items={instagramStories} cacheRef={cacheRef} />
   }
 
   let expandedList = [];

@@ -3,7 +3,7 @@ import useHost from '@/app/hooks/use-host';
 import Link from 'next/link';
 import { getFirestore, FieldValue } from 'firebase-admin/firestore';
 import styles from './page.module.css';
-import { FILE_DOMAIN, FILE_DOMAIN_500, SITE_NAME } from '@/app/utils/constants';
+import { FILE_DOMAIN, FILE_DOMAIN_500, FILE_DOMAIN_SQUARE, SITE_NAME } from '@/app/utils/constants';
 import { redirect } from 'next/navigation';
 import InstagramMedia from '@/app/components/instagram-media';
 import ShareButton from '@/app/components/share-button';
@@ -62,15 +62,15 @@ export async function generateMetadata({ params: { country, city, theHighlight }
   
   const location = (theCity ? isBR && theCity.name_pt ? theCity.name_pt + ' - ' : theCity.name + ' - ' : '') + i18n(countryData.name);
   const title = i18n('Stories') + ' - ' + location + ' - ' + (isWebStories ? 'Web Stories - ' : '') + SITE_NAME;
-  const image = FILE_DOMAIN_500 + theMedia.file;
+  const image = FILE_DOMAIN_SQUARE + theMedia.file;
   const description = i18n('Viajar com Alê stories in :location:', {
     location: isBR && theCity.name_pt ? theCity.name_pt : theCity.name,
   });
 
   const images = [{
     url: image,
-    width: 500,
-    height: Math.round((theMedia.height / theMedia.width) * 500),
+    width: theMedia.width,
+    height: theMedia.width,
     type: 'image/jpg',
   }];
   
@@ -183,9 +183,9 @@ export default async function Highlight({ params: { country, city, theHighlight 
     const location = (theCity ? isBR && theCity.name_pt ? theCity.name_pt + ' - ' : theCity.name + ' - ' : '') + i18n(countryData.name);
     const title = i18n('Stories') + ' - ' + location;
 
-    return <WebStories title={title} storyTitle={location} items={instagramStories} cover={FILE_DOMAIN + theMedia.file} />
+    return <WebStories title={title} storyTitle={location} items={instagramStories} highlightItem={theMedia} />
   }
-  
+
   let newShuffle = randomIntFromInterval(1, 15);
 
   if (newShuffle == searchParams.shuffle) {

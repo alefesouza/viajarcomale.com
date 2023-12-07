@@ -2,7 +2,7 @@ import useI18n from '@/app/hooks/use-i18n';
 import useHost from '@/app/hooks/use-host';
 import { getFirestore } from 'firebase-admin/firestore';
 import styles from './page.module.css';
-import { FILE_DOMAIN, FILE_DOMAIN_500, SITE_NAME } from '@/app/utils/constants';
+import { FILE_DOMAIN, FILE_DOMAIN_500, FILE_DOMAIN_SQUARE, SITE_NAME } from '@/app/utils/constants';
 import { serialize } from 'tinyduration'
 import { redirect } from 'next/navigation'
 import InstagramMedia from '@/app/components/instagram-media';
@@ -105,10 +105,14 @@ export async function generateMetadata({ params: { country, city, media } }) {
     image = FILE_DOMAIN_500 + theMedia.file.replace('.mp4', '-thumb.png');
   }
 
+  if (theMedia.type === 'instagram-story') {
+    image = FILE_DOMAIN_SQUARE + theMedia.file.replace('.mp4', '-thumb.png');
+  }
+
   const images = [{
     url: image,
-    width: 500,
-    height: Math.round((theMedia.height / theMedia.width) * 500),
+    width: theMedia.type === 'instagram-story' ? theMedia.width : 500,
+    height: theMedia.type === 'instagram-story' ? theMedia.width : Math.round((theMedia.height / theMedia.width) * 500),
     type: 'image/jpg',
   }];
   
