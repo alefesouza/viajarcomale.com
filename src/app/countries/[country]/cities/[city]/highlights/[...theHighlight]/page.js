@@ -3,7 +3,7 @@ import useHost from '@/app/hooks/use-host';
 import Link from 'next/link';
 import { getFirestore, FieldValue } from 'firebase-admin/firestore';
 import styles from './page.module.css';
-import { FILE_DOMAIN_500, SITE_NAME } from '@/app/utils/constants';
+import { FILE_DOMAIN, FILE_DOMAIN_500, SITE_NAME } from '@/app/utils/constants';
 import { redirect } from 'next/navigation';
 import InstagramMedia from '@/app/components/instagram-media';
 import ShareButton from '@/app/components/share-button';
@@ -183,7 +183,7 @@ export default async function Highlight({ params: { country, city, theHighlight 
     const location = (theCity ? isBR && theCity.name_pt ? theCity.name_pt + ' - ' : theCity.name + ' - ' : '') + i18n(countryData.name);
     const title = i18n('Stories') + ' - ' + location;
 
-    return <WebStories title={title} storyTitle={location} items={instagramStories} />
+    return <WebStories title={title} storyTitle={location} items={instagramStories} cover={FILE_DOMAIN + theMedia.file} />
   }
   
   let newShuffle = randomIntFromInterval(1, 15);

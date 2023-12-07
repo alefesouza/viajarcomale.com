@@ -1,11 +1,12 @@
 import useHost from '@/app/hooks/use-host';
 import { FILE_DOMAIN, SITE_NAME } from '@/app/utils/constants';
 
-export default function WebStories({title, storyTitle, items}) {
+export default function WebStories({title, storyTitle, items, cover}) {
   const host = useHost();
   const isBR = host().includes('viajarcomale.com.br');
 
   const firstItem = items[0] || {};
+  const theCover = cover || FILE_DOMAIN + firstItem?.file?.replace('.mp4', '-thumb.png');
 
   const textStyles = {
     background: 'rgba(255, 255, 255, .7)',
@@ -21,12 +22,12 @@ export default function WebStories({title, storyTitle, items}) {
     title={title}
     publisher={SITE_NAME}
     publisher-logo-src={host('/icons/92x92.png')}
-    poster-portrait-src={FILE_DOMAIN + firstItem?.file?.replace('.mp4', '-thumb.png')}
+    poster-portrait-src={theCover}
   >
     <amp-story-auto-analytics gtag-id={process.env.NEXT_GA_TRACKING}></amp-story-auto-analytics>
     <amp-story-page id="cover" auto-advance-after="1.5s">
       <amp-story-grid-layer template="fill">
-        <amp-img src={FILE_DOMAIN + firstItem?.file?.replace('.mp4', '-thumb.png')}
+        <amp-img src={theCover}
             width={firstItem.width} height={firstItem.height}
             layout="responsive" alt={isBR && firstItem.description_pt ? firstItem.description_pt : firstItem.description}>
         </amp-img>
