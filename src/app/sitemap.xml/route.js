@@ -141,26 +141,17 @@ export async function GET() {
       ...highlights.map((m) => ({
         ...makeLoc('/countries/' + m.country + '/cities/' + m.city + '/highlights/' + m.id),
       })),
-      ...highlights.map((m) => ({
-        ...makeLoc('/countries/' + m.country + '/cities/' + m.city + '/highlights/' + m.id + '/webstories'),
-      })),
       ...locations.map(m => ({
         ...makeLoc('/countries/' + m.country + '/cities/' + m.city + '/locations/', decodeURIComponent(m.slug)),
       })),
       ...locations.filter(m => m?.totals?.posts > 0).map(m => ({
         ...makeLoc('/countries/' + m.country + '/cities/' + m.city + '/locations/', decodeURIComponent(m.slug) + '/expand'),
       })),
-      ...locations.filter(m => m?.totals?.stories > 0).map(m => ({
-        ...makeLoc('/countries/' + m.country + '/cities/' + m.city + '/locations/', decodeURIComponent(m.slug) + '/webstories'),
-      })),
       ...hashtags.map(h => ({
         ...makeLoc('/hashtags/', decodeURIComponent(h.name), h.name, h.name_pt),
       })),
       ...hashtags.filter(h => h?.totals?.posts > 0).map(h => ({
         ...makeLoc('/hashtags/', decodeURIComponent(h.name) + '/expand', h.name, h.name_pt),
-      })),
-      ...hashtags.filter(h => h?.totals?.stories > 0).map(h => ({
-        ...makeLoc('/hashtags/', decodeURIComponent(h.name) + '/webstories', h.name, h.name_pt),
       })),
       ...medias.filter(m => m.type === 'instagram-story').map((m) => ({
         ...makeLoc('/countries/' + m.country + '/cities/' + m.city + '/medias/' + m.id),

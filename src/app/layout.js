@@ -19,7 +19,7 @@ export async function generateMetadata() {
   const host = useHost();
   const isBR = host().includes('viajarcomale.com.br');
   const headersList = headers();
-  const pathname = headersList.get('x-pathname');
+  const pathname = headersList.get('x-pathname').replace('/webstories', '');
  
   const title = SITE_NAME;
   const description = i18n('Travel photos and links to Viajar com Alê social networks.');
@@ -66,30 +66,45 @@ export default function RootLayout({ children }) {
   const pathname = headersList.get('x-pathname');
   const isAMP = pathname.includes('/webstories');
 
+  const sharedTags = <>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <meta name="author" content="Alefe Souza" />
+
+    <meta name="theme-color" content="#2096cc" />
+
+    <link rel="shortcut icon" href={ host('favicon.ico') } />
+
+    <link rel="manifest" href={ host('manifest.json') } />
+    <link rel="image_src" href={ host('profile-photo-2x.jpg') } />
+
+    <meta name="apple-mobile-web-app-title" content={SITE_NAME} />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <link rel="apple-touch-icon" sizes="60x60" href={ host('icons/60x60.jpg') } />
+    <link rel="apple-touch-icon" sizes="76x76" href={ host('icons/76x76.jpg') } />
+    <link rel="apple-touch-icon" sizes="120x120" href={ host('icons/120x120.jpg') } />
+    <link rel="apple-touch-icon" sizes="152x152" href={ host('icons/152x152.jpg') } />
+    <link rel="apple-touch-icon" sizes="167x167" href={ host('icons/167x167.jpg') } />
+    <link rel="apple-touch-icon" sizes="180x180" href={ host('icons/180x180.jpg') } />
+
+    <meta property="og:locale" content={i18n('en_US')} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={ host('') } />
+    <meta property="og:site_name" content={SITE_NAME} />
+    <meta property='article:author' content='https://www.facebook.com/viajarcomale' />
+    <meta property='article:publisher' content='https://www.facebook.com/viajarcomale' />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@viajarcomale" />
+
+    { isBR ? <meta name="facebook-domain-verification" content={process.env.NEXT_FACEBOOK_DOMAIN_VERIFICATION_BR} /> : <meta name="facebook-domain-verification" content={process.env.NEXT_FACEBOOK_DOMAIN_VERIFICATION} /> }
+  </>
+
   return (
     <html lang={ i18n('en') } amp={isAMP ? 'true' : null}>
 
       {!isAMP && <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-        <meta name="author" content="Alefe Souza" />
-
-        <meta name="theme-color" content="#2096cc" />
-
-        <link rel="shortcut icon" href={ host('favicon.ico') } />
-
-        <link rel="manifest" href={ host('manifest.json') } />
-        <link rel="image_src" href={ host('profile-photo-2x.jpg') } />
-
-        <meta name="apple-mobile-web-app-title" content={SITE_NAME} />
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <link rel="apple-touch-icon" sizes="60x60" href={ host('icons/60x60.jpg') } />
-        <link rel="apple-touch-icon" sizes="76x76" href={ host('icons/76x76.jpg') } />
-        <link rel="apple-touch-icon" sizes="120x120" href={ host('icons/120x120.jpg') } />
-        <link rel="apple-touch-icon" sizes="152x152" href={ host('icons/152x152.jpg') } />
-        <link rel="apple-touch-icon" sizes="167x167" href={ host('icons/167x167.jpg') } />
-        <link rel="apple-touch-icon" sizes="180x180" href={ host('icons/180x180.jpg') } />
+        {sharedTags}
 
         {pathname === '/' &&
           <>
@@ -97,17 +112,6 @@ export default function RootLayout({ children }) {
             <Script id="ld-organization" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({"@context":"http://schema.org","@type":"Organization","url":host(''),"logo":host('/icons/512x512.png'),"email":"mailto:contato@viajarcomale.com","sameAs":["https://instagram.com/viajarcomale","https://tiktok.com/@viajarcomale","https://youtube.com/@viajarcomale","https://twitter.com/viajarcomale"]}) }}></Script>
           </>
         }
-
-        <meta property="og:locale" content={i18n('en_US')} />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content={ host('') } />
-        <meta property="og:site_name" content={SITE_NAME} />
-        <meta property='article:author' content='https://www.facebook.com/viajarcomale' />
-        <meta property='article:publisher' content='https://www.facebook.com/viajarcomale' />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:site" content="@viajarcomale" />
-
-        { isBR ? <meta name="facebook-domain-verification" content={process.env.NEXT_FACEBOOK_DOMAIN_VERIFICATION_BR} /> : <meta name="facebook-domain-verification" content={process.env.NEXT_FACEBOOK_DOMAIN_VERIFICATION} /> }
 
         <Script id="gtm" dangerouslySetInnerHTML={{ __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
         new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -118,9 +122,8 @@ export default function RootLayout({ children }) {
 
       {isAMP && <>
         <head>
-          <meta charset="utf-8" />
+          {sharedTags}
           <script async src="https://cdn.ampproject.org/v0.js"></script>
-          <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1" />
           <style amp-boilerplate dangerouslySetInnerHTML={{__html: `
           body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}
           `}}>
