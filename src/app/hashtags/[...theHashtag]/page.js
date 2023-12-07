@@ -77,7 +77,7 @@ export async function generateMetadata({ params: { theHashtag } }) {
         'pt': ptUrl,
       },
     },
-    ...finalHashtag?.totals?.stories > 0 ? {
+    ...finalHashtag?.totals?.stories > 0 && !isWebStories ? {
     icons: {
       // Why Next.js doesn't just allow us to create custom <link> tags directly...
       other: {
