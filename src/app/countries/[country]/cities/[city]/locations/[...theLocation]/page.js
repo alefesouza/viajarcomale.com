@@ -157,8 +157,9 @@ export default async function Country({ params: { country, city, theLocation }, 
       sort = 'random';
   }
 
+  const isWebStories = theLocation[1] === 'webstories';
   db.collection('accesses').doc((new Date()).toISOString().split('T')[0]).set({
-    [host('/locations/') + location + ('?sort=' + sort)]: FieldValue.increment(1),
+    [host((isWebStories ? '/webstories' : '') + '/locations/') + location + ('?sort=' + sort)]: FieldValue.increment(1),
   }, {merge:true});
 
   let newShuffle = randomIntFromInterval(1, 15);

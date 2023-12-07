@@ -172,8 +172,9 @@ export default async function Highlight({ params: { country, city, theHighlight 
       sort = 'random';
   }
 
+  const isWebStories = theHighlight[1] === 'webstories';
   db.collection('accesses').doc((new Date()).toISOString().split('T')[0]).set({
-    [host('/highlights/') + highlightId + ('?sort=' + sort)]: FieldValue.increment(1),
+    [host((isWebStories ? '/webstories' : '') + '/highlights/') + highlightId + ('?sort=' + sort)]: FieldValue.increment(1),
   }, {merge:true});
 
   let instagramStories = photos.filter(p => p.type === 'instagram-story' );

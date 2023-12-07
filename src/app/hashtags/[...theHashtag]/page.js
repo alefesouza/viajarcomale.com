@@ -157,8 +157,9 @@ export default async function Country({ params: { theHashtag }, searchParams }) 
       sort = 'random';
   }
 
+  const isWebStories = theHashtag[1] === 'webstories';
   db.collection('accesses').doc((new Date()).toISOString().split('T')[0]).set({
-    [host('/hashtags/') + decodeURIComponent(queryHashtag) + ('?sort=' + sort)]: FieldValue.increment(1),
+    [host((isWebStories ? '/webstories' : '') + '/hashtags/') + decodeURIComponent(queryHashtag) + ('?sort=' + sort)]: FieldValue.increment(1),
   }, {merge:true});
 
   let newShuffle = randomIntFromInterval(1, 15);
