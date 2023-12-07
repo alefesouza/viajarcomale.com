@@ -24,7 +24,7 @@ export async function generateMetadata({ params: { theHashtag } }) {
   }
 
   const hashtag = decodeURIComponent(theHashtag[0]).normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-  const title = '#' + hashtag + ' - Hashtags' + ' - ' + (isWebStories ? ' Web Stories - ' : '') + SITE_NAME;
+  const title = '#' + hashtag + ' - Hashtags' + ' - ' + (isWebStories ? 'Web Stories - ' : '') + SITE_NAME;
   const description = i18n('Photos and videos taken by Viajar com Alê with the hashtag #:hashtag:.', {
     hashtag,
   });

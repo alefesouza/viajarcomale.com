@@ -61,7 +61,7 @@ export async function generateMetadata({ params: { country, city, theHighlight }
   }
   
   const location = (theCity ? isBR && theCity.name_pt ? theCity.name_pt + ' - ' : theCity.name + ' - ' : '') + i18n(countryData.name);
-  const title = i18n('Stories') + ' - ' + location + ' - ' + (isWebStories ? ' Web Stories - ' : '') + SITE_NAME;
+  const title = i18n('Stories') + ' - ' + location + ' - ' + (isWebStories ? 'Web Stories - ' : '') + SITE_NAME;
   const image = FILE_DOMAIN_500 + theMedia.file;
   const description = i18n('Viajar com Alê stories in :location:', {
     location: isBR && theCity.name_pt ? theCity.name_pt : theCity.name,
