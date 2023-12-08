@@ -61,15 +61,14 @@ export async function GET() {
         const description = ((isBR && media.description_pt ? media.description_pt : media.description) || '');
         const shortDescription = description.split(' ').length > 10 ? description.split(' ').slice(0, 10).join(' ') + '…' : description;
         const location = media.location_data && media.location_data.map((c) => c.name).join(', ');
-        const hashtags = media.hashtags && media.hashtags.length ? ('Hashtags: ' + (isBR && media.hashtags_pt ? media.hashtags_pt : media.hashtags).map((c) => '#' + c).join(', ')) : '';
         
-        const title = (shortDescription ? shortDescription + ' - ' : '') + (location ? location + ' - ' : '') + (isBR && theCity.name_pt ? theCity.name_pt : theCity.name) + ' - ' + i18n(theCountry.name) + ' - ' + SITE_NAME;
+        const title = (shortDescription ? shortDescription + ' - ' : (location ? location + ' - ' : '')) + (position && position > 1 ? 'Item ' + position + ' - ' : '') + (isBR && theCity.name_pt ? theCity.name_pt : theCity.name) + ' - ' + i18n(theCountry.name) + ' - ' + SITE_NAME;
         
         return { 'video:video': [{
           'video:thumbnail_loc': FILE_DOMAIN + item.file.replace('.mp4', '-thumb.png'),
           'video:content_loc': FILE_DOMAIN + item.file,
           'video:title': title,
-          'video:description': description + (hashtags ? (description ? ' - ' : '') + hashtags : ''),
+          'video:description': description,
           'video:duration': parseInt(item.duration),
           'video:publication_date': media.date ? media.date.replace(' ', 'T') + '+03:00' : theCity.end + 'T12:00:00+03:00',
           'video:family_friendly': 'yes',

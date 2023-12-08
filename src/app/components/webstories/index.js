@@ -70,7 +70,7 @@ export default async function WebStories({title, storyTitle, items, highlightIte
       const location = item.location_data && item.location_data.map((c) => c.name).join(', ');
       const hashtags = item.hashtags && item.hashtags.length ? ('Hashtags: ' + (isBR && item.hashtags_pt ? item.hashtags_pt : item.hashtags).map((c) => '#' + c).join(', ')) : '';
 
-      const title = (shortDescription ? shortDescription + ' - ' : '') + (location ? location + ' - ' : '') + (isBR && theCity.name_pt ? theCity.name_pt : theCity.name) + ' - ' + i18n(countryData.name) + ' - ' + SITE_NAME;
+      const title = (shortDescription ? shortDescription + ' - ' : (location ? location + ' - ' : '')) + (isBR && theCity.name_pt ? theCity.name_pt : theCity.name) + ' - ' + i18n(countryData.name) + ' - ' + SITE_NAME;
 
       return <amp-story-page key={item.id} id={item.id} auto-advance-after={item.file.includes('.mp4') ? item.id + '-video' : '5s'}>
       <amp-story-grid-layer template="fill">

@@ -236,7 +236,7 @@ export default async function Country({ params: { country, city, media } }) {
         "@context": "https://schema.org/",
         "@type": "ImageObject",
         "contentUrl": FILE_DOMAIN + (theMedia.file.includes('.mp4') ? theMedia.file.replace('.mp4', '-thumb.png') : theMedia.file),
-        "creditText": {SITE_NAME},
+        "creditText": SITE_NAME,
         "creator": {
           "@type": "Person",
           "name": "Alefe Souza"
