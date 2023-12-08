@@ -2,7 +2,7 @@ import useI18n from '@/app/hooks/use-i18n';
 import useHost from '@/app/hooks/use-host';
 import { getFirestore } from 'firebase-admin/firestore';
 import styles from './page.module.css';
-import { FILE_DOMAIN, FILE_DOMAIN_500, FILE_DOMAIN_SQUARE, SITE_NAME } from '@/app/utils/constants';
+import { FILE_DOMAIN, FILE_DOMAIN_500, FILE_DOMAIN_LANDSCAPE, FILE_DOMAIN_PORTRAIT, FILE_DOMAIN_SQUARE, SITE_NAME } from '@/app/utils/constants';
 import { serialize } from 'tinyduration'
 import { redirect } from 'next/navigation'
 import InstagramMedia from '@/app/components/instagram-media';
@@ -239,7 +239,13 @@ export default async function Country({ params: { country, city, media } }) {
       "name": title,
       "description": description + (hashtags ? (description ? ' - ' : '') + hashtags : ''),
       "thumbnailUrl": [
-        FILE_DOMAIN + theMedia.file.replace('.mp4', '-thumb.png')
+        FILE_DOMAIN + theMedia.file.replace('.mp4', '-thumb.png'),
+        FILE_DOMAIN_500 + theMedia.file.replace('.mp4', '-thumb.png'),
+        ...theMedia.type === 'instagram-story' ? [
+          FILE_DOMAIN_PORTRAIT + theMedia.file.replace('.mp4', '-thumb.png'),
+          FILE_DOMAIN_LANDSCAPE + theMedia.file.replace('.mp4', '-thumb.png'),
+          FILE_DOMAIN_SQUARE + theMedia.file.replace('.mp4', '-thumb.png'),
+        ] : []
        ],
       "uploadDate": theMedia.date ? theMedia.date.replace(' ', 'T') + '+03:00' : theCity.end + 'T12:00:00+03:00',
       "duration": serialize({ seconds: parseInt(theMedia.duration) }),
