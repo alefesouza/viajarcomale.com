@@ -63,7 +63,7 @@ const langs = {
     'Japan': 'Japão',
     'Austria': 'Áustria',
     'Germany': 'Alemanha',
-    'Switzerland': 'Suiça',
+    'Switzerland': 'Suíça',
     'Netherlands': 'Holanda',
     'Mexico': 'México',
     'Canada': 'Canadá',

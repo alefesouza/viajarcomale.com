@@ -113,7 +113,7 @@ export async function generateMetadata({ params: { country, city, media } }) {
     url: image,
     width: theMedia.type === 'instagram-story' ? theMedia.width : 500,
     height: theMedia.type === 'instagram-story' ? theMedia.width : Math.round((theMedia.height / theMedia.width) * 500),
-    type: 'image/jpg',
+    type: theMedia.file.includes('.png') ? 'image/png' : 'image/jpeg',
   }];
   
   return {

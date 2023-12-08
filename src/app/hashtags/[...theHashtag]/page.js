@@ -10,6 +10,7 @@ import InstagramMedia from '@/app/components/instagram-media';
 import ShareButton from '@/app/components/share-button';
 import randomIntFromInterval from '@/app/utils/random-int';
 import WebStories from '@/app/components/webstories';
+import removeDiacritics from '@/app/utils/remove-diacritics';
 
 export async function generateMetadata({ params: { theHashtag } }) {
   // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -18,12 +19,13 @@ export async function generateMetadata({ params: { theHashtag } }) {
   const host = useHost();
   const isBR = host().includes('viajarcomale.com.br');
   const isWebStories = theHashtag[1] === 'webstories';
+
+  const hashtag = removeDiacritics(decodeURIComponent(theHashtag[0]));
   
   if (theHashtag.length > 2 || (theHashtag[1] && theHashtag[1] !== 'expand' && theHashtag[1] !== 'webstories')) {
-    redirect(`/hashtags/${theHashtag[0]}`);
+    redirect(`/hashtags/${hashtag}`);
   }
 
-  const hashtag = decodeURIComponent(theHashtag[0]).normalize('NFD').replace(/[\u0300-\u036f]/g, '');
   const title = '#' + hashtag + ' - Hashtags' + ' - ' + (isWebStories ? 'Web Stories - ' : '') + SITE_NAME;
   const description = i18n('Photos and videos taken by Viajar com Alê with the hashtag #:hashtag:.', {
     hashtag,
@@ -39,11 +41,8 @@ export async function generateMetadata({ params: { theHashtag } }) {
   });
 
   if (!hashtagPt) {
-    const hashtagEnSnapshot = await db.collection('hashtags').where('name', '==', hashtag).get();
-
-    hashtagEnSnapshot.forEach(doc => {
-      hashtagEn = doc.data();
-    });
+    const hashtagEnDoc = await db.collection('hashtags').doc(hashtag).get();
+    hashtagEn = hashtagEnDoc.data();
   }
 
   if (!hashtagPt && !hashtagEn) {
@@ -94,7 +93,7 @@ export default async function Country({ params: { theHashtag }, searchParams }) 
   const isBR = host().includes('viajarcomale.com.br');
 
   const [queryHashtag, expand] = theHashtag;
-  let hashtag = decodeURIComponent(queryHashtag).normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  let hashtag = removeDiacritics(decodeURIComponent(queryHashtag));
 
   const db = getFirestore();
   const hashtagPtSnapshot = await db.collection('hashtags').where('name_pt', '==', hashtag).get();
