@@ -97,7 +97,9 @@ export default async function WebStories({title, storyTitle, items, highlightIte
 
           {!item.file.includes('.mp4') && <div itemScope itemType="http://schema.org/ImageObject">
             <span itemProp="creditText" content={SITE_NAME}/>
-            <span itemProp="creator" itemScope itemType="http://schema.org/Person" content="Alefe Souza"/>
+            <span itemProp="creator" itemScope itemType="http://schema.org/Person">
+              <span itemProp="name" content="Alefe Souza"></span>
+            </span>
             <span itemProp="copyrightNotice" content={SITE_NAME + ' - @viajarcomale'}/>
             <span itemProp="contentUrl" content={FILE_DOMAIN + (item.file.includes('.mp4') ? item.file.replace('.mp4', '-thumb.png') : item.file)}/>
           </div>}
