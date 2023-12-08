@@ -1,4 +1,5 @@
 import useHost from '@/app/hooks/use-host';
+import { redirect } from 'next/navigation';
 
 // Remove Next.js assets from Web Stories pages.
 export async function GET(req) {
@@ -9,6 +10,10 @@ export async function GET(req) {
   const data = await request.text();
 
   let $ = require('cheerio').load(data);
+
+  if ($('amp-story-page').length <= 1) {
+    redirect(pathname.replace('/webstories', ''));
+  }
 
   $('link[href^="/_next"]').remove();
   $('script:not(.amp-asset)').remove();

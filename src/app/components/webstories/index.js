@@ -95,21 +95,20 @@ export default async function WebStories({title, storyTitle, items, highlightIte
             <amp-img src={FILE_DOMAIN + item.file.replace('.mp4', '-thumb.png')} width={item.width} height={item.height} layout="responsive" alt={description + (location ? (description ? ' - ' : '') + i18n(item.location_data.length > 1 ? 'Locations' : 'Location') + ': ' + location : '') + (hashtags ? (description || location ? ' - ' : '') + hashtags : '')} itemprop="image"></amp-img>
           </>}
 
-            {!item.file.includes('.mp4') && <div itemScope itemType="http://schema.org/ImageObject">
-              <span itemProp="creditText" content={SITE_NAME}/>
-              <span itemProp="creator" itemScope itemType="http://schema.org/Person" content="Alefe Souza"/>
-              <span itemProp="copyrightNotice" content={SITE_NAME + ' - @viajarcomale'}/>
-              <span itemProp="contentUrl" content={FILE_DOMAIN + (item.file.includes('.mp4') ? item.file.replace('.mp4', '-thumb.png') : item.file)}/>
-            </div>}
-          </amp-story-grid-layer>
-          <amp-story-grid-layer template="vertical">
-            <div style={{...textStyles, color: '#fff', background: 'none', position: 'absolute', top: 18, left: 5}}>@viajarcomale</div>
-          </amp-story-grid-layer>
-          <amp-story-page-outlink layout="nodisplay">
-            <a href={host('/countries/' + item.country + '/cities/' + item.city + '/medias/' + item.id)} target="_blank">{i18n('Open')}</a>
-          </amp-story-page-outlink>
-        </amp-story-page>
-      })}
-    <amp-story-bookend src={host('webstories-bookends.json')} layout="nodisplay"></amp-story-bookend>
+          {!item.file.includes('.mp4') && <div itemScope itemType="http://schema.org/ImageObject">
+            <span itemProp="creditText" content={SITE_NAME}/>
+            <span itemProp="creator" itemScope itemType="http://schema.org/Person" content="Alefe Souza"/>
+            <span itemProp="copyrightNotice" content={SITE_NAME + ' - @viajarcomale'}/>
+            <span itemProp="contentUrl" content={FILE_DOMAIN + (item.file.includes('.mp4') ? item.file.replace('.mp4', '-thumb.png') : item.file)}/>
+          </div>}
+        </amp-story-grid-layer>
+        <amp-story-grid-layer template="vertical">
+          <div style={{...textStyles, color: '#fff', background: 'none', position: 'absolute', top: 18, left: 5}}>@viajarcomale</div>
+        </amp-story-grid-layer>
+        <amp-story-page-outlink layout="nodisplay">
+          <a href={host('/countries/' + item.country + '/cities/' + item.city + '/medias/' + item.id)} target="_blank">{i18n('Open')}</a>
+        </amp-story-page-outlink>
+      </amp-story-page>
+    })}
   </amp-story>
 }
