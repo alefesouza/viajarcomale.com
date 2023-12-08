@@ -470,3 +470,18 @@ a {
 .window-controls-overlay .navbar-nav {
   -webkit-app-region: no-drag;
 }
+
+.center_link {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.center_link a {
+  border: 1px #000000 solid;
+  padding: 10px 10px;
+  border-radius: 5px;
+}
+
+.center_link a:hover {
+  background-color: #dddddd;
+}

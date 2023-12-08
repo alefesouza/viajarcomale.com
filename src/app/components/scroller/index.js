@@ -12,11 +12,14 @@ export default function Scroller({ title, items, isShortVideos, isInstagramHighl
   const isBR = host().includes('viajarcomale.com.br');
 
   return (<div>
-    <div className={'container-fluid' + (isStories ? ' ' + styles.stories_title : '')}>
+    <div className="container-fluid">
       <h3 style={{ marginBlockEnd: is360Photos ? '0em' : '' }}>{i18n(title)}</h3>
       {is360Photos && <div style={{ marginBlockEnd: '1em' }}>{i18n('360 photos are really cool but they are heavy too, it can take up to 1 minute to load.')}</div>}
-      {isStories && <a href={webStoriesHref} target="_blank">{i18n('Open in Stories format')}</a>}
     </div>
+
+    {isStories && <div className="center_link">
+      <a href={webStoriesHref} target="_blank">{i18n('Open in Stories format')}</a>
+    </div>}
 
     <div style={{ position: 'relative' }}>
       <div className={ styles.scroller_left_arrow }>‹</div>

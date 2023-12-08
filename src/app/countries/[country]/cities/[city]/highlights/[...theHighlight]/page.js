@@ -220,8 +220,10 @@ export default async function Highlight({ params: { country, city, theHighlight 
     
     <div className="container-fluid">
       <h2>{i18n('Stories')} - {isBR && theCity.name_pt ? theCity.name_pt : theCity.name} - {i18n(countryData.name)} {countryData.flag}</h2>
+    </div>
 
-      <a href={host('/webstories/countries/' + country + '/cities/' + city + '/highlights/' + highlight)} target="_blank" style={{ textDecoration: 'underline' }}>{i18n('Open in Stories format')}</a>
+    <div className="center_link" style={{ marginTop: 28 }}>
+      <a href={host('/webstories/countries/' + country + '/cities/' + city + '/highlights/' + highlight)} target="_blank">{i18n('Open in Stories format')}</a>
     </div>
 
     <div className={ styles.galleries }>

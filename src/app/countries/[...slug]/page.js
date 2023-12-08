@@ -399,11 +399,14 @@ export default async function Country({ params: { slug }, searchParams }) {
         <div className={ styles.instagram_photos }>
           <div className={ styles.instagram_photos_title }>
             <h3>{i18n('Posts')}</h3>
-            <Link href={ `/countries/${country}${city ? '/cities/' + city : ''}${page ? '/page/' + page : ''}${!expandGalleries ? '/expand' : ''}` + (sort !== 'desc' ? '?sort=' + sort : '') + (sort === 'random' ? '&indexes=' + instagramPhotos.filter(p => !p.file_type).map(p => p[index]).join(',') : '')} scroll={false} prefetch={false}>{expandGalleries ? i18n('Minimize Galleries') : i18n('Expand Galleries')}</Link>
           </div>
 
           {!isRandom && pageNumber > 1 && <Pagination base={paginationBase} currentPage={Number(page) || 1} pageNumber={pageNumber} total={totalPhotos} textPosition="bottom" />}
           
+          <div className="center_link">
+            <Link href={ `/countries/${country}${city ? '/cities/' + city : ''}${page ? '/page/' + page : ''}${!expandGalleries ? '/expand' : ''}` + (sort !== 'desc' ? '?sort=' + sort : '') + (sort === 'random' ? '&indexes=' + instagramPhotos.filter(p => !p.file_type).map(p => p[index]).join(',') : '')} scroll={false} prefetch={false}>{expandGalleries ? i18n('Minimize Galleries') : i18n('Expand Galleries')}</Link>
+          </div>
+
           <div className={ styles.instagram_highlights_items }>
             {instagramPhotos.map(p => <InstagramMedia key={p.id} media={p} isBR={isBR} expandGalleries={expandGalleries} isListing />)}
           </div>

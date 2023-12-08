@@ -148,7 +148,6 @@
   text-decoration: underline;
 }
 
-
 .video_thumbnail {
   position: relative;
 }
@@ -161,14 +160,4 @@
   height: 90px;
   opacity: 0.7;
   transform: translate(-50%, -50%);
-}
-
-.stories_title {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-}
-
-.stories_title a {
-  text-decoration: underline;
 }

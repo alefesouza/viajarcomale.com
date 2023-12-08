@@ -264,6 +264,9 @@ export default async function Country({ params: { country, city, theLocation }, 
         <div className={ styles.instagram_photos }>
           <div className={ styles.instagram_photos_title }>
             <h3>{i18n('Posts')}</h3>
+          </div>
+
+          <div className="center_link">
             { !expandGalleries ? <Link href={ `/countries/${country}/cities/${city}/locations/${location}/expand` + (sort !== 'desc' ? '?sort=' + sort : '')} scroll={false} prefetch={false}>{i18n('Expand Galleries')}</Link> : <Link href={ `/countries/${country}/cities/${city}/locations/${location}` + (sort !== 'desc' ? '?sort=' + sort : '')} scroll={false} prefetch={false}>{i18n('Minimize Galleries')}</Link> }
           </div>
           

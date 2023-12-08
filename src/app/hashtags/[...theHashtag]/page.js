@@ -258,6 +258,9 @@ export default async function Country({ params: { theHashtag }, searchParams }) 
         <div className={ styles.instagram_photos }>
           <div className={ styles.instagram_photos_title }>
             <h3>{i18n('Posts')}</h3>
+          </div>
+
+          <div className="center_link">
             { !expandGalleries ? <Link href={ `/hashtags/${hashtag}/expand` + (sort !== 'desc' ? '?sort=' + sort : '')} scroll={false} prefetch={false}>{i18n('Expand Galleries')}</Link> : <Link href={ `/hashtags/${hashtag}` + (sort !== 'desc' ? '?sort=' + sort : '')} scroll={false} prefetch={false}>{i18n('Minimize Galleries')}</Link> }
           </div>
           
