@@ -7,7 +7,7 @@ import { getFirestore } from 'firebase-admin/firestore';
 export default async function WebStories({title, storyTitle, items, highlightItem}) {
   const i18n = useI18n();
   const host = useHost();
-  const isBR = true;
+  const isBR = host().includes('viajarcomale.com.br');
 
   const firstItem = highlightItem ? highlightItem : items[0] || {};
   const theCover = firstItem?.file?.replace('.mp4', '-thumb.png');

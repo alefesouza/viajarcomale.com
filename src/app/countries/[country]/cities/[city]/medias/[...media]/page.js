@@ -173,7 +173,7 @@ export default async function Country({ params: { country, city, media } }) {
   const description = ((isBR && theMedia.description_pt ? theMedia.description_pt : theMedia.description) || '');
   const shortDescription = description.split(' ').length > 10 ? description.split(' ').slice(0, 10).join(' ') + '…' : description;
   const location = theMedia.location_data && theMedia.location_data.map((c) => c.name).join(', ');
-  const hashtags = theMedia.hashtags && theMedia.hashtags.length ? ('Hashtags: ' + (isBR && item.hashtags_pt ? theMedia.hashtags_pt : theMedia.hashtags).map((c) => '#' + c).join(', ')) : '';
+  const hashtags = theMedia.hashtags && theMedia.hashtags.length ? ('Hashtags: ' + (isBR && theMedia.hashtags_pt ? theMedia.hashtags_pt : theMedia.hashtags).map((c) => '#' + c).join(', ')) : '';
   
   const title = (shortDescription ? shortDescription + ' - ' : '') + (location ? location + ' - ' : '') + (isBR && theCity.name_pt ? theCity.name_pt : theCity.name) + ' - ' + i18n(countryData.name) + ' - ' + SITE_NAME;
   
