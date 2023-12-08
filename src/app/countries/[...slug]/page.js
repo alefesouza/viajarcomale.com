@@ -12,6 +12,7 @@ import Scroller from '@/app/components/scroller';
 import randomIntFromInterval from '@/app/utils/random-int';
 import InstagramMedia from '@/app/components/instagram-media';
 import ShareButton from '@/app/components/share-button';
+import { headers } from 'next/headers';
 
 function getDataFromRoute(slug, searchParams) {
   const [country, path1, path2, path3, path4, path5] = slug;
@@ -330,9 +331,11 @@ export default async function Country({ params: { slug }, searchParams }) {
     breadcrumbs.push({ name: i18n('Expand Galleries'), item: currentPath, });
   }
 
-  db.collection('accesses').doc((new Date()).toISOString().split('T')[0]).set({
-    [currentPath + ('?sort=' + sort)]: FieldValue.increment(1),
-  }, {merge: true});
+  db.collection('accesses').doc('accesses').collection((new Date()).toISOString().split('T')[0]).doc((currentPath + ('?sort=' + sort)).replace('https://viajarcomale', '').replaceAll('/', '-')).set({
+    accesses: FieldValue.increment(1),
+    lastUserAgent: headers().get('user-agent') || '',
+    lastIpAddress: headers().get('x-forwarded-for') || '',
+  }, {merge:true});
 
   let newShuffle = randomIntFromInterval(1, 15);
 

@@ -9,6 +9,7 @@ import InstagramMedia from '@/app/components/instagram-media';
 import ShareButton from '@/app/components/share-button';
 import randomIntFromInterval from '@/app/utils/random-int';
 import WebStories from '@/app/components/webstories';
+import { headers } from 'next/headers';
 
 async function getCountry(country, city) {
   const db = getFirestore();
@@ -173,8 +174,10 @@ export default async function Highlight({ params: { country, city, theHighlight 
   }
 
   const isWebStories = theHighlight[1] === 'webstories';
-  db.collection('accesses').doc((new Date()).toISOString().split('T')[0]).set({
-    [host((isWebStories ? '/webstories' : '') + '/highlights/') + highlightId + ('?sort=' + sort)]: FieldValue.increment(1),
+  db.collection('accesses').doc('accesses').collection((new Date()).toISOString().split('T')[0]).doc((host((isWebStories ? '/webstories' : '') + '/highlights/') + highlightId + ('?sort=' + sort)).replace('https://viajarcomale', '').replaceAll('/', '-')).set({
+    accesses: FieldValue.increment(1),
+    lastUserAgent: headers().get('user-agent') || '',
+    lastIpAddress: headers().get('x-forwarded-for') || '',
   }, {merge:true});
 
   let instagramStories = photos.filter(p => p.type === 'instagram-story' );

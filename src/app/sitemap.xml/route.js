@@ -5,6 +5,7 @@ import { getFirestore, FieldValue } from 'firebase-admin/firestore';
 import { getStorage } from 'firebase-admin/storage';
 import { FILE_DOMAIN, FILE_DOMAIN_500, ITEMS_PER_PAGE, SITE_NAME } from '../utils/constants';
 import { customInitApp } from '../firebase';
+import { headers } from 'next/headers';
 
 customInitApp();
 
@@ -180,8 +181,10 @@ export async function GET() {
     obj = JSON.parse(contents);
   }
 
-  db.collection('accesses').doc((new Date()).toISOString().split('T')[0]).set({
-    [host('/sitemap.xml')]: FieldValue.increment(1),
+  db.collection('accesses').doc('accesses').collection((new Date()).toISOString().split('T')[0]).doc((host('/sitemap.xml')).replace('https://viajarcomale', '').replaceAll('/', '-')).set({
+    accesses: FieldValue.increment(1),
+    lastUserAgent: headers().get('user-agent') || '',
+    lastIpAddress: headers().get('x-forwarded-for') || '',
   }, {merge:true});
 
   return new Response(parse('urlset', obj, { declaration: { encoding: 'UTF-8' } }), {

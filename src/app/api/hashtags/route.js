@@ -1,6 +1,7 @@
 import { getFirestore, FieldValue } from 'firebase-admin/firestore';
 import { customInitApp } from '@/app/firebase';
 import useHost from '@/app/hooks/use-host';
+import { headers } from 'next/headers';
 
 customInitApp();
 
@@ -37,8 +38,10 @@ export async function GET() {
     theHashtags = isBR ? allHashtags.hashtags_pt : allHashtags.hashtags;
   }
 
-  db.collection('accesses').doc((new Date()).toISOString().split('T')[0]).set({
-    [host('/api/hashtags')]: FieldValue.increment(1),
+  db.collection('accesses').doc('accesses').collection((new Date()).toISOString().split('T')[0]).doc(host('/api/hashtags').replace('https://viajarcomale', '').replaceAll('/', '-')).set({
+    accesses: FieldValue.increment(1),
+    lastUserAgent: headers().get('user-agent') || '',
+    lastIpAddress: headers().get('x-forwarded-for') || '',
   }, {merge:true});
 
   return new Response(JSON.stringify(theHashtags), {
