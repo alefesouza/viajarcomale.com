@@ -55,18 +55,21 @@ export async function GET() {
       }
 
       if (item.file.includes('.mp4')) {
-        const description = isBR && media.description_pt ? media.description_pt : media.description;
         const theCountry = countries.find(c => c.slug == media.country)
         const theCity = theCountry.cities.find(c => c.slug == media.city)
-        const shortDescription = (description && description.split(' ').length > 10 ? description.split(' ').slice(0, 10).join(' ') + '…' : description) || (media.location_data ? media.location_data[0].name : '');
-        const location = (theCity ? isBR && theCity.name_pt ? theCity.name_pt + ' - ' : theCity.name + ' - ' : '') + i18n(theCountry.name);
-        const title = shortDescription + (position ? ' - Item ' + position : '') + ' - ' + location + ' - ' + SITE_NAME;
+        
+        const description = ((isBR && media.description_pt ? media.description_pt : media.description) || '');
+        const shortDescription = description.split(' ').length > 10 ? description.split(' ').slice(0, 10).join(' ') + '…' : description;
+        const location = media.location_data && media.location_data.map((c) => c.name).join(', ');
+        const hashtags = media.hashtags && media.hashtags.length ? ('Hashtags: ' + (isBR ? media.hashtags_pt : media.hashtags).map((c) => '#' + c).join(', ')) : '';
+        
+        const title = (shortDescription ? shortDescription + ' - ' : '') + (location ? location + ' - ' : '') + (isBR && theCity.name_pt ? theCity.name_pt : theCity.name) + ' - ' + i18n(theCountry.name) + ' - ' + SITE_NAME;
         
         return { 'video:video': [{
-          'video:thumbnail_loc': FILE_DOMAIN_500 + item.file.replace('.mp4', '-thumb.png'),
+          'video:thumbnail_loc': FILE_DOMAIN + item.file.replace('.mp4', '-thumb.png'),
           'video:content_loc': FILE_DOMAIN + item.file,
           'video:title': title,
-          'video:description': description || '',
+          'video:description': description + (hashtags ? (description ? ' - ' : '') + hashtags : ''),
           'video:duration': parseInt(item.duration),
           'video:publication_date': media.date ? media.date.replace(' ', 'T') + '+03:00' : theCity.end + 'T12:00:00+03:00',
           'video:family_friendly': 'yes',

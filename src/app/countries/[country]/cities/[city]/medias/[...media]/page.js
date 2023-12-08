@@ -91,7 +91,7 @@ export async function generateMetadata({ params: { country, city, media } }) {
   let description = isBR && theMedia.description_pt ? theMedia.description_pt : theMedia.description;
 
   if (!description && theMedia.location_data) {
-    description = theMedia.location_data[0].name;
+    description = theMedia.location_data.map(l => l.name).join(', ');
   }
 
   if (!description) {
@@ -170,8 +170,13 @@ export default async function Country({ params: { country, city, media } }) {
   const { mediaIndex, selectedMedia } = getSelectedMedia(media, theMedia, country, city);
   theMedia = selectedMedia;
 
-  const description = isBR && theMedia.description_pt ? theMedia.description_pt : theMedia.description;
-
+  const description = ((isBR && theMedia.description_pt ? theMedia.description_pt : theMedia.description) || '');
+  const shortDescription = description.split(' ').length > 10 ? description.split(' ').slice(0, 10).join(' ') + '…' : description;
+  const location = theMedia.location_data && theMedia.location_data.map((c) => c.name).join(', ');
+  const hashtags = theMedia.hashtags && theMedia.hashtags.length ? ('Hashtags: ' + (isBR ? theMedia.hashtags_pt : theMedia.hashtags).map((c) => '#' + c).join(', ')) : '';
+  
+  const title = (shortDescription ? shortDescription + ' - ' : '') + (location ? location + ' - ' : '') + (isBR && theCity.name_pt ? theCity.name_pt : theCity.name) + ' - ' + i18n(countryData.name) + ' - ' + SITE_NAME;
+  
   const breadcrumbs = [{
     name: i18n(countryData.name),
     item: host('/countries/' + country),
@@ -190,7 +195,7 @@ export default async function Country({ params: { country, city, media } }) {
   const basePath = '/countries/' + country + '/cities/' + city + '/medias/' + media[0];
 
   breadcrumbs.push({
-    name: (description && description.split(' ').length > 10 ? description.split(' ').slice(0, 10).join(' ') + '…' : description) || (theMedia.location_data ? theMedia.location_data[0].name : ''),
+    name: (shortDescription ? shortDescription + ' - ' : '') + (location ? location + ' - ' : ''),
     item: host(basePath),
   });
 
@@ -231,10 +236,10 @@ export default async function Country({ params: { country, city, media } }) {
     {theMedia.file.includes('.mp4') && <Script id="ld-video" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
       "@context": "https://schema.org",
       "@type": "VideoObject",
-      "name": theMedia.location_data && theMedia.location_data[0] ? theMedia.location_data[0].name : isBR && theCity.name_pt ? theCity.name_pt : theCity.name + ' - ' + i18n(countryData.name),
-      "description": theMedia.description,
+      "name": title,
+      "description": description + (hashtags ? (description ? ' - ' : '') + hashtags : ''),
       "thumbnailUrl": [
-        FILE_DOMAIN_500 + theMedia.file.replace('.mp4', '-thumb.png')
+        FILE_DOMAIN + theMedia.file.replace('.mp4', '-thumb.png')
        ],
       "uploadDate": theMedia.date ? theMedia.date.replace(' ', 'T') + '+03:00' : theCity.end + 'T12:00:00+03:00',
       "duration": serialize({ seconds: parseInt(theMedia.duration) }),
@@ -245,12 +250,12 @@ export default async function Country({ params: { country, city, media } }) {
       "@context": "https://schema.org/",
       "@type": "ImageObject",
       "contentUrl": FILE_DOMAIN + (theMedia.file.includes('.mp4') ? theMedia.file.replace('.mp4', '-thumb.png') : theMedia.file),
-      "creditText": "Viajar com Alê",
+      "creditText": {SITE_NAME},
       "creator": {
         "@type": "Person",
         "name": "Alefe Souza"
        },
-      "copyrightNotice": "Viajar com Alê - @viajarcomale"
+      "copyrightNotice": SITE_NAME + " - @viajarcomale"
     }) }}></Script>
   </div>
 }
