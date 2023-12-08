@@ -41,10 +41,6 @@ export default function Scroller({ title, items, isShortVideos, isInstagramHighl
           </div>}
 
           {isInstagramHighlights && <div className={ styles.external_links }>
-            {<a href={host('/webstories/countries/' + p.country + '/cities/' + p.city + '/highlights/' + p.id)} target="_blank" title={i18n('Play')}>
-              <img src={host('/images/play.svg')} width={32} height={32} alt={i18n('Play')} />
-            </a>}
-
             {<a href={p.link} target="_blank">
               <img src={host('/logos/instagram.png')} alt={i18n('Instagram Icon')} />
             </a>}
@@ -60,9 +56,14 @@ export default function Scroller({ title, items, isShortVideos, isInstagramHighl
             <ShareButton text={isBR ? p.description_pt : p.description} url={host('/countries/' + p.country + '/cities/' + p.city + '/medias/' + p.id)} />
           </div>}
 
-          {isInstagramHighlights && <div>
-            {isBR && cityData[p.city].name_pt ? cityData[p.city].name_pt : cityData[p.city].name}
-          </div>}
+          {isInstagramHighlights && <>
+            <div>
+              {isBR && cityData[p.city].name_pt ? cityData[p.city].name_pt : cityData[p.city].name}
+            </div>
+            <div className="center_link" style={{ marginTop: 18, marginBottom: 0 }}>
+              <a href={ '/webstories/countries/' + p.country + '/cities/' + p.city + '/highlights/' + p.id } target="_blank">{i18n('Open in Stories format')}</a>
+            </div>
+          </>}
 
           {isYouTubeVideos && <div>
             <b>{isBR ? p.title_pt : p.title}</b>
