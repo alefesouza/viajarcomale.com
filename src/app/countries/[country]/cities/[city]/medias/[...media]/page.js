@@ -3,8 +3,7 @@ import useHost from '@/app/hooks/use-host';
 import { getFirestore } from 'firebase-admin/firestore';
 import styles from './page.module.css';
 import { FILE_DOMAIN, FILE_DOMAIN_500, FILE_DOMAIN_LANDSCAPE, FILE_DOMAIN_PORTRAIT, FILE_DOMAIN_SQUARE, SITE_NAME } from '@/app/utils/constants';
-import { serialize } from 'tinyduration'
-import { redirect } from 'next/navigation'
+import { redirect } from 'next/navigation';
 import InstagramMedia from '@/app/components/instagram-media';
 import Link from 'next/link';
 import ShareButton from '@/app/components/share-button';
@@ -173,10 +172,9 @@ export default async function Country({ params: { country, city, media } }) {
   const description = ((isBR && theMedia.description_pt ? theMedia.description_pt : theMedia.description) || '');
   const shortDescription = description.split(' ').length > 10 ? description.split(' ').slice(0, 10).join(' ') + '…' : description;
   const location = theMedia.location_data && theMedia.location_data.map((c) => c.name).join(', ');
-  const hashtags = theMedia.hashtags && theMedia.hashtags.length ? ('Hashtags: ' + (isBR && theMedia.hashtags_pt ? theMedia.hashtags_pt : theMedia.hashtags).map((c) => '#' + c).join(', ')) : '';
-  
+
   const title = (shortDescription ? shortDescription + ' - ' : '') + (location ? location + ' - ' : '') + (isBR && theCity.name_pt ? theCity.name_pt : theCity.name) + ' - ' + i18n(countryData.name) + ' - ' + SITE_NAME;
-  
+
   const breadcrumbs = [{
     name: i18n(countryData.name),
     item: host('/countries/' + country),
@@ -195,7 +193,7 @@ export default async function Country({ params: { country, city, media } }) {
   const basePath = '/countries/' + country + '/cities/' + city + '/medias/' + media[0];
 
   breadcrumbs.push({
-    name: (shortDescription ? shortDescription + ' - ' : '') + (location ? location + ' - ' : ''),
+    name: (shortDescription ? shortDescription : '') + (location ? location + ' - ' : ''),
     item: host(basePath),
   });
 
@@ -222,7 +220,7 @@ export default async function Country({ params: { country, city, media } }) {
     </div>
 
     <div className={ styles.media }>
-      <InstagramMedia media={theMedia} isBR={isBR} withoutLink expandGalleries fullQuality isMain />
+      <InstagramMedia media={theMedia} isBR={isBR} withoutLink expandGalleries fullQuality isMain theCity={theCity} title={title} description={description} />
 
       {media[1] && galleryLength > 0 && <div style={{marginTop: 24}}><Pagination base={paginationBase} currentPage={Number(media[1]) || 1} pageNumber={galleryLength} isGallery total={5} /></div>}
 
@@ -233,35 +231,18 @@ export default async function Country({ params: { country, city, media } }) {
 
     <StructuredBreadcrumbs breadcrumbs={breadcrumbs} />
 
-    {theMedia.file.includes('.mp4') && <Script id="ld-video" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "VideoObject",
-      "name": title,
-      "description": description + (hashtags ? (description ? ' - ' : '') + hashtags : ''),
-      "thumbnailUrl": [
-        FILE_DOMAIN + theMedia.file.replace('.mp4', '-thumb.png'),
-        FILE_DOMAIN_500 + theMedia.file.replace('.mp4', '-thumb.png'),
-        ...theMedia.type === 'instagram-story' ? [
-          FILE_DOMAIN_PORTRAIT + theMedia.file.replace('.mp4', '-thumb.png'),
-          FILE_DOMAIN_LANDSCAPE + theMedia.file.replace('.mp4', '-thumb.png'),
-          FILE_DOMAIN_SQUARE + theMedia.file.replace('.mp4', '-thumb.png'),
-        ] : []
-       ],
-      "uploadDate": theMedia.date ? theMedia.date.replace(' ', 'T') + '+03:00' : theCity.end + 'T12:00:00+03:00',
-      "duration": serialize({ seconds: parseInt(theMedia.duration) }),
-      "contentUrl": FILE_DOMAIN + theMedia.file
-    }) }}></Script>}
-
-    <Script id="ld-image" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
-      "@context": "https://schema.org/",
-      "@type": "ImageObject",
-      "contentUrl": FILE_DOMAIN + (theMedia.file.includes('.mp4') ? theMedia.file.replace('.mp4', '-thumb.png') : theMedia.file),
-      "creditText": {SITE_NAME},
-      "creator": {
-        "@type": "Person",
-        "name": "Alefe Souza"
-       },
-      "copyrightNotice": SITE_NAME + " - @viajarcomale"
-    }) }}></Script>
+    {theMedia.file.includes('.mp4') && <>
+      <Script id="ld-image" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+        "@context": "https://schema.org/",
+        "@type": "ImageObject",
+        "contentUrl": FILE_DOMAIN + (theMedia.file.includes('.mp4') ? theMedia.file.replace('.mp4', '-thumb.png') : theMedia.file),
+        "creditText": {SITE_NAME},
+        "creator": {
+          "@type": "Person",
+          "name": "Alefe Souza"
+        },
+        "copyrightNotice": SITE_NAME + " - @viajarcomale"
+      }) }}></Script>
+    </>}
   </div>
 }

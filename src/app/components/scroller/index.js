@@ -5,6 +5,7 @@ import styles from './index.module.css';
 import { FILE_DOMAIN, FILE_DOMAIN_500 } from '@/app/utils/constants';
 import ShareButton from '../share-button';
 import Hashtags from '../hashtags';
+import SchemaData from '../schema-data';
 
 export default function Scroller({ title, items, isShortVideos, isInstagramHighlights, isYouTubeVideos, is360Photos, cityData, isStories, webStoriesHref }) {
   const i18n = useI18n();
@@ -25,13 +26,12 @@ export default function Scroller({ title, items, isShortVideos, isInstagramHighl
       <div className={ styles.scroller_left_arrow }>‹</div>
 
       <div className={ styles.scroller_items } data-scroller>
-        {items.map(p => <div key={ p.id } className={ styles.scroller_item + (is360Photos ? ' ' + styles.item_360_photo : '') + (isInstagramHighlights ? ' ' + styles.is_gallery : '') }>
+        {items.map(p => <div key={ p.id } className={ styles.scroller_item + (is360Photos ? ' ' + styles.item_360_photo : '') + (isInstagramHighlights ? ' ' + styles.is_gallery : '') } itemScope itemType="http://schema.org/ImageObject">
           <a href={isInstagramHighlights ? host('/countries/' + p.country + '/cities/' + p.city + '/highlights/' + p.id) : isShortVideos ? p.tiktok_link : isStories ? host('/countries/' + p.country + '/cities/' + p.city + '/medias/' + p.id) : p.link} target={isInstagramHighlights || isStories ? '_self' : '_blank'} style={{ display: 'block', position: 'relative' }} className={(is360Photos ? styles.item_360_photo : '')}>
-            {isStories && p.file.includes('.mp4') ? <img src={FILE_DOMAIN_500 + p.file.replace('.mp4', '-thumb.png')} alt={isBR ? p.description_pt : p.description} className={ styles.video_thumbnail } loading="lazy" /> : <img src={isYouTubeVideos ? p.image : FILE_DOMAIN + p.file} srcSet={ isYouTubeVideos ? p.image : `${FILE_DOMAIN_500 + p.file} 500w, ${FILE_DOMAIN + p.file} ${p.width}w` } sizes={!isYouTubeVideos ? `(max-width: 500px) 500px, ${p.width}px` : ''} alt={isBR ? p.description_pt : p.description} className={!isYouTubeVideos && !is360Photos ? styles.vertical_content : isYouTubeVideos ? styles.youtube_video : ''} loading="lazy" />}
+            {isStories && p.file.includes('.mp4') ? <img src={FILE_DOMAIN_500 + p.file.replace('.mp4', '-thumb.png')} alt={isBR ? p.description_pt : p.description} className={ styles.video_thumbnail } loading="lazy" itemProp="contentUrl" /> : <img src={isYouTubeVideos ? p.image : FILE_DOMAIN + p.file} srcSet={ isYouTubeVideos ? p.image : `${FILE_DOMAIN_500 + p.file} 500w, ${FILE_DOMAIN + p.file} ${p.width}w` } sizes={!isYouTubeVideos ? `(max-width: 500px) 500px, ${p.width}px` : ''} alt={isBR ? p.description_pt : p.description} className={!isYouTubeVideos && !is360Photos ? styles.vertical_content : isYouTubeVideos ? styles.youtube_video : ''} loading="lazy" itemProp="contentUrl" />}
 
             {(p.file_type === 'video' || p?.file?.includes('.mp4')) && isStories &&
             <div className={ styles.play_button }><img src="/images/play.svg" alt="Play" /></div>}
-
           </a>
 
           {isShortVideos && <div className={ styles.short_video_links }>
@@ -65,19 +65,21 @@ export default function Scroller({ title, items, isShortVideos, isInstagramHighl
             </div>
           </>}
 
-          {isYouTubeVideos && <div>
+          {isYouTubeVideos && <div itemProp="title">
             <b>{isBR ? p.title_pt : p.title}</b>
           </div>}
 
-          <div>
+          <div itemProp="description">
             {isBR ? p.description_pt : p.description}
           </div>
 
           {p.locations && p.location_data && p.location_data[0] && <div style={{marginTop: 4}} className={styles.location}>
-            {i18n(p.location_data.length > 1 ? 'Locations' : 'Location')}: {p.location_data.map((location, i) => <><Link href={'/countries/' + p.country + '/cities/' + p.city + '/locations/' + location.slug} key={location.slug}>{location.name}{location.alternative_names && ' (' + location.alternative_names.join(', ') + ')'}</Link>{i < p.location_data.length - 1 ? ', ' : ''}</>)}
+            {i18n(p.location_data.length > 1 ? 'Locations' : 'Location')}: {p.location_data.map((location, i) => <><Link href={'/countries/' + p.country + '/cities/' + p.city + '/locations/' + location.slug} key={location.slug}><span itemProp="contentLocation">{location.name}{location.alternative_names && ' (' + location.alternative_names.join(', ') + ')'}</span></Link>{i < p.location_data.length - 1 ? ', ' : ''}</>)}
           </div>}
 
           {p.hashtags && p.hashtags.length > 0 && <Hashtags hashtags={isBR && p.hashtags_pt ? p.hashtags_pt : p.hashtags} />}
+
+          <SchemaData media={p} />
         </div>)}
       </div>
 

@@ -3,6 +3,7 @@ import useHost from '@/app/hooks/use-host';
 import { FILE_DOMAIN, FILE_DOMAIN_LANDSCAPE, FILE_DOMAIN_PORTRAIT, FILE_DOMAIN_SQUARE, SITE_NAME } from '@/app/utils/constants';
 import { serialize } from 'tinyduration';
 import { getFirestore } from 'firebase-admin/firestore';
+import SchemaData from '../schema-data';
 
 export default async function WebStories({title, storyTitle, items, highlightItem}) {
   const i18n = useI18n();
@@ -80,29 +81,14 @@ export default async function WebStories({title, storyTitle, items, highlightIte
             id={item.id + '-video'}
             autoplay
             itemScope
-            itemType="http://schema.org/VideoObject"
           >
             <source src={FILE_DOMAIN + item.file} type="video/mp4" />
-
-            <span itemProp="name" content={title} />
-            <span itemProp="description" content={description + (hashtags ? (description ? ' - ' : '') + hashtags : '')}/>
-            <span itemProp="duration" content={serialize({ seconds: parseInt(item.duration) })}/>
-            <span itemProp="thumbnailUrl" content={FILE_DOMAIN + item.file.replace('.mp4', '-thumb.png')}/>
-            <span itemProp="contentUrl" content={FILE_DOMAIN + item.file}/>
-            <span itemProp="uploadDate" content={item.date ? item.date.replace(' ', 'T') + '+03:00' : media.end + 'T12:00:00+03:00'}/>
           </amp-video> :
           <>
-            <amp-img src={FILE_DOMAIN + item.file.replace('.mp4', '-thumb.png')} width={item.width} height={item.height} layout="responsive" alt={description + (location ? (description ? ' - ' : '') + i18n(item.location_data.length > 1 ? 'Locations' : 'Location') + ': ' + location : '') + (hashtags ? (description || location ? ' - ' : '') + hashtags : '')} itemprop="image"></amp-img>
+            <amp-img src={FILE_DOMAIN + item.file.replace('.mp4', '-thumb.png')} width={item.width} height={item.height} layout="responsive" alt={description + (location ? (description ? ' - ' : '') + i18n(item.location_data.length > 1 ? 'Locations' : 'Location') + ': ' + location : '') + (hashtags ? (description || location ? ' - ' : '') + hashtags : '')}></amp-img>
           </>}
 
-          {!item.file.includes('.mp4') && <div itemScope itemType="http://schema.org/ImageObject">
-            <span itemProp="creditText" content={SITE_NAME}/>
-            <span itemProp="creator" itemScope itemType="http://schema.org/Person">
-              <span itemProp="name" content="Alefe Souza"></span>
-            </span>
-            <span itemProp="copyrightNotice" content={SITE_NAME + ' - @viajarcomale'}/>
-            <span itemProp="contentUrl" content={FILE_DOMAIN + (item.file.includes('.mp4') ? item.file.replace('.mp4', '-thumb.png') : item.file)}/>
-          </div>}
+          <SchemaData media={item} withItemType={true} title={title} description={description} keywords={(isBR && item.hashtags_pt ? item.hashtags_pt : item.hashtags)} fallbackDate={theCity.end} isVideo={item.file.includes('.mp4')} />
         </amp-story-grid-layer>
         <amp-story-grid-layer template="vertical">
           <div style={{...textStyles, color: '#fff', background: 'none', position: 'absolute', top: 18, left: 5}}>@viajarcomale</div>
