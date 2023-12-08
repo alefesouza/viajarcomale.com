@@ -69,7 +69,7 @@ export async function generateMetadata({ params: { theHashtag } }) {
       title,
     },
     alternates: {
-      canonical: (isBR ? ptUrl : enUrl).replace('/webstories', '/'),
+      canonical: (isBR ? ptUrl : enUrl).replace('/webstories', ''),
       languages: {
         'x-default': enUrl,
         'en': enUrl,
