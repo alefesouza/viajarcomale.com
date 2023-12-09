@@ -1,15 +1,15 @@
 import useI18n from '@/app/hooks/use-i18n';
 import useHost from '@/app/hooks/use-host';
 import Link from 'next/link';
-import { getFirestore, FieldValue } from 'firebase-admin/firestore';
+import { getFirestore } from 'firebase-admin/firestore';
 import styles from './page.module.css';
-import { FILE_DOMAIN, FILE_DOMAIN_500, FILE_DOMAIN_SQUARE, SITE_NAME } from '@/app/utils/constants';
+import { FILE_DOMAIN_SQUARE, SITE_NAME } from '@/app/utils/constants';
 import { redirect } from 'next/navigation';
 import InstagramMedia from '@/app/components/instagram-media';
 import ShareButton from '@/app/components/share-button';
 import randomIntFromInterval from '@/app/utils/random-int';
 import WebStories from '@/app/components/webstories';
-import { headers } from 'next/headers';
+import logAccess from '@/app/utils/log-access';
 
 async function getCountry(country, city) {
   const db = getFirestore();
@@ -174,12 +174,7 @@ export default async function Highlight({ params: { country, city, theHighlight 
   }
 
   const isWebStories = theHighlight[1] === 'webstories';
-  db.collection('accesses').doc('accesses').collection((new Date()).toISOString().split('T')[0]).doc((host((isWebStories ? '/webstories' : '') + '/highlights/') + highlightId + ('?sort=' + sort)).replace('https://viajarcomale', '').replaceAll('/', '-')).set({
-    accesses: FieldValue.increment(1),
-    lastUserAgent: headers().get('user-agent') || '',
-    isBot: (headers().get('user-agent') || '').toLowerCase().includes('bot'),
-    lastIpAddress: headers().get('x-forwarded-for') || '',
-  }, {merge:true});
+  logAccess(db, host((isWebStories ? '/webstories' : '') + '/highlights/') + highlightId + ('?sort=' + sort));
 
   let instagramStories = photos.filter(p => p.type === 'instagram-story' );
 

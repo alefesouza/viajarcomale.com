@@ -10,7 +10,7 @@ import InstagramMedia from '@/app/components/instagram-media';
 import ShareButton from '@/app/components/share-button';
 import randomIntFromInterval from '@/app/utils/random-int';
 import WebStories from '@/app/components/webstories';
-import { headers } from 'next/headers';
+import logAccess from '@/app/utils/log-access';
 
 async function getCountry(country, city) {
   const db = getFirestore();
@@ -159,12 +159,7 @@ export default async function Country({ params: { country, city, theLocation }, 
   }
 
   const isWebStories = theLocation[1] === 'webstories';
-  db.collection('accesses').doc('accesses').collection((new Date()).toISOString().split('T')[0]).doc((host((isWebStories ? '/webstories' : '') + '/locations/') + location + ('?sort=' + sort)).replace('https://viajarcomale', '').replaceAll('/', '-')).set({
-    accesses: FieldValue.increment(1),
-    lastUserAgent: headers().get('user-agent') || '',
-    isBot: (headers().get('user-agent') || '').toLowerCase().includes('bot'),
-    lastIpAddress: headers().get('x-forwarded-for') || '',
-  }, {merge:true});
+  logAccess(db, host((isWebStories ? '/webstories' : '') + '/locations/') + location + ('?sort=' + sort));
 
   let newShuffle = randomIntFromInterval(1, 15);
 

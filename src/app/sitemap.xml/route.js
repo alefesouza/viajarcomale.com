@@ -1,11 +1,11 @@
 import {parse} from 'js2xmlparser';
 import useHost from '@/app/hooks/use-host';
 import useI18n from '@/app/hooks/use-i18n';
-import { getFirestore, FieldValue } from 'firebase-admin/firestore';
+import { getFirestore } from 'firebase-admin/firestore';
 import { getStorage } from 'firebase-admin/storage';
-import { FILE_DOMAIN, FILE_DOMAIN_500, ITEMS_PER_PAGE, SITE_NAME } from '../utils/constants';
+import { FILE_DOMAIN, ITEMS_PER_PAGE, SITE_NAME } from '../utils/constants';
 import { customInitApp } from '../firebase';
-import { headers } from 'next/headers';
+import logAccess from '../utils/log-access';
 
 customInitApp();
 
@@ -13,7 +13,7 @@ export async function GET() {
   const host = useHost();
   const i18n = useI18n();
   const isBR = host().includes('viajarcomale.com.br');
-  const lastmod = '2023-12-06';
+  const lastmod = '2023-12-08';
 
   const db = getFirestore();
   const reference = host('sitemap.json').split('//')[1].replaceAll('/', '-');
@@ -181,12 +181,7 @@ export async function GET() {
     obj = JSON.parse(contents);
   }
 
-  db.collection('accesses').doc('accesses').collection((new Date()).toISOString().split('T')[0]).doc((host('/sitemap.xml')).replace('https://viajarcomale', '').replaceAll('/', '-')).set({
-    accesses: FieldValue.increment(1),
-    lastUserAgent: headers().get('user-agent') || '',
-    isBot: (headers().get('user-agent') || '').toLowerCase().includes('bot'),
-    lastIpAddress: headers().get('x-forwarded-for') || '',
-  }, {merge:true});
+  logAccess(db, host('/sitemap.xml')).replace('https://viajarcomale', '');
 
   return new Response(parse('urlset', obj, { declaration: { encoding: 'UTF-8' } }), {
     headers: { 'Content-Type': 'application/xml' },

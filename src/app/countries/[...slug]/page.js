@@ -2,7 +2,7 @@ import useI18n from '../../hooks/use-i18n';
 import { redirect } from 'next/navigation';
 import useHost from '@/app/hooks/use-host';
 import Link from 'next/link';
-import { getFirestore, FieldValue } from 'firebase-admin/firestore';
+import { getFirestore } from 'firebase-admin/firestore';
 import styles from '../page.module.css';
 import { ITEMS_PER_PAGE, SITE_NAME } from '@/app/utils/constants';
 import Pagination from '@/app/components/pagination';
@@ -12,7 +12,7 @@ import Scroller from '@/app/components/scroller';
 import randomIntFromInterval from '@/app/utils/random-int';
 import InstagramMedia from '@/app/components/instagram-media';
 import ShareButton from '@/app/components/share-button';
-import { headers } from 'next/headers';
+import logAccess from '@/app/utils/log-access';
 
 function getDataFromRoute(slug, searchParams) {
   const [country, path1, path2, path3, path4, path5] = slug;
@@ -331,12 +331,7 @@ export default async function Country({ params: { slug }, searchParams }) {
     breadcrumbs.push({ name: i18n('Expand Galleries'), item: currentPath, });
   }
 
-  db.collection('accesses').doc('accesses').collection((new Date()).toISOString().split('T')[0]).doc((currentPath + ('?sort=' + sort)).replace('https://viajarcomale', '').replaceAll('/', '-')).set({
-    accesses: FieldValue.increment(1),
-    lastUserAgent: headers().get('user-agent') || '',
-    isBot: (headers().get('user-agent') || '').toLowerCase().includes('bot'),
-    lastIpAddress: headers().get('x-forwarded-for') || '',
-  }, {merge:true});
+  logAccess(db, currentPath + ('?sort=' + sort));
 
   let newShuffle = randomIntFromInterval(1, 15);
 
