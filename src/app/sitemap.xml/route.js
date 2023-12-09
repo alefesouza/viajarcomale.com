@@ -184,6 +184,7 @@ export async function GET() {
   db.collection('accesses').doc('accesses').collection((new Date()).toISOString().split('T')[0]).doc((host('/sitemap.xml')).replace('https://viajarcomale', '').replaceAll('/', '-')).set({
     accesses: FieldValue.increment(1),
     lastUserAgent: headers().get('user-agent') || '',
+    isBot: (headers().get('user-agent') || '').toLowerCase().includes('bot'),
     lastIpAddress: headers().get('x-forwarded-for') || '',
   }, {merge:true});
 

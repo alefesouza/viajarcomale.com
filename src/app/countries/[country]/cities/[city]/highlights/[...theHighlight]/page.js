@@ -177,6 +177,7 @@ export default async function Highlight({ params: { country, city, theHighlight 
   db.collection('accesses').doc('accesses').collection((new Date()).toISOString().split('T')[0]).doc((host((isWebStories ? '/webstories' : '') + '/highlights/') + highlightId + ('?sort=' + sort)).replace('https://viajarcomale', '').replaceAll('/', '-')).set({
     accesses: FieldValue.increment(1),
     lastUserAgent: headers().get('user-agent') || '',
+    isBot: (headers().get('user-agent') || '').toLowerCase().includes('bot'),
     lastIpAddress: headers().get('x-forwarded-for') || '',
   }, {merge:true});
 
