@@ -90,7 +90,7 @@ export async function generateMetadata({ params: { country, city, media } }) {
   let description = isBR && theMedia.description_pt ? theMedia.description_pt : theMedia.description;
 
   if (!description && theMedia.location_data) {
-    description = theMedia.location_data.map(l => l.name).join(', ');
+    description = theMedia.location_data.map(l => l.name + (l.alternative_names ? ' (' + l.alternative_names.join(', ') + ')' : '')).join(', ');
   }
 
   if (!description) {

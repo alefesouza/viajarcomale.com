@@ -67,7 +67,7 @@ export default async function WebStories({title, storyTitle, items, highlightIte
       
       const description = ((isBR && item.description_pt ? item.description_pt : item.description) || '');
       const shortDescription = description.split(' ').length > 10 ? description.split(' ').slice(0, 10).join(' ') + '…' : description;
-      const location = item.location_data && item.location_data.map((c) => c.name).join(', ');
+      const location = item.location_data && item.location_data.map((c) => c.name + (c.alternative_names ? ' (' + c.alternative_names.join(', ') + ')' : '')).join(', ');
       const hashtags = item.hashtags && item.hashtags.length ? ('Hashtags: ' + (isBR && item.hashtags_pt ? item.hashtags_pt : item.hashtags).map((c) => '#' + c).join(', ')) : '';
 
       const title = (shortDescription ? shortDescription + ' - ' : (location ? location + ' - ' : '')) + (isBR && theCity.name_pt ? theCity.name_pt : theCity.name) + ' - ' + i18n(countryData.name) + ' - ' + SITE_NAME;

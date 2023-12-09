@@ -58,10 +58,10 @@ export async function GET() {
       if (item.file.includes('.mp4')) {
         const theCountry = countries.find(c => c.slug == media.country)
         const theCity = theCountry.cities.find(c => c.slug == media.city)
-        
+
         const description = ((isBR && media.description_pt ? media.description_pt : media.description) || '');
         const shortDescription = description.split(' ').length > 10 ? description.split(' ').slice(0, 10).join(' ') + '…' : description;
-        const location = media.location_data && media.location_data.map((c) => c.name).join(', ');
+        const location = media.location_data && media.location_data.map((c) => c.name + (c.alternative_names ? ' (' + c.alternative_names.join(', ') + ')' : '')).join(', ');
         
         const title = (shortDescription ? shortDescription + ' - ' : (location ? location + ' - ' : '')) + (position && position > 1 ? 'Item ' + position + ' - ' : '') + (isBR && theCity.name_pt ? theCity.name_pt : theCity.name) + ' - ' + i18n(theCountry.name) + ' - ' + SITE_NAME;
         
