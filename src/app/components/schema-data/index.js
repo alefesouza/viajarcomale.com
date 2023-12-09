@@ -9,11 +9,11 @@ export default function SchemaData({ media, title, isVideo, description, fallbac
     </span>
     <span itemProp="copyrightNotice" content={SITE_NAME + ' - @viajarcomale'}/>
     {withItemType && <span itemProp="contentUrl" content={FILE_DOMAIN + (media.file.includes('.mp4') ? media.file.replace('.mp4', '-thumb.png') : media.file)}/>}
+    <span itemProp="uploadDate" content={media.date ? media.date.replace(' ', 'T') + '+03:00' : fallbackDate + 'T12:00:00+03:00'}/>
 
     {isVideo && <>
       <span itemProp="name" content={title} />
       <span itemProp="duration" content={serialize({ seconds: parseInt(media.duration) })}/>
-      <span itemProp="uploadDate" content={media.date ? media.date.replace(' ', 'T') + '+03:00' : fallbackDate + 'T12:00:00+03:00'}/>
       <span itemProp="thumbnailUrl" content={FILE_DOMAIN + media.file.replace('.mp4', '-thumb.png')}/>
     </>}
   </>

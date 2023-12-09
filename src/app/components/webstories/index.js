@@ -72,6 +72,8 @@ export default async function WebStories({title, storyTitle, items, highlightIte
 
       const title = (shortDescription ? shortDescription + ' - ' : (location ? location + ' - ' : '')) + (isBR && theCity.name_pt ? theCity.name_pt : theCity.name) + ' - ' + i18n(countryData.name) + ' - ' + SITE_NAME;
 
+      const mediaDescription = description + (location ? (description ? ' - ' : '') + i18n(item.location_data.length > 1 ? 'Locations' : 'Location') + ': ' + location : '') + (hashtags ? (description || location ? ' - ' : '') + hashtags : '');
+
       return <amp-story-page key={item.id} id={item.id} auto-advance-after={item.file.includes('.mp4') ? item.id + '-video' : '5s'}>
       <amp-story-grid-layer template="fill">
         {item.file.includes('.mp4') ? <amp-video width={item.width}
@@ -85,10 +87,10 @@ export default async function WebStories({title, storyTitle, items, highlightIte
             <source src={FILE_DOMAIN + item.file} type="video/mp4" />
           </amp-video> :
           <>
-            <amp-img src={FILE_DOMAIN + item.file.replace('.mp4', '-thumb.png')} width={item.width} height={item.height} layout="responsive" alt={description + (location ? (description ? ' - ' : '') + i18n(item.location_data.length > 1 ? 'Locations' : 'Location') + ': ' + location : '') + (hashtags ? (description || location ? ' - ' : '') + hashtags : '')}></amp-img>
+            <amp-img src={FILE_DOMAIN + item.file.replace('.mp4', '-thumb.png')} width={item.width} height={item.height} layout="responsive" alt={mediaDescription}></amp-img>
           </>}
 
-          <SchemaData media={item} withItemType={true} title={title} description={description} keywords={(isBR && item.hashtags_pt ? item.hashtags_pt : item.hashtags)} fallbackDate={theCity.end} isVideo={item.file.includes('.mp4')} />
+          <SchemaData media={item} withItemType={true} title={title} description={mediaDescription} keywords={(isBR && item.hashtags_pt ? item.hashtags_pt : item.hashtags)} fallbackDate={theCity.end} isVideo={item.file.includes('.mp4')} />
         </amp-story-grid-layer>
         <amp-story-grid-layer template="vertical">
           <div style={{...textStyles, color: '#fff', background: 'none', position: 'absolute', top: 18, left: 5}}>@viajarcomale</div>
