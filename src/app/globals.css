@@ -477,11 +477,13 @@ a {
 }
 
 .center_link a {
-  border: 1px #000000 solid;
+  border: 1px #2096cc solid;
   padding: 10px 10px;
   border-radius: 5px;
+  color: #ffffff;
+  background-color: #2096cc;
 }
 
 .center_link a:hover {
-  background-color: #dddddd;
+  background-color: #1a87b9;
 }

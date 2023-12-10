@@ -230,19 +230,5 @@ export default async function Country({ params: { country, city, media } }) {
     </div>
 
     <StructuredBreadcrumbs breadcrumbs={breadcrumbs} />
-
-    {theMedia.file.includes('.mp4') && <>
-      <Script id="ld-image" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
-        "@context": "https://schema.org/",
-        "@type": "ImageObject",
-        "contentUrl": FILE_DOMAIN + (theMedia.file.includes('.mp4') ? theMedia.file.replace('.mp4', '-thumb.png') : theMedia.file),
-        "creditText": SITE_NAME,
-        "creator": {
-          "@type": "Person",
-          "name": "Alefe Souza"
-        },
-        "copyrightNotice": SITE_NAME + " - @viajarcomale"
-      }) }}></Script>
-    </>}
   </div>
 }

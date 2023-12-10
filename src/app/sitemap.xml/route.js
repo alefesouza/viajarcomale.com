@@ -13,7 +13,7 @@ export async function GET() {
   const host = useHost();
   const i18n = useI18n();
   const isBR = host().includes('viajarcomale.com.br');
-  const lastmod = '2023-12-08';
+  const lastmod = '2023-12-09';
 
   const db = getFirestore();
   const reference = host('sitemap.json').split('//')[1].replaceAll('/', '-');
@@ -64,7 +64,7 @@ export async function GET() {
         const location = media.location_data && media.location_data.map((c) => c.name + (c.alternative_names ? ' (' + c.alternative_names.join(', ') + ')' : '')).join(', ');
         
         const title = (shortDescription ? shortDescription + ' - ' : (location ? location + ' - ' : '')) + (position && position > 1 ? 'Item ' + position + ' - ' : '') + (isBR && theCity.name_pt ? theCity.name_pt : theCity.name) + ' - ' + i18n(theCountry.name) + ' - ' + SITE_NAME;
-        
+
         return { 'video:video': [{
           'video:thumbnail_loc': FILE_DOMAIN + item.file.replace('.mp4', '-thumb.png'),
           'video:content_loc': FILE_DOMAIN + item.file,
@@ -181,7 +181,7 @@ export async function GET() {
     obj = JSON.parse(contents);
   }
 
-  logAccess(db, host('/sitemap.xml')).replace('https://viajarcomale', '');
+  logAccess(db, host('/sitemap.xml').replace('https://viajarcomale', ''));
 
   return new Response(parse('urlset', obj, { declaration: { encoding: 'UTF-8' } }), {
     headers: { 'Content-Type': 'application/xml' },
