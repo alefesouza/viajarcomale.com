@@ -19,8 +19,8 @@ export async function generateMetadata() {
   const host = useHost();
   const isBR = host().includes('viajarcomale.com.br');
   const headersList = headers();
-  const pathname = headersList.get('x-pathname').replace('/webstories', '');
   const isWebStories = headersList.get('x-pathname').includes('/webstories');
+  let pathname =  (isWebStories ? '/webstories' : '') + headersList.get('x-pathname').replace('/webstories', '');
 
   const title = SITE_NAME;
   const description = i18n('Travel photos and links to Viajar com Alê social networks.');
@@ -51,9 +51,9 @@ export async function generateMetadata() {
     alternates: {
       canonical: new URL(pathname, isBR ? 'https://viajarcomale.com.br' : 'https://viajarcomale.com').toString(),
       languages: {
-        'x-default': 'https://viajarcomale.com' + (isWebStories ? '/webstories' : '') + pathname,
-        'en': 'https://viajarcomale.com' + (isWebStories ? '/webstories' : '') + pathname,
-        'pt': 'https://viajarcomale.com.br' + (isWebStories ? '/webstories' : '') + pathname,
+        'x-default': 'https://viajarcomale.com' + pathname,
+        'en': 'https://viajarcomale.com' + pathname,
+        'pt': 'https://viajarcomale.com.br' + pathname,
       },
     },
   }
