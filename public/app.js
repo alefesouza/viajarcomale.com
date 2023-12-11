@@ -218,6 +218,19 @@
     }
 
     firstAccess = false;
+
+    const paths = window.location.pathname.split('/');
+    const isMediaSingle = paths[1] === 'countries' && paths[3] === 'cities' && paths[5] === 'medias' && paths[6] && (paths[6].includes('story-') || paths[7]);
+
+    if (isMediaSingle) {
+      document.querySelector('header .autocomplete').style.display = 'none';
+      document.querySelector('header .profile').style.display = 'none';
+      document.querySelector('#bottom-profile').style.display = 'block';
+    } else {
+      document.querySelector('header .autocomplete').style.display = 'flex';
+      document.querySelector('header .profile').style.display = 'flex';
+      document.querySelector('#bottom-profile').style.display = 'none';
+    }
   }
 
   function setupScroller() {

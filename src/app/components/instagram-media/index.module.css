@@ -2,6 +2,12 @@
   max-width: 100%;
 }
 
+@media(min-width: 424px) {
+  .gallery_item.portrait img, .gallery_item.portrait video {
+    max-width: 400px;
+  }
+}
+
 .gallery_item {
   text-align: center;
   position: relative;

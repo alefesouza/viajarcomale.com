@@ -207,7 +207,7 @@ export default async function Country({ params: { country, city, media } }) {
   const paginationBase = basePath + '/{page}';
 
   return <div className="container">
-    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+    <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 16 }}>
       <Link href={ '/countries/' + country + '/cities/' + city + (theMedia.type === 'instagram-story' ? '/highlights/' + theMedia.highlight : '') + (mediaIndex ? '/medias/' + theMedia.id : '') } id="back-button" scroll={false} prefetch={false}>
         <img src="/images/back.svg" alt={i18n('Back')} width="32px"></img>
       </Link>
@@ -220,7 +220,7 @@ export default async function Country({ params: { country, city, media } }) {
     </div>
 
     <div className={ styles.media }>
-      <InstagramMedia media={theMedia} isBR={isBR} withoutLink expandGalleries fullQuality isMain theCity={theCity} title={title} description={description} />
+      <InstagramMedia media={theMedia} isBR={isBR} withoutLink={media[1] || theMedia.type === 'instagram-story'} expandGalleries fullQuality isMain theCity={theCity} title={title} description={description} />
 
       {media[1] && galleryLength > 0 && <div style={{marginTop: 24}}><Pagination base={paginationBase} currentPage={Number(media[1]) || 1} pageNumber={galleryLength} isGallery total={5} /></div>}
 

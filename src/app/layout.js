@@ -67,6 +67,9 @@ export default function RootLayout({ children }) {
   const pathname = headersList.get('x-pathname');
   const isAMP = pathname.includes('/webstories');
 
+  const paths = pathname.split('/');
+  const isMediaSingle = paths[1] === 'countries' && paths[3] === 'cities' && paths[5] === 'medias' && paths[6] && (paths[6].includes('story-') || paths[7]);
+
   const sharedTags = <>
     <meta name="author" content="Alefe Souza" />
 
@@ -166,15 +169,21 @@ export default function RootLayout({ children }) {
           <div id="portuguese-language-switcher">
             <a href={ 'https://viajarcomale.com.br' + headersList.get('x-pathname') } className="language">Clique aqui para português</a>
           </div>
+          
+          <Autocomplete style={{ display: isMediaSingle ? 'none' : '' }} />
 
-          <Autocomplete />
-
-          <Top />
+          <Top style={{ display: isMediaSingle ? 'none' : '' }} />
         </header>
 
         <main>
           {children}
         </main>
+
+        <div style={{ display: !isMediaSingle ? 'none' : '', marginTop: 8 }} className="container" id="bottom-profile">
+          <Autocomplete />
+
+          <Top />
+        </div>
 
         <Footer />
 

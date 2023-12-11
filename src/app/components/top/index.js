@@ -4,11 +4,11 @@ import { SITE_NAME } from '@/app/utils/constants';
 import countries from '@/app/utils/countries';
 import Link from 'next/link';
 
-export default function Top() {
+export default function Top(props) {
   const host = useHost();
   const i18n = useI18n();
   
-  return <div className="profile">
+  return <div className="profile" {...props}>
     <Link href={ host('/') }>
       <img src={ host('profile-photo.jpg') } srcSet={ host('profile-photo-2x.jpg') + ' 2x' } width={96} height={96} alt={i18n('Profile Photo')} className="profile_picture" />
     </Link>
