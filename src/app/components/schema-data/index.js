@@ -1,7 +1,10 @@
 import { FILE_DOMAIN, SITE_NAME } from '@/app/utils/constants';
 import { serialize } from 'tinyduration';
+import useHost from '@/app/hooks/use-host';
 
 export default function SchemaData({ media, title, isVideo, description, fallbackDate, keywords, withItemType = false }) {
+  const host = useHost();
+  
   const content = <>
     <span itemProp="creditText" content={SITE_NAME}/>
     <span itemProp="creator" itemScope itemType="http://schema.org/Person">
@@ -10,6 +13,8 @@ export default function SchemaData({ media, title, isVideo, description, fallbac
     <span itemProp="copyrightNotice" content={SITE_NAME + ' - @viajarcomale'}/>
     {withItemType && <span itemProp="contentUrl" content={FILE_DOMAIN + (media.file.includes('.mp4') ? media.file.replace('.mp4', '-thumb.png') : media.file)}/>}
     <span itemProp="uploadDate" content={media.date ? media.date.replace(' ', 'T') + '+03:00' : fallbackDate + 'T12:00:00+03:00'}/>
+    <span itemProp="license" content="https://creativecommons.org/licenses/by-nc/4.0/deed.en"/>
+    <span itemProp="acquireLicensePage" content={host('/contact')}/>
 
     {isVideo && <>
       <span itemProp="name" content={title} />

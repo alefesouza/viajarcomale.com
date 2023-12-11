@@ -41,10 +41,17 @@ exports.onLocationUpdated = onDocumentUpdated('/countries/{countryId}/locations/
   const mediasSnapshot = await db.collection('countries').doc(newValue.country).collection('medias').where('locations', 'array-contains', newValue.slug).get();
 
   mediasSnapshot.forEach((doc) => {
-    const locationData = doc.data().location_data;
-    const locationIndex = locationData.findIndex(l => l.slug === newValue.slug);
+    let locationData = doc.data().location_data;
 
-    locationData[locationIndex] = newValue;
+    if (locationData) {
+      const locationIndex = locationData.findIndex(l => l.slug === newValue.slug);
+
+      if (locationData[locationIndex]) {
+        locationData[locationIndex] = newValue;
+      }
+    } else {
+      locationData = [newValue];
+    }
 
     batch.update(doc.ref, {
       location_data: locationData,

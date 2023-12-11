@@ -22,8 +22,8 @@ export async function GET() {
       hashtagDocs.push(data);
     });
 
-    const hashtags = hashtagDocs.map(h => h.name);
-    const hashtagsPt = hashtagDocs.map(h => h.name_pt || h.name);
+    const hashtags = hashtagDocs.map(h => h.name).filter(h => h)
+    const hashtagsPt = hashtagDocs.map(h => h.name_pt || h.name).filter(h => h);
 
     theHashtags = isBR ? hashtagsPt : hashtags;
 

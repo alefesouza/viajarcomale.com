@@ -69,7 +69,7 @@ export async function GET() {
           'video:thumbnail_loc': FILE_DOMAIN + item.file.replace('.mp4', '-thumb.png'),
           'video:content_loc': FILE_DOMAIN + item.file,
           'video:title': title,
-          'video:description': description,
+          'video:description': description ? description : media.hashtags ? 'Hashtags: #' + (isBR && media.hashtags_pt ? media.hashtags_pt : media.hashtags).join(' #') : i18n('City') + ':' + (isBR && theCity.name_pt) ? theCity.name_pt : theCity.name,
           'video:duration': parseInt(item.duration),
           'video:publication_date': media.date ? media.date.replace(' ', 'T') + '+03:00' : theCity.end + 'T12:00:00+03:00',
           'video:family_friendly': 'yes',
