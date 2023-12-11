@@ -7,7 +7,7 @@ import { useEffect, useState, useId } from 'react';
 import arrayShuffle from '@/app/utils/array-shuffle';
 import { ITEMS_PER_PAGE } from '@/app/utils/constants';
 
-export default function Autocomplete(props) {
+export default function Autocomplete() {
   const router = useRouter()
   const i18n = useI18nClient();
   
@@ -185,7 +185,7 @@ export default function Autocomplete(props) {
     );
   };
 
-  return <div className="autocomplete" {...props}>
+  return <div className="autocomplete">
     <Select options={allOptions} placeholder={ i18n('Hashtag Search') } onInputChange={onInputChange} onChange={onChange} onFocus={onFocus} isLoading={isLoading} styles={customStyle} components={{ Menu }} instanceId={useId()} />
   </div>
 }

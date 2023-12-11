@@ -137,7 +137,7 @@ export default function RootLayout({ children }) {
         </body>
       </>}
 
-      {!isAMP && <body>
+      {!isAMP && <body className={isMediaSingle ? 'single-media-page' : null}>
         <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KG98M7XG" height="0" width="0" style={{ display: 'none', visibility: 'hidden'}}></iframe></noscript>
 
         <div className="background"></div>
@@ -170,16 +170,16 @@ export default function RootLayout({ children }) {
             <a href={ 'https://viajarcomale.com.br' + headersList.get('x-pathname') } className="language">Clique aqui para português</a>
           </div>
           
-          <Autocomplete style={{ display: isMediaSingle ? 'none' : '' }} />
+          <Autocomplete />
 
-          <Top style={{ display: isMediaSingle ? 'none' : '' }} />
+          <Top />
         </header>
 
         <main>
           {children}
         </main>
 
-        <div style={{ display: !isMediaSingle ? 'none' : '', marginTop: 8 }} className="container" id="bottom-profile">
+        <div style={{ marginTop: 8 }} className="container" id="bottom-profile">
           <Autocomplete />
 
           <Top />

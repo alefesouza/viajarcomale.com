@@ -223,13 +223,9 @@
     const isMediaSingle = paths[1] === 'countries' && paths[3] === 'cities' && paths[5] === 'medias' && paths[6] && (paths[6].includes('story-') || paths[7]);
 
     if (isMediaSingle) {
-      document.querySelector('header .autocomplete').style.display = 'none';
-      document.querySelector('header .profile').style.display = 'none';
-      document.querySelector('#bottom-profile').style.display = 'block';
+      document.querySelector('body').classList.add('single-media-page');
     } else {
-      document.querySelector('header .autocomplete').style.display = 'flex';
-      document.querySelector('header .profile').style.display = 'flex';
-      document.querySelector('#bottom-profile').style.display = 'none';
+      document.querySelector('body').classList.remove('single-media-page');
     }
   }
 

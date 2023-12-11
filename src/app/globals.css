@@ -185,6 +185,26 @@ a {
   display: none;
 }
 
+.single-media-page #portuguese-language-switcher {
+  width: 230px;
+  top: 76px;
+  left: 50%;
+  transform: translate(-50%, 0px);
+  text-align: center;
+}
+
+.single-media-page header .autocomplete, .single-media-page header .profile {
+  display: none;
+}
+
+#bottom-profile {
+  display: none;
+}
+
+.single-media-page #bottom-profile {
+  display: block;
+}
+
 @media(min-width: 644px) {
   #portuguese-language-switcher {   
     position: absolute;
