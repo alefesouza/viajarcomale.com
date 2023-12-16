@@ -10,6 +10,7 @@ import ShareButton from '@/app/components/share-button';
 import randomIntFromInterval from '@/app/utils/random-int';
 import WebStories from '@/app/components/webstories';
 import logAccess from '@/app/utils/log-access';
+import StructuredBreadcrumbs from '@/app/components/structured-breadcrumbs';
 
 async function getCountry(country, city) {
   const db = getFirestore();
@@ -121,7 +122,6 @@ export default async function Highlight({ params: { country, city, theHighlight 
     }
   }
 
-
   const cacheRef = `/caches/highlights/highlights/${highlightId}/sort/${sort === 'asc' ? 'asc' : 'desc'}`;
 
   const countryData = await getCountry(country, city);
@@ -198,6 +198,17 @@ export default async function Highlight({ params: { country, city, theHighlight 
 
   const basePath = '/countries/' + country + '/cities/' + city + '/highlights/' + highlightId;
 
+  const breadcrumbs = [{
+    name: i18n(countryData.name),
+    item: `/countries/${country}`,
+  }, {
+    name: isBR && theCity.name_pt ? theCity.name_pt : theCity.name,
+    item: `/countries/${country}/cities/${city}`,
+  }, {
+    name: 'Stories',
+    item: basePath,
+  }];
+
   const sortPicker = (type) => (<div className="container-fluid">
     <div className={ styles.sort_picker }>
       <span>{i18n('Sorting')}:</span>
@@ -245,5 +256,7 @@ export default async function Highlight({ params: { country, city, theHighlight 
         </div>
       </div>}
     </div>
+
+    <StructuredBreadcrumbs breadcrumbs={breadcrumbs} />
   </div>
 }

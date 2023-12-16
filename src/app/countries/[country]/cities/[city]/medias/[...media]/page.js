@@ -158,20 +158,18 @@ export default async function Country({ params: { country, city, media } }) {
   const shortDescription = description.split(' ').length > 10 ? description.split(' ').slice(0, 10).join(' ') + '…' : description;
   const location = theMedia.location_data && theMedia.location_data.map((c) => c.name).join(', ');
 
-  const title = (shortDescription ? shortDescription + ' - ' : '') + (location ? location + ' - ' : '') + (isBR && theCity.name_pt ? theCity.name_pt : theCity.name) + ' - ' + i18n(countryData.name) + ' - ' + SITE_NAME;
-
   const breadcrumbs = [{
     name: i18n(countryData.name),
-    item: host('/countries/' + country),
+    item: '/countries/' + country,
   }, {
     name: isBR && theCity.name_pt ? theCity.name_pt : theCity.name,
-    item: host('/countries/' + country + '/cities/' + city),
+    item: '/countries/' + country + '/cities/' + city,
   }];
 
   if (theMedia.type === 'instagram-story') {
     breadcrumbs.push({
       name: i18n('Stories'),
-      item: host('/countries/' + country + '/cities/' + city + '/highlights/' + theMedia.highlight),
+      item: '/countries/' + country + '/cities/' + city + '/highlights/' + theMedia.highlight,
     });
   }
 
@@ -179,13 +177,13 @@ export default async function Country({ params: { country, city, media } }) {
 
   breadcrumbs.push({
     name: (shortDescription ? shortDescription : '') + (location ? location + ' - ' : ''),
-    item: host(basePath),
+    item: basePath,
   });
 
   if (media[1]) {
     breadcrumbs.push({
       name: 'Item ' + media[1],
-      item: host(basePath) + media[1],
+      item: basePath + media[1],
     });
   }
 

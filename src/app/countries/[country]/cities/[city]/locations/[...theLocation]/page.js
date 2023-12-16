@@ -12,6 +12,7 @@ import randomIntFromInterval from '@/app/utils/random-int';
 import WebStories from '@/app/components/webstories';
 import logAccess from '@/app/utils/log-access';
 import getSort from '@/app/utils/get-sort';
+import StructuredBreadcrumbs from '@/app/components/structured-breadcrumbs';
 
 async function getCountry(country, city) {
   const db = getFirestore();
@@ -270,6 +271,21 @@ export default async function Country({ params: { country, city, theLocation }, 
   
   instagramPhotos = expandedList;
 
+  const breadcrumbs = [{
+    name: i18n(countryData.name),
+    item: `/countries/${country}`,
+  }, {
+    name: isBR && theCity.name_pt ? theCity.name_pt : theCity.name,
+    item: `/countries/${country}/cities/${city}`,
+  }, {
+    name: isBR && theMedia.name_pt ? theMedia.name_pt : theMedia.name,
+    item: `/countries/${country}/cities/${city}/locations/${theMedia.slug}`,
+  }];
+
+  if (expandGalleries) {
+    breadcrumbs.push({ name: i18n('Expand Galleries'), item: `/countries/${country}/cities/${city}/locations/${theMedia.slug}/expand` });
+  }
+
   return <div>
     <div className="container">
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -325,5 +341,7 @@ export default async function Country({ params: { country, city, theLocation }, 
         </div>
       </div>}
     </div>
+
+    <StructuredBreadcrumbs breadcrumbs={breadcrumbs} />
   </div>
 }

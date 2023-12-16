@@ -1,6 +1,9 @@
+import useHost from '@/app/hooks/use-host';
 import Script from 'next/script';
 
 export default function StructuredBreadcrumbs({ breadcrumbs }) {
+  const host = useHost();
+
   return <Script id="ld-breadcrumb" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -8,7 +11,7 @@ export default function StructuredBreadcrumbs({ breadcrumbs }) {
       "@type": "ListItem",
       "position": i + 1,
       "name": item.name,
-      "item": item.item
+      "item": host(item.item),
     }))
   }) }}></Script>
 }

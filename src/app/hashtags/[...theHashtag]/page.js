@@ -13,6 +13,7 @@ import WebStories from '@/app/components/webstories';
 import removeDiacritics from '@/app/utils/remove-diacritics';
 import logAccess from '@/app/utils/log-access';
 import getSort from '@/app/utils/get-sort';
+import StructuredBreadcrumbs from '@/app/components/structured-breadcrumbs';
 
 export async function generateMetadata({ params: { theHashtag }, searchParams }) {
   // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -259,6 +260,20 @@ export default async function Country({ params: { theHashtag }, searchParams }) 
   
   instagramPhotos = expandedList;
 
+  const currentHashtag = decodeURIComponent(hashtagPt ? hashtagPt.name_pt : hashtag);
+
+  const breadcrumbs = [{
+    name: 'Hashtags',
+    item: '/hashtags',
+  }, {
+    name: `#${currentHashtag}`,
+    item: '/hashtags/' + currentHashtag,
+  }];
+
+  if (expandGalleries) {
+    breadcrumbs.push({ name: i18n('Expand Galleries'), item: '/hashtags/' + currentHashtag + '/expand' });
+  }
+
   return <div>
     <div className="container">
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -271,7 +286,7 @@ export default async function Country({ params: { theHashtag }, searchParams }) 
     </div>
     
     <div className="container-fluid">
-      <h2>#{decodeURIComponent(hashtagPt ? hashtagPt.name_pt : hashtag)}</h2>
+      <h2>#{currentHashtag}</h2>
     </div>
 
     <div className={ styles.galleries }>
@@ -309,5 +324,7 @@ export default async function Country({ params: { theHashtag }, searchParams }) 
         </div>
       </div>}
     </div>
+
+    <StructuredBreadcrumbs breadcrumbs={breadcrumbs} />
   </div>
 }
