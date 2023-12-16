@@ -42,6 +42,23 @@ const langs = {
     'Open in Stories format': 'Abrir em formato de Stories',
     'Open': 'Abrir',
     'City': 'Cidade',
+    'Maximize': 'Maximizar',
+    'Minimize': 'Minimizar',
+
+    // Map
+    'Map': 'Mapa',
+    'Loading': 'Carregando',
+    'Places I have been': 'Lugares que eu já estive',
+    'Open in Google Maps': 'Abrir no Google Maps',
+    'Reset Zoom': 'Resetar zoom',
+    'Google Maps logo': 'Logo do Google Maps',
+    'The map of the places I have been.': 'O mapa dos lugares que eu já visitei.',
+
+    // Hashtags
+    'Main Hashtags': 'Hashtags principais',
+    'Random Hashtags': 'Hashtags aleatórias',
+    'Navigate through my website with main and random hashtags.': 'Navegue pelo meu site com as hashtags principais e aleatórias.',
+    'Click on a hashtag to see my content about it.': 'Clique em uma hashtag para ver meu conteúdo sobre isso.',
 
     // Alt
     'Viajar com Alê Icon': 'Ícone do Viajar com Alê',
