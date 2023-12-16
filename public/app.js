@@ -192,6 +192,10 @@
 
     if (window.matchMedia('(display-mode: standalone)').matches || window.matchMedia('(display-mode: window-controls-overlay)').matches) {
       document.querySelectorAll('a[target=_blank]').forEach(function(a) {
+        if (a.href.includes('/webstories/')) {
+          return;
+        }
+
         a.removeAttribute('target');
      });
     }
@@ -215,6 +219,12 @@
     } else if (window.location.pathname == '/countries') {
       document.querySelector('.navbar .nav-item:nth-child(2)').classList.add('active');
       document.querySelector('#title-bar .nav-item:nth-child(2)').classList.add('active');
+    } else if (window.location.pathname == '/map') {
+      document.querySelector('.navbar .nav-item:nth-child(3)').classList.add('active');
+      document.querySelector('#title-bar .nav-item:nth-child(3)').classList.add('active');
+    } else if (window.location.pathname == '/hashtags') {
+      document.querySelector('.navbar .nav-item:nth-child(4)').classList.add('active');
+      document.querySelector('#title-bar .nav-item:nth-child(4)').classList.add('active');
     }
 
     firstAccess = false;
@@ -224,6 +234,39 @@
 
     if (isMediaSingle) {
       document.querySelector('body').classList.add('single-media-page');
+
+      const image = document.querySelector('img[itemprop="contentUrl"]');
+
+      if (image) {
+        const initViewer = () => {
+          new Viewer(image, {
+            toolbar: {
+              zoomIn: 1,
+              zoomOut: 1,
+              oneToOne: 0,
+              reset: 0,
+              prev: 0,
+              play: {
+                show: 0,
+                size: 'large',
+              },
+              next: 0,
+              rotateLeft: 0,
+              rotateRight: 0,
+              flipHorizontal: 0,
+              flipVertical: 0,
+            },
+          });
+        }
+
+        if (window.Viewer) {
+          initViewer();
+        } else {
+          setTimeout(() => {
+            initViewer();
+          }, 1000);
+        }
+      }
     } else {
       document.querySelector('body').classList.remove('single-media-page');
     }
@@ -232,9 +275,11 @@
   function setupScroller() {
     const highlightVideoItems = document.querySelectorAll('[data-scroller]');
 
-    Array.from(highlightVideoItems).forEach((scroller) => {
+    Array.from(highlightVideoItems).forEach((theScroller) => {
+      const scroller = theScroller.querySelector('[data-scroller-scroll]')
       const highlightScrollLeft = scroller.previousElementSibling;
       const highlightScrollRight = scroller.nextElementSibling;
+      const maximizeButton = theScroller.querySelector('.maximize-button')
 
       if (highlightScrollLeft.onclick) {
         return;
@@ -242,6 +287,7 @@
       
       if (scroller.scrollLeft + scroller.clientWidth < scroller.scrollWidth) {
         highlightScrollRight.style.display = 'flex';
+        maximizeButton.style.display = 'flex';
       }
 
       highlightScrollLeft.onclick = function () {
@@ -252,10 +298,27 @@
         scroller.scrollLeft += scroller.clientWidth * 0.75;
       };
 
+      maximizeButton.onclick = function (e) {
+        e.preventDefault();
+        scroller.dataset.maximized = scroller.dataset.maximized === 'yes' ? 'no' : 'yes';
+        console.log(scroller.dataset.maximized)
+        scroller.classList.toggle(this.dataset.maximize);
+        scroller.classList.toggle('container-fluid');
+        scroller.classList.toggle(this.dataset.minimize);
+        highlightScrollRight.style.display = 'none';
+        highlightScrollLeft.style.display = 'none';
+        this.textContent = scroller.dataset.maximized === 'yes' ? this.dataset.mintext : this.dataset.maxtext;
+
+        if (scroller.dataset.maximized === 'no' && scroller.scrollLeft + scroller.clientWidth < scroller.scrollWidth) {
+          scroller.scrollLeft = 0;
+          highlightScrollRight.style.display = 'flex';
+        }
+      }
+
       scroller.onscroll = function () {
         if (this.scrollLeft === 0) {
           highlightScrollLeft.style.display = 'none';
-        } else if (scroller.scrollLeft + scroller.clientWidth >= scroller.scrollWidth) {
+        } else if (this.scrollLeft + this.clientWidth >= this.scrollWidth) {
           highlightScrollRight.style.display = 'none';
         }
 
@@ -263,7 +326,7 @@
           highlightScrollLeft.style.display = 'flex';
         }
         
-        if (scroller.scrollLeft + scroller.clientWidth < scroller.scrollWidth) {
+        if (this.scrollLeft + this.clientWidth < this.scrollWidth) {
           highlightScrollRight.style.display = 'flex';
         }
       };
@@ -312,6 +375,10 @@
   if (!window.matchMedia('(display-mode: standalone)').matches && !window.matchMedia('(display-mode: window-controls-overlay)').matches && navigator.language.startsWith('pt') && !window.location.origin.includes('viajarcomale.com.br')) {
     document.querySelector('#portuguese-language-switcher').style.display = 'block';
   }
+
+  window.addEventListener('pageshow', function() {
+    loadingSpinner.style.display = 'none';
+  });
   
   initNavbarLinkClick();
 })();
