@@ -11,7 +11,7 @@ export default async function WebStories({title, storyTitle, items, highlightIte
 
   const firstItem = highlightItem ? highlightItem : items[0] || {};
   const theCover = firstItem?.file?.replace('.mp4', '-thumb.png');
-  
+
   const textStyles = {
     background: '#ffffff',
     width: 'auto',
@@ -46,7 +46,7 @@ export default async function WebStories({title, storyTitle, items, highlightIte
       <amp-story-grid-layer template="vertical">
         <amp-img src={host('/icons/96x96.png')} width={96} height={96}></amp-img>
         <div style={{ width: '100%', marginLeft: 6, marginRight: 6, }}>
-          <h1 style={{...textStyles, fontSize: storyTitle.length && needSplit > 35 ? 20 : storyTitle.length && needSplit > 30 ? 24 : 32}}>{storyTitle}</h1>
+          <h1 style={{...textStyles, fontSize: storyTitle.length >= 35 && needSplit ? 17 : storyTitle.length >= 30 && needSplit ? 22 : storyTitle.length >= 25 && needSplit ? 28 : 32}}>{storyTitle}</h1>
         </div>
       </amp-story-grid-layer>
       <amp-story-page-outlink layout="nodisplay">
