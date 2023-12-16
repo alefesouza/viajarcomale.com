@@ -10,6 +10,7 @@ import ShareButton from '@/app/components/share-button';
 import StructuredBreadcrumbs from '@/app/components/structured-breadcrumbs';
 import Script from 'next/script';
 import Pagination from '@/app/components/pagination';
+import getMetadata from '@/app/utils/get-metadata';
 
 async function getCountry(country, city) {
   const db = getFirestore();
@@ -86,18 +87,8 @@ export async function generateMetadata({ params: { country, city, media } }) {
 
   theMedia = selectedMedia;
 
-  const location = (theCity ? isBR && theCity.name_pt ? theCity.name_pt + ' - ' : theCity.name + ' - ' : '') + i18n(countryData.name);
-  let description = isBR && theMedia.description_pt ? theMedia.description_pt : theMedia.description;
+  const { title, description } = getMetadata(theMedia, isBR);
 
-  if (!description && theMedia.location_data) {
-    description = theMedia.location_data.map(l => l.name + (l.alternative_names ? ' (' + l.alternative_names.join(', ') + ')' : '')).join(', ');
-  }
-
-  if (!description) {
-    description = '';
-  }
-
-  const title = (description ? (description.split(' ').length > 10 ? description.split(' ').slice(0, 10).join(' ') + '…' : description) + ' - ' : '') + (media[1] ? 'Item ' + media[1] + ' - ' : '') + location + ' - ' + SITE_NAME;
   let image = FILE_DOMAIN_500 + theMedia.file;
 
   if (theMedia.file.includes('.mp4')) {
@@ -117,15 +108,15 @@ export async function generateMetadata({ params: { country, city, media } }) {
   
   return {
     title,
-    description,
+    description: description,
     openGraph: {
       title,
-      description,
+      description: description,
       images,
     },
     twitter: {
       title,
-      description,
+      description: description,
       images,
     },
     other: {
@@ -207,7 +198,7 @@ export default async function Country({ params: { country, city, media } }) {
   const paginationBase = basePath + '/{page}';
 
   return <div className="container">
-    <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 16 }}>
+    <div className="media_navigation">
       <Link href={ '/countries/' + country + '/cities/' + city + (theMedia.type === 'instagram-story' ? '/highlights/' + theMedia.highlight : '') + (mediaIndex ? '/medias/' + theMedia.id : '') } id="back-button" scroll={false} prefetch={false}>
         <img src="/images/back.svg" alt={i18n('Back')} width="32px"></img>
       </Link>
@@ -222,7 +213,7 @@ export default async function Country({ params: { country, city, media } }) {
     </div>}
     
     <div className={ styles.media } style={{ marginTop: media[1] || theMedia.type === 'instagram-story' ? 14 : null }}>
-      <InstagramMedia media={theMedia} isBR={isBR} withoutLink={media[1] || theMedia.type === 'instagram-story'} expandGalleries fullQuality isMain theCity={theCity} title={title} description={description} />
+      <InstagramMedia media={theMedia} isBR={isBR} withoutLink={media[1] || theMedia.type === 'instagram-story'} expandGalleries fullQuality isMain title={title} description={description} />
 
       {media[1] && galleryLength > 0 && <div style={{marginTop: 24}}><Pagination base={paginationBase} currentPage={Number(media[1]) || 1} pageNumber={galleryLength} isGallery total={5} /></div>}
 
@@ -232,11 +223,11 @@ export default async function Country({ params: { country, city, media } }) {
     </div>
 
     {(media[1] || theMedia.type === 'instagram-story') && <div style={{ textAlign: 'center' }}>
-      <Link href={ '/countries/' + country + '/cities/' + city } id="back-button" scroll={false} prefetch={false}>
-        <h2>{isBR && theCity.name_pt ? theCity.name_pt : theCity.name} - {i18n(countryData.name)} {countryData.flag}</h2>
-      </Link>
+      <h2><Link href={ '/countries/' + country + '/cities/' + city } scroll={false} prefetch={false} style={{textDecoration: 'underline'}}>{isBR && theCity.name_pt ? theCity.name_pt : theCity.name}</Link> - <Link href={ '/countries/' + country } scroll={false} prefetch={false} style={{textDecoration: 'underline'}}>{i18n(countryData.name)}</Link> {countryData.flag}</h2>
     </div>}
 
     <StructuredBreadcrumbs breadcrumbs={breadcrumbs} />
+
+    <Script src="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.6/viewer.min.js"></Script>
   </div>
 }

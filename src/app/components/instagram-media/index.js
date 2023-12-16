@@ -7,7 +7,7 @@ import ShareButton from '../share-button';
 import useI18n from '@/app/hooks/use-i18n';
 import SchemaData from '../schema-data';
 
-export default function InstagramMedia({ media, expandGalleries, isBR, withoutLink, fullQuality, isMain, isListing, theCity, title, description }) {
+export default function InstagramMedia({ media, expandGalleries, isBR, withoutLink, fullQuality, isMain, isListing, description }) {
   const host = useHost();
   const i18n = useI18n();
 
@@ -15,7 +15,7 @@ export default function InstagramMedia({ media, expandGalleries, isBR, withoutLi
   const link = host('/countries/' + media.country + '/cities/' + media.city + '/medias/' + media.id + (isMain ? '/1' : '') + (media.img_index ? '/' + media.img_index : ''));
 
   return <div key={ media.file } className={ styles.gallery_item + (isMain && media.type === 'instagram-story' && media.mode === 'portrait' ? ' ' + styles.portrait : '') + (media.gallery && media.gallery.length && ! expandGalleries ? ' ' + styles.is_gallery : '' ) } itemScope itemType={media.file.includes('.mp4') && !isListing ? 'http://schema.org/VideoObject' : 'http://schema.org/ImageObject' }>
-    {withoutLink ? mediaElement : <Link href={link} style={{ display: 'block' }}>
+    {withoutLink ? <div style={{ cursor: media.file.includes('.mp4') ? '' : 'zoom-in' }}>{mediaElement}</div> : <Link href={link} style={{ display: 'block' }} prefetch={false}>
       {mediaElement}
 
       {(media.file_type === 'video' || media.file.includes('.mp4')) && isListing &&
@@ -23,26 +23,22 @@ export default function InstagramMedia({ media, expandGalleries, isBR, withoutLi
     </Link>}
 
     <div className={ styles.external_links }>
-      <a href={media.link + (media.img_index ? '?img_index=' + media.img_index : '')} target="_blank">
+      <a href={media.highlight ? 'https://www.instagram.com/stories/highlights/' + media.highlight.replace('media-highlight-', '') + '/' : media.link + (media.img_index ? '?img_index=' + media.img_index : '')} target="_blank">
         <img src={host('/logos/instagram.png')} alt={isBR ? media.description_pt : media.description} />
       </a>
       <ShareButton text={isBR ? media.description_pt : media.description} url={link} />
     </div>
     
-    {(isBR ? media.description_pt : media.description)
-      ? <div itemProp="description">
-          {isBR ? media.description_pt : media.description} {(media.img_index ? '- Item ' + media.img_index : '')}
-        </div>
-      :
-        <span itemProp="description" content={(media.img_index ? 'Item ' + media.img_index + ' - ' : '') + (media.hashtags && media.hashtags.length ? 'Hashtags: #' + (isBR && media.hashtags_pt ? media.hashtags_pt : media.hashtags).join(' #') : i18n('City') + ': ' + ((isBR && theCity.name_pt) ? theCity.name_pt : theCity.name))}></span>
-    }
+    <div>
+      {isBR ? media.description_pt : media.description} {(media.img_index ? '- Item ' + media.img_index : '')}
+    </div>
   
     {!media.is_gallery && media.locations && media.location_data && media.location_data[0] && <div style={{marginTop: 4}} className={styles.location}>
-      {i18n(media.location_data.length > 1 ? 'Locations' : 'Location')}: <span itemProp="contentLocation">{media.location_data.map((location, i) => <><Link href={'/countries/' + media.country + '/cities/' + media.city + '/locations/' + location.slug} key={location.slug}>{location.name}{location.alternative_names && ' (' + location.alternative_names.join(', ') + ')'}</Link>{i < media.location_data.length - 1 ? ', ' : ''}</>)}</span>
+      {i18n(media.location_data.length > 1 ? 'Locations' : 'Location')}: <span itemProp="contentLocation">{media.location_data.map((location, i) => <><Link href={'/countries/' + media.country + '/cities/' + media.city + '/locations/' + location.slug} key={location.slug} prefetch={false}>{isBR && location.name_pt ? location.name_pt : location.name}{location.alternative_names && location.alternative_names.length && ' (' + location.alternative_names.join(', ') + ')'}</Link>{i < media.location_data.length - 1 ? ', ' : ''}</>)}</span>
     </div>}
 
     {!media.is_gallery && media.hashtags && media.hashtags.length > 0 && <Hashtags hashtags={isBR && media.hashtags_pt ? media.hashtags_pt : media.hashtags} />}
 
-    <SchemaData media={media} isVideo={media.file.includes('.mp4') && !isListing} title={title} description={description} />
+    <SchemaData media={media} isVideo={media.file.includes('.mp4') && !isListing} description={description} isExpand={expandGalleries} />
   </div>
 }

@@ -182,7 +182,7 @@ export default async function Highlight({ params: { country, city, theHighlight 
     const location = (theCity ? isBR && theCity.name_pt ? theCity.name_pt + ' - ' : theCity.name + ' - ' : '') + i18n(countryData.name);
     const title = i18n('Stories') + ' - ' + location;
 
-    return <WebStories title={title} storyTitle={location} items={instagramStories} highlightItem={theMedia} />
+    return <WebStories title={title} storyTitle={location + ' ' + countryData.flag} items={instagramStories} highlightItem={theMedia} />
   }
 
   let newShuffle = randomIntFromInterval(1, 15);
@@ -210,7 +210,7 @@ export default async function Highlight({ params: { country, city, theHighlight 
 
         <div style={{display: 'flex', gap: 16}}>
           {<a href={host('/webstories/countries/' + country + '/cities/' + city + '/highlights/' + highlightId)} target="_blank" title={i18n('Play')}>
-            <img src={host('/images/play.svg')} width={30} height={30} alt={i18n('Play')} />
+            <img src={host('/images/play.svg')} width={32} height={32} alt={i18n('Play')} />
           </a>}
           <ShareButton />
         </div>
@@ -235,7 +235,7 @@ export default async function Highlight({ params: { country, city, theHighlight 
           </div>
           
           <div className={ styles.instagram_highlights_items }>
-            {instagramStories.map(p => <InstagramMedia key={p.id} media={p} isBR={isBR} theCity={theCity} hasPoster isListing />)}
+            {instagramStories.map(p => <InstagramMedia key={p.id} media={p} isBR={isBR} hasPoster isListing />)}
           </div>
         </div>
       </div>}

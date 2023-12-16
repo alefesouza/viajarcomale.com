@@ -1,19 +1,18 @@
 import {parse} from 'js2xmlparser';
 import useHost from '@/app/hooks/use-host';
-import useI18n from '@/app/hooks/use-i18n';
 import { getFirestore } from 'firebase-admin/firestore';
 import { getStorage } from 'firebase-admin/storage';
 import { FILE_DOMAIN, ITEMS_PER_PAGE, SITE_NAME } from '../utils/constants';
 import { customInitApp } from '../firebase';
 import logAccess from '../utils/log-access';
+import getMetadata from '../utils/get-metadata';
 
 customInitApp();
 
 export async function GET() {
   const host = useHost();
-  const i18n = useI18n();
   const isBR = host().includes('viajarcomale.com.br');
-  const lastmod = '2023-12-09';
+  const lastmod = '2023-12-14';
 
   const db = getFirestore();
   const reference = host('sitemap.json').split('//')[1].replaceAll('/', '-').replace('www.', '');
@@ -23,7 +22,7 @@ export async function GET() {
 
   let obj = {};
 
-  if (!cacheExists[0]) {
+  if (!cacheExists[0] || host().includes('localhost')) {
     const countriesSnapshot = await db.collection('countries').get();
     let countries = [];
 
@@ -39,7 +38,13 @@ export async function GET() {
     const locationsSnapshot = await db.collectionGroup('locations').get();
     const locations = [];
     locationsSnapshot.forEach(doc => {
-      locations.push(doc.data());
+      const data = doc.data();
+
+      if (data.is_placeholder) {
+        return;
+      }
+
+      locations.push(data);
     });
     const hashtagsSnapshot = await db.collectionGroup('hashtags').get();
     const hashtags = [];
@@ -56,22 +61,15 @@ export async function GET() {
       }
 
       if (item.file.includes('.mp4')) {
-        const theCountry = countries.find(c => c.slug == media.country)
-        const theCity = theCountry.cities.find(c => c.slug == media.city)
-
-        const description = ((isBR && media.description_pt ? media.description_pt : media.description) || '');
-        const shortDescription = description.split(' ').length > 10 ? description.split(' ').slice(0, 10).join(' ') + '…' : description;
-        const location = media.location_data && media.location_data.map((c) => c.name + (c.alternative_names ? ' (' + c.alternative_names.join(', ') + ')' : '')).join(', ');
-        
-        const title = (shortDescription ? shortDescription + ' - ' : (location ? location + ' - ' : '')) + (position && position > 1 ? 'Item ' + position + ' - ' : '') + (isBR && theCity.name_pt ? theCity.name_pt : theCity.name) + ' - ' + i18n(theCountry.name) + ' - ' + SITE_NAME;
-
+        const { title, description } = getMetadata(media, isBR, position)
+          
         return { 'video:video': [{
           'video:thumbnail_loc': FILE_DOMAIN + item.file.replace('.mp4', '-thumb.png'),
           'video:content_loc': FILE_DOMAIN + item.file,
           'video:title': title,
-          'video:description': description ? description : media.hashtags ? 'Hashtags: #' + (isBR && media.hashtags_pt ? media.hashtags_pt : media.hashtags).join(' #') : i18n('City') + ':' + (isBR && theCity.name_pt) ? theCity.name_pt : theCity.name,
+          'video:description': description,
           'video:duration': parseInt(item.duration),
-          'video:publication_date': media.date ? media.date.replace(' ', 'T') + '+03:00' : theCity.end + 'T12:00:00+03:00',
+          'video:publication_date': media.date ? media.date.replace(' ', 'T') + '+03:00' : media.cityData.end + 'T12:00:00+03:00',
           'video:family_friendly': 'yes',
           'video:requires_subscription': 'no',
           'video:live': 'no',
@@ -118,6 +116,10 @@ export async function GET() {
         ...makeLoc('/')
       }, {
         ...makeLoc('/countries'),
+      }, {
+        ...makeLoc('/map'),
+      }, {
+        ...makeLoc('/hashtags'),
       },
       ...countries.flatMap(c => [{
         ...makeLoc('/countries/' + c.slug),
@@ -166,17 +168,17 @@ export async function GET() {
         ...makeLoc('/countries/' + m.country + '/cities/' + m.city + '/medias/' + m.id + '/1'),
         ...mediaProcessing(m, null),
       },
-      ...m.gallery.map((g, i) => ({
+      ...(m.gallery ? m.gallery.map((g, i) => ({
           ...makeLoc('/countries/' + m.country + '/cities/' + m.city + '/medias/' + m.id + '/' + (i + 2)),
           ...mediaProcessing(m, g, (i + 2)),
-        }))
+        })) : [])
       ])],
     };
 
     storage.bucket('viajarcomale.appspot.com').file(reference).save(JSON.stringify(obj));
   }
 
-  if (cacheExists[0]) {
+  if (cacheExists[0] && !host().includes('localhost')) {
     const contents = await storage.bucket('viajarcomale.appspot.com').file(reference).download();
     obj = JSON.parse(contents);
   }
