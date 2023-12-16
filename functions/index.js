@@ -22,12 +22,34 @@ exports.onMediaCreated = onDocumentCreated('/countries/{countryId}/medias/{media
 });
 
 exports.onMediaUpdated = onDocumentUpdated('/countries/{countryId}/medias/{mediaId}', async (event) => {
+  const oldValue = event.data.before.data();
   const newValue = event.data.after.data();
   const update = {};
 
   // Set hashtags to an array
   if (typeof newValue.hashtags === 'string') {
     update.hashtags = newValue.hashtags.split('#').map(h => h.trim()).filter(h => h);
+  }
+
+  if (newValue.locations && JSON.stringify(oldValue.locations) !== JSON.stringify(newValue.locations)) {
+    const db = getFirestore();
+    const locationsSnapshot = await db.collection('countries')
+      .doc(newValue.country)
+      .collection('locations')
+      .where('slug', 'in', newValue.locations)
+      .get();
+
+    const locations = [];
+    locationsSnapshot.forEach((doc) => {
+      const data = doc.data();
+
+      locations.push({
+        name: data.name,
+        slug: data.slug,
+      });
+    });
+
+    update.location_data = locations;
   }
 
   return event.data.after.ref.update(update);

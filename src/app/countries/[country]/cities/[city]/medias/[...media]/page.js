@@ -211,7 +211,7 @@ export default async function Country({ params: { country, city, media } }) {
 
       {media[1] && galleryLength > 0 && <div style={{marginTop: 24}}><Pagination base={paginationBase} currentPage={Number(media[1]) || 1} pageNumber={galleryLength} isGallery total={5} /></div>}
 
-      {theMedia.gallery && theMedia.gallery.length && theMedia.gallery.map(g => <div key={g.file} style={{ marginTop: 16 }}>
+      {theMedia.gallery && theMedia.gallery.length > 0 && theMedia.gallery.map(g => <div key={g.file} style={{ marginTop: 16 }}>
         <InstagramMedia key={g.file} media={g} isBR={isBR} expandGalleries fullQuality isListing />
       </div>)}
     </div>
