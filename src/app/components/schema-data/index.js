@@ -2,8 +2,9 @@ import { FILE_DOMAIN, SITE_NAME } from '@/app/utils/constants';
 import { serialize } from 'tinyduration';
 import useHost from '@/app/hooks/use-host';
 
-export default function SchemaData({ media, title, isVideo, description, fallbackDate, keywords, withItemType = false }) {
+export default function SchemaData({ media, title, isVideo, description, keywords, isWebStories = false }) {
   const host = useHost();
+  const isBR = host().includes('viajarcomale.com.br');
   
   const content = <>
     <span itemProp="creditText" content={SITE_NAME}/>
@@ -11,8 +12,7 @@ export default function SchemaData({ media, title, isVideo, description, fallbac
       <span itemProp="name" content="Alefe Souza"></span>
     </span>
     <span itemProp="copyrightNotice" content={SITE_NAME + ' - @viajarcomale'}/>
-    {withItemType && <span itemProp="contentUrl" content={FILE_DOMAIN + (media.file.includes('.mp4') ? media.file.replace('.mp4', '-thumb.png') : media.file)}/>}
-    <span itemProp="uploadDate" content={media.date ? media.date.replace(' ', 'T') + '+03:00' : fallbackDate + 'T12:00:00+03:00'}/>
+    <span itemProp="uploadDate" content={media.date.replace(' ', 'T') + '+03:00'}/>
     <span itemProp="license" content="https://creativecommons.org/licenses/by-nc/4.0/deed.en"/>
     <span itemProp="acquireLicensePage" content={host('/contact')}/>
 
@@ -23,17 +23,17 @@ export default function SchemaData({ media, title, isVideo, description, fallbac
     </>}
   </>
 
-  if (!withItemType) {
+  if (!isWebStories) {
     return content;
   }
 
-  return <div itemScope itemType={isVideo ? 'http://schema.org/VideoObject' : 'http://schema.org/ImageObject'}>
+  return <div>
     {media.file.includes('.mp4') && <>
       <span itemProp="description" content={description}/>
-      {media.location_data && <span itemProp="contentLocation" content={media.location_data.map(l => l.name).join(', ')}/>}
-      {keywords && keywords.length && <span itemProp="keywords" content={'#' + keywords.map(l => l).join(' #')}/>}
-      <span itemProp="contentUrl" content={FILE_DOMAIN + media.file}/>
+      {media.location_data && media.location_data.length && <span itemProp="contentLocation" content={media.location_data.map(l => (isBR && l.name_pt ? l.name_pt : l.name) + (l.alternative_names && l.alternative_names.length ? ' (' + l.alternative_names.join(', ') + ')' : '')).join(', ')}/>}
+      {keywords && keywords.length && <span itemProp="keywords" content={'#' + keywords.filter(l => l).join(' #')}/>}
     </>}
+    <span itemProp="contentUrl" content={FILE_DOMAIN + media.file}/>
     {content}
   </div>
 }

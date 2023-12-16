@@ -74,7 +74,7 @@ export default function Scroller({ title, items, isShortVideos, isInstagramHighl
                 {isBR ? p.description_pt : p.description}
               </div>
             :
-              <span itemProp="description" content={p.hashtags ? 'Hashtags: #' + (isBR && p.hashtags_pt ? p.hashtags_pt : p.hashtags).join(' #') : i18n('City') + ':' + (isBR && cityData[p.city].name_pt) ? cityData[p.city].name_pt : cityData[p.city].name}></span>
+              <span itemProp="description" content={p.hashtags && p.hashtags.length ? 'Hashtags: #' + (isBR && p.hashtags_pt ? p.hashtags_pt : p.hashtags).join(' #') : i18n('City') + ':' + (isBR && cityData[p.city].name_pt) ? cityData[p.city].name_pt : cityData[p.city].name}></span>
           }
 
           {p.locations && p.location_data && <div style={{marginTop: 4}} className={styles.location}>

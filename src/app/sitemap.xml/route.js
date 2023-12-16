@@ -16,7 +16,7 @@ export async function GET() {
   const lastmod = '2023-12-09';
 
   const db = getFirestore();
-  const reference = host('sitemap.json').split('//')[1].replaceAll('/', '-');
+  const reference = host('sitemap.json').split('//')[1].replaceAll('/', '-').replace('www.', '');
 
   const storage = getStorage();
   const cacheExists = await storage.bucket('viajarcomale.appspot.com').file(reference).exists();

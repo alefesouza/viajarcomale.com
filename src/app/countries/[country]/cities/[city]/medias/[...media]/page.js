@@ -214,12 +214,14 @@ export default async function Country({ params: { country, city, media } }) {
 
       <ShareButton />
     </div>
-    
-    <div>
-      <h2>{isBR && theCity.name_pt ? theCity.name_pt : theCity.name} - {i18n(countryData.name)} {countryData.flag}</h2>
-    </div>
 
-    <div className={ styles.media }>
+    {!media[1] && theMedia.type !== 'instagram-story' && <div>
+      <Link href={ '/countries/' + country + '/cities/' + city } id="back-button" scroll={false} prefetch={false}>
+        <h2>{isBR && theCity.name_pt ? theCity.name_pt : theCity.name} - {i18n(countryData.name)} {countryData.flag}</h2>
+      </Link>
+    </div>}
+    
+    <div className={ styles.media } style={{ marginTop: media[1] || theMedia.type === 'instagram-story' ? 14 : null }}>
       <InstagramMedia media={theMedia} isBR={isBR} withoutLink={media[1] || theMedia.type === 'instagram-story'} expandGalleries fullQuality isMain theCity={theCity} title={title} description={description} />
 
       {media[1] && galleryLength > 0 && <div style={{marginTop: 24}}><Pagination base={paginationBase} currentPage={Number(media[1]) || 1} pageNumber={galleryLength} isGallery total={5} /></div>}
@@ -228,6 +230,12 @@ export default async function Country({ params: { country, city, media } }) {
         <InstagramMedia key={g.file} media={g} isBR={isBR} expandGalleries fullQuality isListing />
       </div>)}
     </div>
+
+    {(media[1] || theMedia.type === 'instagram-story') && <div style={{ textAlign: 'center' }}>
+      <Link href={ '/countries/' + country + '/cities/' + city } id="back-button" scroll={false} prefetch={false}>
+        <h2>{isBR && theCity.name_pt ? theCity.name_pt : theCity.name} - {i18n(countryData.name)} {countryData.flag}</h2>
+      </Link>
+    </div>}
 
     <StructuredBreadcrumbs breadcrumbs={breadcrumbs} />
   </div>

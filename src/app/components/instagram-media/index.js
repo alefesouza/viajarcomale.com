@@ -28,17 +28,21 @@ export default function InstagramMedia({ media, expandGalleries, isBR, withoutLi
       </a>
       <ShareButton text={isBR ? media.description_pt : media.description} url={link} />
     </div>
-
-    <div itemProp="description">
-      {isBR ? media.description_pt : media.description} {(media.img_index ? '- Item ' + media.img_index : '')}
-    </div>
     
+    {(isBR ? media.description_pt : media.description)
+      ? <div itemProp="description">
+          {isBR ? media.description_pt : media.description} {(media.img_index ? '- Item ' + media.img_index : '')}
+        </div>
+      :
+        <span itemProp="description" content={(media.img_index ? 'Item ' + media.img_index + ' - ' : '') + (media.hashtags && media.hashtags.length ? 'Hashtags: #' + (isBR && media.hashtags_pt ? media.hashtags_pt : media.hashtags).join(' #') : i18n('City') + ': ' + ((isBR && theCity.name_pt) ? theCity.name_pt : theCity.name))}></span>
+    }
+  
     {!media.is_gallery && media.locations && media.location_data && media.location_data[0] && <div style={{marginTop: 4}} className={styles.location}>
       {i18n(media.location_data.length > 1 ? 'Locations' : 'Location')}: <span itemProp="contentLocation">{media.location_data.map((location, i) => <><Link href={'/countries/' + media.country + '/cities/' + media.city + '/locations/' + location.slug} key={location.slug}>{location.name}{location.alternative_names && ' (' + location.alternative_names.join(', ') + ')'}</Link>{i < media.location_data.length - 1 ? ', ' : ''}</>)}</span>
     </div>}
 
     {!media.is_gallery && media.hashtags && media.hashtags.length > 0 && <Hashtags hashtags={isBR && media.hashtags_pt ? media.hashtags_pt : media.hashtags} />}
 
-    <SchemaData media={media} isVideo={media.file.includes('.mp4') && !isListing} fallbackDate={theCity && theCity.end} title={title} description={description} />
+    <SchemaData media={media} isVideo={media.file.includes('.mp4') && !isListing} title={title} description={description} />
   </div>
 }
