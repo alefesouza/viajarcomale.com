@@ -213,7 +213,7 @@ export default async function Country({ params: { country, city, media } }) {
     </div>}
     
     <div className={ styles.media } style={{ marginTop: media[1] || theMedia.type === 'instagram-story' ? 14 : null }}>
-      <InstagramMedia media={theMedia} isBR={isBR} withoutLink={media[1] || theMedia.type === 'instagram-story'} expandGalleries fullQuality isMain title={title} description={description} />
+      <InstagramMedia media={theMedia} isBR={isBR} withoutLink={media[1] || theMedia.type === 'instagram-story'} expandGalleries fullQuality isMain />
 
       {media[1] && galleryLength > 0 && <div style={{marginTop: 24}}><Pagination base={paginationBase} currentPage={Number(media[1]) || 1} pageNumber={galleryLength} isGallery total={5} /></div>}
 

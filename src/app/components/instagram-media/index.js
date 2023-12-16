@@ -7,7 +7,7 @@ import ShareButton from '../share-button';
 import useI18n from '@/app/hooks/use-i18n';
 import SchemaData from '../schema-data';
 
-export default function InstagramMedia({ media, expandGalleries, isBR, withoutLink, fullQuality, isMain, isListing, description }) {
+export default function InstagramMedia({ media, expandGalleries, isBR, withoutLink, fullQuality, isMain, isListing }) {
   const host = useHost();
   const i18n = useI18n();
 
@@ -39,6 +39,6 @@ export default function InstagramMedia({ media, expandGalleries, isBR, withoutLi
 
     {!media.is_gallery && media.hashtags && media.hashtags.length > 0 && <Hashtags hashtags={isBR && media.hashtags_pt ? media.hashtags_pt : media.hashtags} />}
 
-    <SchemaData media={media} isVideo={media.file.includes('.mp4') && !isListing} description={description} isExpand={expandGalleries} />
+    <SchemaData media={media} isVideo={media.file.includes('.mp4') && !isListing} isExpand={expandGalleries && !isMain} />
   </div>
 }
