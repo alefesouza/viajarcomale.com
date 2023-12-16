@@ -11,6 +11,7 @@ import ShareButton from '@/app/components/share-button';
 import randomIntFromInterval from '@/app/utils/random-int';
 import WebStories from '@/app/components/webstories';
 import logAccess from '@/app/utils/log-access';
+import getSort from '@/app/utils/get-sort';
 
 async function getCountry(country, city) {
   const db = getFirestore();
@@ -24,7 +25,7 @@ async function getCountry(country, city) {
   return countryData;
 }
 
-export async function generateMetadata({ params: { country, city, theLocation } }) {
+export async function generateMetadata({ params: { country, city, theLocation }, searchParams }) {
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const i18n = useI18n();
   // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -68,7 +69,18 @@ export async function generateMetadata({ params: { country, city, theLocation } 
     location: theMedia.name,
   });
 
-  const coverSnapshot = await db.collectionGroup('medias').where('locations', 'array-contains', location).orderBy('date', 'desc').limit(2).get();
+  const sort = getSort(searchParams, theLocation[1] === 'webstories', false);
+  let coverSnapshot = db.collectionGroup('medias')
+    .where('locations', 'array-contains', location)
+
+  if (isWebStories) {
+    coverSnapshot = coverSnapshot.where('type', '==', 'instagram-story');
+  }
+
+  coverSnapshot = await coverSnapshot
+    .orderBy('date', sort)
+    .limit(isWebStories ? 1 : 2)
+    .get();
 
   let cover = null;
 
@@ -134,15 +146,7 @@ export default async function Country({ params: { country, city, theLocation }, 
   const location = decodeURIComponent(queryLocation);
 
   const expandGalleries = expand;
-  let sort = searchParams.sort && ['asc', 'desc', 'random'].includes(searchParams.sort) && searchParams.sort || 'desc';
-
-  if (expand === 'webstories') {
-    if (!searchParams.sort || sort === 'desc') {
-      sort = 'asc';
-    } else if (sort === 'asc') {
-      sort = 'desc';
-    }
-  }
+  let sort = getSort(searchParams, expand === 'webstories');
 
   const countryData = await getCountry(country, city);
 
