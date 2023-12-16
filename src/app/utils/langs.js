@@ -3,6 +3,7 @@ const langs = {
     // Home
     'Home': 'Início',
     'Albums': 'Álbuns',
+    'Albums - Photos separated by country': 'Álbuns - Fotos separadas por país',
     '360 Photos': 'Fotos 360',
     'Add to Home Screen': 'Adicionar à tela inicial',
     'Hashtag Search': 'Busca de hashtags',
