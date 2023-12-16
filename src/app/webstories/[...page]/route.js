@@ -4,9 +4,10 @@ import { redirect } from 'next/navigation';
 // Remove Next.js assets from Web Stories pages.
 export async function GET(req) {
   const host = useHost();
-  const { pathname } = new URL(req.url);
+  const { pathname, searchParams } = new URL(req.url);
+  const sort = searchParams.get('sort');
 
-  const request = await fetch(host(pathname.replace('/webstories', '') + '/webstories') + '?fixer=true');
+  const request = await fetch(host(pathname.replace('/webstories', '') + '/webstories') + '?fixer=true' + (sort !== 'desc' ? '&sort=' + sort : ''));
   const data = await request.text();
 
   let $ = require('cheerio').load(data);

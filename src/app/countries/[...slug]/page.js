@@ -409,7 +409,7 @@ export default async function Country({ params: { slug }, searchParams }) {
     { instagramHighLights.length > 1 && sortPicker('stories') }
 
     <div className={ styles.galleries }>
-      {instagramHighLights.length > 0 && <Scroller title="Stories" items={instagramHighLights} isInstagramHighlights cityData={cityData} />}
+      {instagramHighLights.length > 0 && <Scroller title="Stories" items={instagramHighLights} isInstagramHighlights cityData={cityData} sort={sort} />}
 
       { shortVideos.length > 1 && sortPicker('short') }
 

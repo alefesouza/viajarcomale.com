@@ -7,7 +7,7 @@ import ShareButton from '../share-button';
 import Hashtags from '../hashtags';
 import SchemaData from '../schema-data';
 
-export default function Scroller({ title, items, isShortVideos, isInstagramHighlights, isYouTubeVideos, is360Photos, isStories, webStoriesHref }) {
+export default function Scroller({ title, items, isShortVideos, isInstagramHighlights, isYouTubeVideos, is360Photos, isStories, webStoriesHref, sort }) {
   const i18n = useI18n();
   const host = useHost();
   const isBR = host().includes('viajarcomale.com.br');
@@ -22,7 +22,7 @@ export default function Scroller({ title, items, isShortVideos, isInstagramHighl
     </div>
 
     {isStories && <div className="center_link">
-      <a href={webStoriesHref} target="_blank">{i18n('Open in Stories format')}</a>
+      <a href={webStoriesHref + (sort !== 'desc' ? '?sort=' + sort : '')} target="_blank">{i18n('Open in Stories format')}</a>
     </div>}
 
     <div style={{ position: 'relative' }}>
@@ -64,7 +64,7 @@ export default function Scroller({ title, items, isShortVideos, isInstagramHighl
               {isBR && p.cityData.name_pt ? p.cityData.name_pt : p.cityData.name}
             </div>
             <div className="center_link" style={{ marginTop: 18, marginBottom: 0 }}>
-              <Link href={ '/webstories/countries/' + p.country + '/cities/' + p.city + '/highlights/' + p.id } target="_blank" prefetch={false}>{i18n('Open in Stories format')}</Link>
+              <Link href={ '/webstories/countries/' + p.country + '/cities/' + p.city + '/highlights/' + p.id + (sort !== 'desc' ? '?sort=' + sort : '') } target="_blank" prefetch={false}>{i18n('Open in Stories format')}</Link>
             </div>
           </>}
 

@@ -75,13 +75,13 @@ export async function generateMetadata({ params: { country, city, theLocation } 
   coverSnapshot.forEach((photo) => {
     const data = photo.data();
 
-    if (data.type !== 'instagram' || cover) {
+    if (data.type !== 'instagram' || !cover) {
       cover = data;
     }
   });
 
   if (!cover) {
-    redirect('/hashtags');
+    redirect(`/countries/${country}/cities/${city}`);
   }
 
   let image = FILE_DOMAIN + cover.file.replace('.mp4', '-thumb.png');
@@ -136,8 +136,12 @@ export default async function Country({ params: { country, city, theLocation }, 
   const expandGalleries = expand;
   let sort = searchParams.sort && ['asc', 'desc', 'random'].includes(searchParams.sort) && searchParams.sort || 'desc';
 
-  if (!searchParams.sort && expand === 'webstories') {
-    sort = 'asc';
+  if (expand === 'webstories') {
+    if (!searchParams.sort || sort === 'desc') {
+      sort = 'asc';
+    } else if (sort === 'asc') {
+      sort = 'desc';
+    }
   }
 
   const countryData = await getCountry(country, city);
@@ -297,7 +301,7 @@ export default async function Country({ params: { country, city, theLocation }, 
 
       { instagramStories.length > 1 && sortPicker('stories') }
 
-      { instagramStories.length > 0 && <Scroller title="Stories" items={instagramStories} isStories webStoriesHref={host('/webstories/countries/' + country + '/cities/' + city + '/locations/' + location)} /> }
+      { instagramStories.length > 0 && <Scroller title="Stories" items={instagramStories} isStories webStoriesHref={host('/webstories/countries/' + country + '/cities/' + city + '/locations/' + location)} sort={sort} /> }
 
       { instagramPhotos.filter(p => !p.file_type).length > 1 && sortPicker('photos') }
 

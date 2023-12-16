@@ -143,8 +143,12 @@ export default async function Country({ params: { theHashtag }, searchParams }) 
   const expandGalleries = expand;
   let sort = searchParams.sort && ['asc', 'desc', 'random'].includes(searchParams.sort) && searchParams.sort || 'desc';
 
-  if (!searchParams.sort && expand === 'webstories') {
-    sort = 'asc';
+  if (expand === 'webstories') {
+    if (!searchParams.sort || sort === 'desc') {
+      sort = 'asc';
+    } else if (sort === 'asc') {
+      sort = 'desc';
+    }
   }
 
   const cacheRef = `/caches/hashtags/hashtags/${hashtag}/sort/${sort === 'asc' ? 'asc' : 'desc'}`;
@@ -281,7 +285,7 @@ export default async function Country({ params: { theHashtag }, searchParams }) 
 
       { instagramStories.length > 1 && sortPicker('stories') }
 
-      { instagramStories.length > 0 && <Scroller title="Stories" items={instagramStories} isStories webStoriesHref={host('/webstories/hashtags/' + hashtag)} /> }
+      { instagramStories.length > 0 && <Scroller title="Stories" items={instagramStories} isStories webStoriesHref={host('/webstories/hashtags/' + hashtag)} sort={sort} /> }
 
       { instagramPhotos.filter(p => !p.file_type).length > 1 && sortPicker('photos') }
 

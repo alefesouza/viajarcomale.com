@@ -113,9 +113,14 @@ export default async function Highlight({ params: { country, city, theHighlight 
 
   let sort = searchParams.sort && ['asc', 'desc', 'random'].includes(searchParams.sort) && searchParams.sort || 'desc';
 
-  if (!searchParams.sort && theHighlight && theHighlight[1] === 'webstories') {
-    sort = 'asc';
+  if (theHighlight && theHighlight[1] === 'webstories') {
+    if (!searchParams.sort || sort === 'desc') {
+      sort = 'asc';
+    } else if (sort === 'asc') {
+      sort = 'desc';
+    }
   }
+
 
   const cacheRef = `/caches/highlights/highlights/${highlightId}/sort/${sort === 'asc' ? 'asc' : 'desc'}`;
 
@@ -209,7 +214,7 @@ export default async function Highlight({ params: { country, city, theHighlight 
         </Link>
 
         <div style={{display: 'flex', gap: 16}}>
-          {<a href={host('/webstories/countries/' + country + '/cities/' + city + '/highlights/' + highlightId)} target="_blank" title={i18n('Play')}>
+          {<a href={host('/webstories/countries/' + country + '/cities/' + city + '/highlights/' + highlightId + (sort !== 'desc' ? '?sort=' + sort : ''))} target="_blank" title={i18n('Play')}>
             <img src={host('/images/play.svg')} width={32} height={32} alt={i18n('Play')} />
           </a>}
           <ShareButton />
@@ -222,7 +227,7 @@ export default async function Highlight({ params: { country, city, theHighlight 
     </div>
 
     <div className="center_link" style={{ marginTop: 28 }}>
-      <a href={host('/webstories/countries/' + country + '/cities/' + city + '/highlights/' + highlight)} target="_blank">{i18n('Open in Stories format')}</a>
+      <a href={host('/webstories/countries/' + country + '/cities/' + city + '/highlights/' + highlight + (sort !== 'desc' ? '?sort=' + sort : '') )} target="_blank">{i18n('Open in Stories format')}</a>
     </div>
 
     <div className={ styles.galleries }>
