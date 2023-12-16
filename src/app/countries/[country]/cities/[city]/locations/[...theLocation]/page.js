@@ -58,8 +58,12 @@ export async function generateMetadata({ params: { country, city, theLocation } 
   const mediaRef = await db.collection('countries').doc(country).collection('locations').doc(location).get();
   const theMedia = mediaRef.data();
 
+  if (!theMedia) {
+    redirect(`/countries/${country}/cities/${city}`);
+  }
+
   const finalLocation = (theCity ? isBR && theCity.name_pt ? theCity.name_pt + ' - ' : theCity.name + ' - ' : '') + i18n(countryData.name);
-  const title = theMedia.name + ' - ' + finalLocation + ' - ' + (isWebStories ? 'Web Stories - ' : '') + SITE_NAME;
+  const title = (isBR && theMedia.name_pt ? theMedia.name_pt : theMedia.name) + (theMedia.alternative_names ? ' (' + theMedia.alternative_names.join(', ') + ')' : '') + ' - ' + finalLocation + ' - ' + (isWebStories ? 'Web Stories - ' : '') + SITE_NAME;
   const description = i18n('Photos and videos taken by Viajar com Alê in :location:', {
     location: theMedia.name,
   });
@@ -195,9 +199,10 @@ export default async function Country({ params: { country, city, theLocation }, 
 
   if (expand == 'webstories') {
     const finalLocation = (theCity ? isBR && theCity.name_pt ? theCity.name_pt + ' - ' : theCity.name + ' - ' : '') + i18n(countryData.name);
-    const title = theMedia.name + ' - ' + finalLocation;
+    const storyTitle = (isBR && theMedia.name_pt ? theMedia.name_pt : theMedia.name) + (theMedia.alternative_names ? ' (' + theMedia.alternative_names.join(', ') + ')' : '');
+    const title = storyTitle  + ' - ' + finalLocation;
     
-    return <WebStories title={title} storyTitle={theMedia.name} items={instagramStories} />
+    return <WebStories title={title} storyTitle={storyTitle} items={instagramStories} />
   }
 
   let expandedList = [];
@@ -228,16 +233,21 @@ export default async function Country({ params: { country, city, theLocation }, 
   return <div>
     <div className="container">
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <Link href="/" id="back-button" className={ styles.history_back_button } scroll={false}>
+        <Link href={`/countries/${country}/cities/${city}`} id="back-button" className={ styles.history_back_button } scroll={false}>
           <img src="/images/back.svg" alt={i18n('Back')} width="32px"></img>
         </Link>
 
-        <ShareButton />
+        <div style={{display: 'flex', gap: 16}}>
+          {<a href={`https://www.google.com/maps/search/${theMedia.name}/@${theMedia.latitude},${theMedia.longitude},13z`} target="_blank" title={i18n('Open in Google Maps')}>
+            <img src={host('/images/google-maps.svg')} width={32} height={32} alt={i18n('Google Maps logo')} />
+          </a>}
+          <ShareButton />
+        </div>
       </div>
     </div>
     
     <div className="container-fluid">
-      <h2>{theMedia.name}{theMedia.alternative_names && ' (' + theMedia.alternative_names.join(', ') + ')'} - {isBR && theCity.name_pt ? theCity.name_pt : theCity.name} - {i18n(countryData.name)} {countryData.flag}</h2>
+      <h2>{isBR && theMedia.name_pt ? theMedia.name_pt : theMedia.name}{theMedia.alternative_names && ' (' + theMedia.alternative_names.join(', ') + ')'} - <Link href={`/countries/${country}/cities/${city}`} style={{textDecoration: 'underline'}}>{isBR && theCity.name_pt ? theCity.name_pt : theCity.name}</Link> - <Link href={`/countries/${country}`} style={{textDecoration: 'underline'}}>{i18n(countryData.name)}</Link> {countryData.flag}</h2>
     </div>
 
     <div className={ styles.galleries }>

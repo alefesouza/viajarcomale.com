@@ -13,6 +13,12 @@ const NavbarLinks = () => {
     <li className={'nav-item' + (headersList.get('x-pathname') === '/countries' ? ' active' : '')}>
       <Link className="nav-link" href="/countries">{i18n('Albums')}</Link>
     </li>
+    <li className={'nav-item' + (headersList.get('x-pathname') === '/map' ? ' active' : '')}>
+      <Link className="nav-link" href="/map">{i18n('Map')}</Link>
+    </li>
+    <li className={'nav-item' + (headersList.get('x-pathname') === '/hashtags' ? ' active' : '')}>
+      <Link className="nav-link" href="/hashtags">{i18n('Hashtags')}</Link>
+    </li>
   </ul>
 }
 

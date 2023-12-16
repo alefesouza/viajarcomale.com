@@ -103,11 +103,13 @@ export default function RootLayout({ children }) {
   </>
 
   return (
-    <html lang={ i18n('en') } amp={isAMP ? 'true' : null}>
+    <html lang={ i18n('en') }>
 
       {!isAMP && <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         {sharedTags}
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.6/viewer.min.css" />
 
         {pathname === '/' &&
           <>
@@ -150,7 +152,7 @@ export default function RootLayout({ children }) {
           <div className="container" style={{ display: 'flex', alignItems: 'center', paddingLeft: 0, paddingRight: 0 }}>
             <Link className="navbar-brand" href="/">
               <img src="/icons/96x96.png" width={48} height={48} alt={i18n('Viajar com Alê Icon')} />
-              {SITE_NAME}
+              <span className="site-name">{SITE_NAME}</span>
             </Link>
 
             <NavbarLinks />

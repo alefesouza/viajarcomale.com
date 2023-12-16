@@ -47,7 +47,7 @@ export async function generateMetadata({ params: { theHashtag } }) {
   }
 
   if (!hashtagPt && !hashtagEn) {
-    redirect('/');
+    redirect('/hashtags');
   }
 
   const finalHashtag = hashtagPt || hashtagEn;
@@ -137,7 +137,7 @@ export default async function Country({ params: { theHashtag }, searchParams }) 
     });
 
     if (!photos.length) {
-      redirect('/');
+      redirect('/hashtags');
     }
 
     if (!isRandom && !cache.exists) {
@@ -222,7 +222,7 @@ export default async function Country({ params: { theHashtag }, searchParams }) 
   return <div>
     <div className="container">
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <Link href="/" id="back-button" className={ styles.history_back_button } scroll={false}>
+        <Link href="/hashtags" id="back-button" className={ styles.history_back_button } scroll={false}>
           <img src="/images/back.svg" alt={i18n('Back')} width="32px"></img>
         </Link>
 
