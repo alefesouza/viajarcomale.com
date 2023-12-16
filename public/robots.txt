@@ -1,0 +1,13 @@
+User-agent: *
+Disallow: /*?*sort=
+Disallow: /*?*shuffle=
+Disallow: /*?*indexes=
+Disallow: /*?*fixer=
+
+User-agent: AwarioRssBot
+User-agent: AwarioSmartBot
+User-agent: AwarioBot
+User-agent: MJ12bot
+User-agent: AhrefsBot
+User-agent: SemrushBot
+Disallow: /

@@ -6,7 +6,7 @@ export async function GET(req) {
   const host = useHost();
   const { pathname } = new URL(req.url);
 
-  const request = await fetch(host(pathname.replace('/webstories', '') + '/webstories'));
+  const request = await fetch(host(pathname.replace('/webstories', '') + '/webstories') + '?fixer=true');
   const data = await request.text();
 
   let $ = require('cheerio').load(data);
