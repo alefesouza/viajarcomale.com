@@ -50,8 +50,6 @@ function getSelectedMedia(media, theMedia, country, city) {
 
 export async function generateMetadata({ params: { country, city, media } }) {
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  const i18n = useI18n();
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   const host = useHost();
   const isBR = host().includes('viajarcomale.com.br');
 
@@ -89,11 +87,7 @@ export async function generateMetadata({ params: { country, city, media } }) {
 
   const { title, description } = getMetadata(theMedia, isBR);
 
-  let image = FILE_DOMAIN_500 + theMedia.file;
-
-  if (theMedia.file.includes('.mp4')) {
-    image = FILE_DOMAIN_500 + theMedia.file.replace('.mp4', '-thumb.png');
-  }
+  let image = FILE_DOMAIN + theMedia.file.replace('.mp4', '-thumb.png');
 
   if (theMedia.type === 'instagram-story') {
     image = FILE_DOMAIN_SQUARE + theMedia.file.replace('.mp4', '-thumb.png');
@@ -101,22 +95,22 @@ export async function generateMetadata({ params: { country, city, media } }) {
 
   const images = [{
     url: image,
-    width: theMedia.type === 'instagram-story' ? theMedia.width : 500,
-    height: theMedia.type === 'instagram-story' ? theMedia.width : Math.round((theMedia.height / theMedia.width) * 500),
+    width: theMedia.width,
+    height: theMedia.type === 'instagram-story' ? theMedia.width : theMedia.height,
     type: theMedia.file.includes('.png') ? 'image/png' : 'image/jpeg',
   }];
-  
+
   return {
     title,
-    description: description,
+    description,
     openGraph: {
       title,
-      description: description,
+      description,
       images,
     },
     twitter: {
       title,
-      description: description,
+      description,
       images,
     },
     other: {

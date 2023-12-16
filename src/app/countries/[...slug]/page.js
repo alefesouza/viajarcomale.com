@@ -4,7 +4,7 @@ import useHost from '@/app/hooks/use-host';
 import Link from 'next/link';
 import { getFirestore } from 'firebase-admin/firestore';
 import styles from '../page.module.css';
-import { ITEMS_PER_PAGE, SITE_NAME } from '@/app/utils/constants';
+import { FILE_DOMAIN, FILE_DOMAIN_SQUARE, ITEMS_PER_PAGE, SITE_NAME } from '@/app/utils/constants';
 import Pagination from '@/app/components/pagination';
 import StructuredBreadcrumbs from '@/app/components/structured-breadcrumbs';
 import arrayShuffle from '@/app/utils/array-shuffle';
@@ -86,19 +86,50 @@ export async function generateMetadata({ params: { slug }, searchParams }) {
     location
   });
 
+  let coverSnapshot = null;
+  let cover = null;
+
+  if (city) {
+   coverSnapshot = await db.collection('countries').doc(countryData.slug).collection('medias').where('type', '==', 'instagram-highlight').where('city', '==', city).limit(1).get();
+  } else {
+    coverSnapshot = await db.collection('countries').doc(countryData.slug).collection('medias').where('type', '==', 'instagram-highlight').orderBy('date', 'desc').limit(1).get();
+  }
+
+  coverSnapshot.forEach((photo) => {
+    const data = photo.data();
+
+    cover = data;
+  });
+
+  if (!cover) {
+    redirect('/hashtags');
+  }
+
+  let image = FILE_DOMAIN_SQUARE + cover.file.replace('.mp4', '-thumb.png');
+
+  const images = [{
+    url: image,
+    width: cover.width,
+    height: cover.type === 'instagram-story' ? cover.width : cover.height,
+    type: cover.file.includes('.png') ? 'image/png' : 'image/jpeg',
+  }];
+
   return {
     title,
     description,
     openGraph: {
       title,
       description,
+      images,
     },
     twitter: {
       title,
       description,
+      images,
     },
     other: {
       title,
+      image,
     },
   }
 }
