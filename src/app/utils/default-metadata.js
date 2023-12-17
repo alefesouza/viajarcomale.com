@@ -55,7 +55,13 @@ export default function defaultMetadata(title, description, media, isSingle) {
         height: media.height,
         type: 'video/mp4',
       }] : null),
-      type: isSingle && media && media.file.includes('.mp4') ? 'video.other' : 'website',
+      type: isSingle && media && media.file.includes('.mp4') ? 'video.movie' : 'website',
+      ...isSingle && media && media.file.includes('.mp4') ? {
+        duration: Math.ceil(media.duration),
+        releaseDate: media.date.replace(' ', 'T') + '+03:00',
+        directors: ['Alefe Souza - ' + SITE_NAME],
+        tags: (isBR && media.hashtags_pt ? media.hashtags_pt : media.hashtags || []),
+      } : null,
     },
     twitter: {
       title: title || defaultTitle,
@@ -65,12 +71,6 @@ export default function defaultMetadata(title, description, media, isSingle) {
     other: {
       title: title || defaultTitle,
       image: images[0].url,
-      ...isSingle && media && media.file.includes('.mp4') ? {
-        'video:duration': Math.ceil(media.duration),
-        'video:release_data': media.date.replace(' ', 'T') + '+03:00',
-        'video:director': 'Alefe Souza - ' + SITE_NAME,
-        'video:tag': ((isBR && media.hashtags_pt ? media.hashtags_pt : media.hashtags || []).join(', ')),
-      } : null,
     },
     alternates: {
       canonical,
