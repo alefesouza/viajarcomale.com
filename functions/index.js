@@ -1,5 +1,5 @@
 const { onDocumentCreated, onDocumentUpdated } = require('firebase-functions/v2/firestore');
-const { getFirestore } = require('firebase-admin/firestore');
+const { getFirestore, FieldValue } = require('firebase-admin/firestore');
 const admin = require('firebase-admin');
 
 admin.initializeApp();
@@ -47,6 +47,35 @@ exports.onMediaUpdated = onDocumentUpdated('/countries/{countryId}/medias/{media
         name: data.name,
         slug: data.slug,
       });
+
+      if (!oldValue.locations || !oldValue.locations.includes(data.slug)) {
+        let key = '';
+
+        switch (newValue.type) {
+          case 'instagram':
+            key = 'posts';
+            break;
+          case 'instagram-story':
+            key = 'stories';
+            break;
+          case '360photo':
+            key = 'photos360';
+            break;
+          case 'youtube':
+            key = 'videos';
+            break;
+          case 'short-video':
+            key = 'shorts';
+            break;
+        }
+
+        doc.ref.update({
+          totals: {
+            ...data.totals,
+            [key]: (data.totals[key] || 0) + 1, 
+          }
+        })
+      }
     });
 
     update.location_data = locations;
@@ -56,29 +85,36 @@ exports.onMediaUpdated = onDocumentUpdated('/countries/{countryId}/medias/{media
 });
 
 exports.onLocationUpdated = onDocumentUpdated('/countries/{countryId}/locations/{locationId}', async (event) => {
+  const oldValue = event.data.before.data();
   const newValue = event.data.after.data();
 
   const db = getFirestore();
   const batch = db.batch();
-  const mediasSnapshot = await db.collection('countries').doc(newValue.country).collection('medias').where('locations', 'array-contains', newValue.slug).get();
 
-  mediasSnapshot.forEach((doc) => {
-    let locationData = doc.data().location_data;
+  if (oldValue.name !== newValue.name) {
+    const mediasSnapshot = await db.collection('countries').doc(newValue.country).collection('medias').where('locations', 'array-contains', newValue.slug).get();
 
-    if (locationData) {
-      const locationIndex = locationData.findIndex(l => l.slug === newValue.slug);
+    mediasSnapshot.forEach((doc) => {
+      let locationData = doc.data().location_data;
 
-      if (locationData[locationIndex]) {
-        locationData[locationIndex] = newValue;
+      if (locationData) {
+        const locationIndex = locationData.findIndex(l => l.slug === newValue.slug);
+
+        if (locationData[locationIndex]) {
+          locationData[locationIndex] = newValue;
+        }
+      } else {
+        locationData = [newValue];
       }
-    } else {
-      locationData = [newValue];
-    }
 
-    batch.update(doc.ref, {
-      location_data: locationData,
-    })
-  });
+      batch.update(doc.ref, {
+        location_data: locationData.map((l) => ({
+          name: l.name,
+          slug: l.slug,
+        })),
+      })
+    });
+  }
 
   return batch.commit();
 });
