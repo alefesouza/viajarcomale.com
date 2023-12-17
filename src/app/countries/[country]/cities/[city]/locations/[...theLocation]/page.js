@@ -13,6 +13,7 @@ import WebStories from '@/app/components/webstories';
 import logAccess from '@/app/utils/log-access';
 import getSort from '@/app/utils/get-sort';
 import StructuredBreadcrumbs from '@/app/components/structured-breadcrumbs';
+import defaultMetadata from '@/app/utils/default-metadata';
 
 async function getCountry(country, city) {
   const db = getFirestore();
@@ -97,36 +98,8 @@ export async function generateMetadata({ params: { country, city, theLocation },
     redirect(`/countries/${country}/cities/${city}`);
   }
 
-  let image = FILE_DOMAIN + cover.file.replace('.mp4', '-thumb.png');
-
-  if (cover.type === 'instagram-story') {
-    image = FILE_DOMAIN_SQUARE + cover.file.replace('.mp4', '-thumb.png');
-  }
-
-  const images = [{
-    url: image,
-    width: cover.width,
-    height: cover.type === 'instagram-story' ? cover.width : cover.height,
-    type: cover.file.includes('.png') ? 'image/png' : 'image/jpeg',
-  }];
-
   return {
-    title,
-    description,
-    openGraph: {
-      title,
-      description,
-      images,
-    },
-    twitter: {
-      title,
-      description,
-      images,
-    },
-    other: {
-      title,
-      image,
-    },
+    ...defaultMetadata(title, description, cover),
     ...theMedia?.totals?.stories > 0 && !isWebStories ? {
     icons: {
       // Why Next.js doesn't just allow us to create custom <link> tags directly...

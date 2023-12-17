@@ -6,6 +6,7 @@ import useI18n from '@/app/hooks/use-i18n';
 import { SITE_NAME } from '../utils/constants';
 import Link from 'next/link';
 import ShareButton from '../components/share-button';
+import defaultMetadata from '../utils/default-metadata';
 
 export async function generateMetadata() {
   // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -14,21 +15,7 @@ export async function generateMetadata() {
   const title = i18n('Map') + ' - ' + SITE_NAME;
   const description = i18n('The map of the places I have been.');
   
-  return {
-    title,
-    description,
-    openGraph: {
-      title,
-      description,
-    },
-    twitter: {
-      title,
-      description,
-    },
-    other: {
-      title,
-    },
-  }
+  return defaultMetadata(title, description);
 }
 
 export default async function MapPage() {

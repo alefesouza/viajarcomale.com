@@ -14,6 +14,7 @@ import removeDiacritics from '@/app/utils/remove-diacritics';
 import logAccess from '@/app/utils/log-access';
 import getSort from '@/app/utils/get-sort';
 import StructuredBreadcrumbs from '@/app/components/structured-breadcrumbs';
+import defaultMetadata from '@/app/utils/default-metadata';
 
 export async function generateMetadata({ params: { theHashtag }, searchParams }) {
   // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -84,35 +85,13 @@ export async function generateMetadata({ params: { theHashtag }, searchParams })
     redirect('/hashtags');
   }
 
-  let image = FILE_DOMAIN + cover.file.replace('.mp4', '-thumb.png');
-
-  if (cover.type === 'instagram-story') {
-    image = FILE_DOMAIN_SQUARE + cover.file.replace('.mp4', '-thumb.png');
-  }
-
-  const images = [{
-    url: image,
-    width: cover.width,
-    height: cover.type === 'instagram-story' ? cover.width : cover.height,
-    type: cover.file.includes('.png') ? 'image/png' : 'image/jpeg',
-  }];
+  const defaultMeta = defaultMetadata(title, description, cover);
 
   return {
-    title,
-    description,
+    ...defaultMeta,
     openGraph: {
-      title,
-      description,
-      images,
-    },
-    twitter: {
-      title,
-      description,
-      images,
-    },
-    other: {
-      title,
-      image,
+      ...defaultMeta.openGraph,
+      url: isBR ? ptUrl : enUrl,
     },
     alternates: {
       canonical: isBR ? ptUrl : enUrl,

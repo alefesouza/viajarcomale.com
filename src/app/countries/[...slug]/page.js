@@ -13,6 +13,7 @@ import randomIntFromInterval from '@/app/utils/random-int';
 import InstagramMedia from '@/app/components/instagram-media';
 import ShareButton from '@/app/components/share-button';
 import logAccess from '@/app/utils/log-access';
+import defaultMetadata from '@/app/utils/default-metadata';
 
 function getDataFromRoute(slug, searchParams) {
   const [country, path1, path2, path3, path4, path5] = slug;
@@ -105,33 +106,7 @@ export async function generateMetadata({ params: { slug }, searchParams }) {
     redirect('/hashtags');
   }
 
-  let image = FILE_DOMAIN_SQUARE + cover.file.replace('.mp4', '-thumb.png');
-
-  const images = [{
-    url: image,
-    width: cover.width,
-    height: cover.type === 'instagram-story' ? cover.width : cover.height,
-    type: cover.file.includes('.png') ? 'image/png' : 'image/jpeg',
-  }];
-
-  return {
-    title,
-    description,
-    openGraph: {
-      title,
-      description,
-      images,
-    },
-    twitter: {
-      title,
-      description,
-      images,
-    },
-    other: {
-      title,
-      image,
-    },
-  }
+  return defaultMetadata(title, description, cover);
 }
 
 export default async function Country({ params: { slug }, searchParams }) {

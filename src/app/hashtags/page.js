@@ -7,6 +7,7 @@ import Link from 'next/link';
 import ShareButton from '../components/share-button';
 import HashtagCloud from '../components/hashtag-cloud';
 import shuffle from '../utils/array-shuffle';
+import defaultMetadata from '../utils/default-metadata';
 
 export async function generateMetadata() {
   // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -15,21 +16,7 @@ export async function generateMetadata() {
   const title = 'Hashtags' + ' - ' + SITE_NAME;
   const description = i18n('Navigate through my website with main and random hashtags.');
   
-  return {
-    title,
-    description,
-    openGraph: {
-      title,
-      description,
-    },
-    twitter: {
-      title,
-      description,
-    },
-    other: {
-      title,
-    },
-  }
+  return defaultMetadata(title, description);
 }
 
 export default async function MapPage() {

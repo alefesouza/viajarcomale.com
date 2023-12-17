@@ -11,6 +11,7 @@ import StructuredBreadcrumbs from '@/app/components/structured-breadcrumbs';
 import Script from 'next/script';
 import Pagination from '@/app/components/pagination';
 import getMetadata from '@/app/utils/get-metadata';
+import defaultMetadata from '@/app/utils/default-metadata';
 
 async function getCountry(country, city) {
   const db = getFirestore();
@@ -87,37 +88,7 @@ export async function generateMetadata({ params: { country, city, media } }) {
 
   const { title, description } = getMetadata(theMedia, isBR);
 
-  let image = FILE_DOMAIN + theMedia.file.replace('.mp4', '-thumb.png');
-
-  if (theMedia.type === 'instagram-story') {
-    image = FILE_DOMAIN_SQUARE + theMedia.file.replace('.mp4', '-thumb.png');
-  }
-
-  const images = [{
-    url: image,
-    width: theMedia.width,
-    height: theMedia.type === 'instagram-story' ? theMedia.width : theMedia.height,
-    type: theMedia.file.includes('.png') ? 'image/png' : 'image/jpeg',
-  }];
-
-  return {
-    title,
-    description,
-    openGraph: {
-      title,
-      description,
-      images,
-    },
-    twitter: {
-      title,
-      description,
-      images,
-    },
-    other: {
-      title,
-      image,
-    },
-  }
+  return defaultMetadata(title, description, theMedia);
 }
 
 export default async function Country({ params: { country, city, media } }) {

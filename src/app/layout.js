@@ -11,52 +11,10 @@ import Footer from './components/footer';
 import Autocomplete from './components/autocomplete';
 import Link from 'next/link';
 import NavbarLinks from './components/navbar-links';
+import defaultMetadata from './utils/default-metadata';
 
 export async function generateMetadata() {
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const i18n = useI18n();
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const host = useHost();
-  const isBR = host().includes('viajarcomale.com.br');
-  const headersList = headers();
-  const isWebStories = headersList.get('x-pathname').includes('/webstories');
-  let pathname =  (isWebStories ? '/webstories' : '') + headersList.get('x-pathname').replace('/webstories', '');
-
-  const title = SITE_NAME;
-  const description = i18n('Travel photos and links to Viajar com Alê social networks.');
-  const images = [{
-    url: host('cover.jpg'),
-    width: 1280,
-    height: 630,
-    type: 'image/jpg',
-  }];
-
-  return {
-    title,
-    description,
-    openGraph: {
-      title,
-      description,
-      images,
-    },
-    twitter: {
-      title,
-      description,
-      images,
-    },
-    other: {
-      title,
-      image: images[0].url,
-    },
-    alternates: {
-      canonical: new URL(pathname, isBR ? 'https://viajarcomale.com.br' : 'https://viajarcomale.com').toString(),
-      languages: {
-        'x-default': 'https://viajarcomale.com' + pathname,
-        'en': 'https://viajarcomale.com' + pathname,
-        'pt': 'https://viajarcomale.com.br' + pathname,
-      },
-    },
-  }
+  return defaultMetadata();
 }
 
 export default function RootLayout({ children }) {
@@ -92,7 +50,6 @@ export default function RootLayout({ children }) {
 
     <meta property="og:locale" content={i18n('en_US')} />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content={ host('') } />
     <meta property="og:site_name" content={SITE_NAME} />
     <meta property='article:author' content='https://www.facebook.com/viajarcomale' />
     <meta property='article:publisher' content='https://www.facebook.com/viajarcomale' />

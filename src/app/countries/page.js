@@ -5,6 +5,7 @@ import Link from 'next/link';
 import useHost from '../hooks/use-host';
 import { SITE_NAME } from '../utils/constants';
 import ShareButton from '../components/share-button';
+import defaultMetadata from '../utils/default-metadata';
 
 export async function generateMetadata() {
   // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -13,21 +14,7 @@ export async function generateMetadata() {
   const title = i18n('Albums') + ' - ' + SITE_NAME;
   const description = i18n('Choose which country to travel with me.');
 
-  return {
-    title,
-    description,
-    openGraph: {
-      title,
-      description,
-    },
-    twitter: {
-      title,
-      description,
-    },
-    other: {
-      title,
-    },
-  }
+  return defaultMetadata(title, description);
 }
 
 export default function Countries() {
