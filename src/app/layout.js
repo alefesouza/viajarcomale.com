@@ -49,7 +49,6 @@ export default function RootLayout({ children }) {
     <link rel="apple-touch-icon" sizes="180x180" href={ host('icons/180x180.jpg') } />
 
     <meta property="og:locale" content={i18n('en_US')} />
-    <meta property="og:type" content="website" />
     <meta property="og:site_name" content={SITE_NAME} />
     <meta property='article:author' content='https://www.facebook.com/viajarcomale' />
     <meta property='article:publisher' content='https://www.facebook.com/viajarcomale' />

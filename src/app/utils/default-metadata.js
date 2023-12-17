@@ -4,7 +4,7 @@ import { headers } from 'next/headers';
 import { FILE_DOMAIN, FILE_DOMAIN_SQUARE, SITE_NAME } from './constants';
 import getMetadata from './get-metadata';
 
-export default function defaultMetadata(title, description, media) {
+export default function defaultMetadata(title, description, media, isSingle) {
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const i18n = useI18n();
   // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -48,12 +48,13 @@ export default function defaultMetadata(title, description, media) {
       title: title || defaultTitle,
       description: description || defaultDescription,
       images,
-      videos: (media && media.file.includes('.mp4') ? [{
-        url: media.file,
+      videos: (isSingle && media && media.file.includes('.mp4') ? [{
+        url: FILE_DOMAIN + media.file,
         width: media.width,
         height: media.height,
         type: 'video/mp4',
-      }] : null)
+      }] : null),
+      type: isSingle && media && media.file.includes('.mp4') ? 'video.other' : 'website',
     },
     twitter: {
       title: title || defaultTitle,
@@ -68,6 +69,14 @@ export default function defaultMetadata(title, description, media) {
     other: {
       title: title || defaultTitle,
       image: images[0].url,
+      'fb:app_id': '2951171431683266',
+      'fb:page_id': '61550287721638',
+      ...isSingle && media && media.file.includes('.mp4') ? {
+        'video:duration': Math.ceil(media.duration),
+        'video:release_data': media.date.replace(' ', 'T') + '+03:00',
+        'video:director': 'Alefe Souza - ' + SITE_NAME,
+        'video:tag': ((isBR && media.hashtags_pt ? media.hashtags_pt : media.hashtags || []).join(', ')),
+      } : null,
     },
     alternates: {
       canonical,

@@ -88,7 +88,7 @@ export async function generateMetadata({ params: { country, city, media } }) {
 
   const { title, description } = getMetadata(theMedia, isBR);
 
-  return defaultMetadata(title, description, theMedia);
+  return defaultMetadata(title, description, theMedia, media[1] || theMedia.type === 'instagram-story');
 }
 
 export default async function Country({ params: { country, city, media } }) {
@@ -160,6 +160,10 @@ export default async function Country({ params: { country, city, media } }) {
 
   const paginationBase = basePath + '/{page}';
 
+  const header = <>
+    <h2><Link href={ '/countries/' + country + '/cities/' + city } scroll={false} prefetch={false} style={{textDecoration: 'underline'}}>{isBR && theCity.name_pt ? theCity.name_pt : theCity.name}</Link> - <Link href={ '/countries/' + country } scroll={false} prefetch={false} style={{textDecoration: 'underline'}}>{i18n(countryData.name)}</Link> {countryData.flag}</h2>
+  </>
+
   return <div className="container">
     <div className="media_navigation">
       <Link href={ '/countries/' + country + '/cities/' + city + (theMedia.type === 'instagram-story' ? '/highlights/' + theMedia.highlight : '') + (mediaIndex ? '/medias/' + theMedia.id : '') } id="back-button" scroll={false} prefetch={false}>
@@ -170,9 +174,7 @@ export default async function Country({ params: { country, city, media } }) {
     </div>
 
     {!media[1] && theMedia.type !== 'instagram-story' && <div>
-      <Link href={ '/countries/' + country + '/cities/' + city } id="back-button" scroll={false} prefetch={false}>
-        <h2>{isBR && theCity.name_pt ? theCity.name_pt : theCity.name} - {i18n(countryData.name)} {countryData.flag}</h2>
-      </Link>
+      {header}
     </div>}
     
     <div className={ styles.media } style={{ marginTop: media[1] || theMedia.type === 'instagram-story' ? 14 : null }}>
@@ -186,7 +188,7 @@ export default async function Country({ params: { country, city, media } }) {
     </div>
 
     {(media[1] || theMedia.type === 'instagram-story') && <div style={{ textAlign: 'center' }}>
-      <h2><Link href={ '/countries/' + country + '/cities/' + city } scroll={false} prefetch={false} style={{textDecoration: 'underline'}}>{isBR && theCity.name_pt ? theCity.name_pt : theCity.name}</Link> - <Link href={ '/countries/' + country } scroll={false} prefetch={false} style={{textDecoration: 'underline'}}>{i18n(countryData.name)}</Link> {countryData.flag}</h2>
+      {header}
     </div>}
 
     <StructuredBreadcrumbs breadcrumbs={breadcrumbs} />

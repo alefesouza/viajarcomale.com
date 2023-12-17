@@ -212,7 +212,7 @@ export default async function Highlight({ params: { country, city, theHighlight 
     </div>
     
     <div className="container-fluid">
-      <h2>{i18n('Stories')} - {isBR && theCity.name_pt ? theCity.name_pt : theCity.name} - {i18n(countryData.name)} {countryData.flag}</h2>
+      <h2>{i18n('Stories')} - <Link href={ '/countries/' + country + '/cities/' + city } scroll={false} prefetch={false} style={{textDecoration: 'underline'}}>{isBR && theCity.name_pt ? theCity.name_pt : theCity.name}</Link> - <Link href={ '/countries/' + country } scroll={false} prefetch={false} style={{textDecoration: 'underline'}}>{i18n(countryData.name)}</Link> {countryData.flag}</h2>
     </div>
 
     <div className="center_link" style={{ marginTop: 28 }}>
