@@ -50,6 +50,8 @@ export default function RootLayout({ children }) {
 
     <meta property="og:locale" content={i18n('en_US')} />
     <meta property="og:site_name" content={SITE_NAME} />
+    <meta property="fb:app_id" content="2951171431683266" />
+    <meta property="fb:page_id" content="61550287721638" />
     <meta property='article:author' content='https://www.facebook.com/viajarcomale' />
     <meta property='article:publisher' content='https://www.facebook.com/viajarcomale' />
     <meta name="twitter:card" content="summary_large_image" />

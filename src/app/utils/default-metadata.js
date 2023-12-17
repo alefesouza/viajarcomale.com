@@ -70,8 +70,6 @@ export default function defaultMetadata(title, description, media, isSingle) {
     other: {
       title: title || defaultTitle,
       image: images[0].url,
-      'fb:app_id': '2951171431683266',
-      'fb:page_id': '61550287721638',
       ...isSingle && media && media.file.includes('.mp4') ? {
         'video:duration': Math.ceil(media.duration),
         'video:release_data': media.date.replace(' ', 'T') + '+03:00',
