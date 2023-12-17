@@ -88,7 +88,7 @@ export async function generateMetadata({ params: { country, city, theLocation },
   coverSnapshot.forEach((photo) => {
     const data = photo.data();
 
-    if (data.type !== 'instagram' || !cover) {
+    if ((cover && cover.type === 'instagram') || !cover) {
       cover = data;
     }
   });
