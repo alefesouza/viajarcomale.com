@@ -66,7 +66,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang={ i18n('en') }>
 
-      {!isAMP && <head>
+      {!isAMP && <head prefix={isMediaSingle ? 'video: https://ogp.me/ns/video#' : null}>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         {sharedTags}
 
