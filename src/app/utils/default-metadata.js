@@ -61,11 +61,6 @@ export default function defaultMetadata(title, description, media, isSingle) {
       title: title || defaultTitle,
       description: description || defaultDescription,
       images,
-      card: 'summary_large_image',
-      site: '@viajarcomale',
-      siteId: '1693645649789480960',
-      creator: '@alefesouza',
-      creatorId: '84677172',
     },
     other: {
       title: title || defaultTitle,

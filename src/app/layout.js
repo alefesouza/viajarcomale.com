@@ -56,6 +56,9 @@ export default function RootLayout({ children }) {
     <meta property='article:publisher' content='https://www.facebook.com/viajarcomale' />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@viajarcomale" />
+    <meta name="twitter:site:id" content="1693645649789480960" />
+    <meta name="twitter:creator" content="@alefesouza" />
+    <meta name="twitter:creator:id" content="84677172" />
 
     { isBR ? <meta name="facebook-domain-verification" content={process.env.NEXT_FACEBOOK_DOMAIN_VERIFICATION_BR} /> : <meta name="facebook-domain-verification" content={process.env.NEXT_FACEBOOK_DOMAIN_VERIFICATION} /> }
   </>
