@@ -12,6 +12,7 @@ import Script from 'next/script';
 import Pagination from '@/app/components/pagination';
 import getMetadata from '@/app/utils/get-metadata';
 import defaultMetadata from '@/app/utils/default-metadata';
+import logAccess from '@/app/utils/log-access';
 
 async function getCountry(country, city) {
   const db = getFirestore();
@@ -159,6 +160,8 @@ export default async function Country({ params: { country, city, media } }) {
   }
 
   const paginationBase = basePath + '/{page}';
+
+  logAccess(db, host('/medias/' + theMedia.id + (media[1] ? '/' + media[1] : '')));
 
   const header = <>
     <h2><Link href={ '/countries/' + country + '/cities/' + city } scroll={false} prefetch={false} style={{textDecoration: 'underline'}}>{isBR && theCity.name_pt ? theCity.name_pt : theCity.name}</Link> - <Link href={ '/countries/' + country } scroll={false} prefetch={false} style={{textDecoration: 'underline'}}>{i18n(countryData.name)}</Link> {countryData.flag}</h2>

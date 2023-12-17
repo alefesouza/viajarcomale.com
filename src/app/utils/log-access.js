@@ -13,5 +13,6 @@ export default function logAccess(db, path) {
       lastUserAgent: userAgent,
       isBot: userAgent.toLowerCase().includes('bot') || userAgent === 'node',
       lastIpAddress: headers().get('x-forwarded-for') || '',
+      lastAccess: (new Date()).toISOString(),
     }, {merge:true});
 }
