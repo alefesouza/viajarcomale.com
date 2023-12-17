@@ -228,7 +228,7 @@ export default async function Highlight({ params: { country, city, theHighlight 
             <h3>{i18n('Stories')}</h3>
           </div>
           
-          <div className={ styles.instagram_highlights_items }>
+          <div className="instagram_highlights_items">
             {instagramStories.map(p => <InstagramMedia key={p.id} media={p} isBR={isBR} hasPoster isListing />)}
           </div>
         </div>
