@@ -48,6 +48,7 @@ export default function defaultMetadata(title, description, media, isSingle) {
       title: title || defaultTitle,
       description: description || defaultDescription,
       images,
+      url: canonical,
       videos: (isSingle && media && media.file.includes('.mp4') ? [{
         url: FILE_DOMAIN + media.file,
         width: media.width,
