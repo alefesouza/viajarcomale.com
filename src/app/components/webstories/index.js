@@ -44,7 +44,7 @@ export default async function WebStories({title, storyTitle, items, highlightIte
         </amp-img>
       </amp-story-grid-layer>
       <amp-story-grid-layer template="vertical">
-        <amp-img src={host('/icons/96x96.png')} width={96} height={96}></amp-img>
+        <amp-img src={host('/icons/96x96.png')} srcSet={host('/icons/192x192.png') + ' 2x'} width={96} height={96}></amp-img>
         <div style={{ width: '100%', marginLeft: 6, marginRight: 6, }}>
           <h1 style={{...textStyles, fontSize: storyTitle.length >= 35 && needSplit ? 17 : storyTitle.length >= 30 && needSplit ? 22 : storyTitle.length >= 25 && needSplit ? 28 : 32}}>{storyTitle}</h1>
         </div>
