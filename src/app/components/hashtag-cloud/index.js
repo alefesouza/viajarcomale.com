@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import ReactWordcloud from '@/app/components/lib/react-wordcloud';
 
@@ -7,7 +7,12 @@ import 'tippy.js/animations/scale.css';
 import { useState } from 'react';
 import shuffle from '@/app/utils/array-shuffle';
 
-export default function HashtagCloud({ theHashtags, isRandom, shuffleText }) {
+export default function HashtagCloud({
+  theHashtags,
+  isRandom,
+  shuffleText,
+  isAndroid,
+}) {
   const [isLoading, setIsLoading] = useState(false);
   const [hashtags, setHashtags] = useState(theHashtags);
 
@@ -15,15 +20,16 @@ export default function HashtagCloud({ theHashtags, isRandom, shuffleText }) {
     onWordClick: () => {
       document.querySelector('#loader-spinner').style.display = 'block';
     },
-    getWordTooltip: word => `${word.text}`,
-  }
+    getWordTooltip: (word) => `${word.text}`,
+  };
 
   const handleShuffle = async () => {
     const today = new Date().toISOString().split('T')[0];
-    
+
     if (today === localStorage.getItem('hashtags_updated')) {
-      const hashtags = JSON.parse(localStorage.getItem('hashtags'))
-        .map(h => ({ text: '#' + h, value: 5 }));
+      const hashtags = JSON.parse(localStorage.getItem('hashtags')).map(
+        (h) => ({ text: '#' + h, value: 5 })
+      );
       setHashtags(shuffle(hashtags).slice(0, 100));
       return;
     }
@@ -33,38 +39,57 @@ export default function HashtagCloud({ theHashtags, isRandom, shuffleText }) {
     const result = await fetch('/api/hashtags');
     const data = await result.text();
 
-    const hashtags = JSON.parse(data).map(h => ({ text: '#' + h, value: 5 }));
+    setIsLoading(false);
+
+    const hashtags = JSON.parse(data).map((h) => ({ text: '#' + h, value: 5 }));
     setHashtags(shuffle(hashtags).slice(0, 100));
 
     localStorage.setItem('hashtags', data);
-    localStorage.setItem('hashtags_updated', new Date().toISOString().split('T')[0]);
-
-    setIsLoading(false);
-  }
+    localStorage.setItem(
+      'hashtags_updated',
+      new Date().toISOString().split('T')[0]
+    );
+  };
 
   const options = {
     fontFamily: 'Impact',
     fontSizes: [14, 40],
     scale: 'linear',
     spiral: 'archimedean',
+    fontWeight: isAndroid ? 'bold' : 'normal',
     rotations: 0,
     rotationAngles: [-180, 180],
     transitionDuration: 0,
   };
-  
-  return <div>
-    {isRandom && <div className="center_link" style={{ marginBottom: 16 }}>
-      <button onClick={handleShuffle} disabled={isLoading}>{shuffleText}</button>
-    </div>}
 
+  return (
     <div>
-      <ReactWordcloud
-        className="hashtag-cloud"
-        words={typeof window !== 'undefined' && window.innerWidth < 680 && isRandom ? hashtags.slice(0, 50) : hashtags}
-        options={options}
-        callbacks={callbacks}
-        size={[typeof window !== 'undefined' && window.innerWidth < 680 ? window.innerWidth - 24 : 680, isRandom ? 700 : 420]}
-      />
+      {isRandom && (
+        <div className="center_link" style={{ marginBottom: 16 }}>
+          <button onClick={handleShuffle} disabled={isLoading}>
+            {shuffleText}
+          </button>
+        </div>
+      )}
+
+      <div>
+        <ReactWordcloud
+          className="hashtag-cloud"
+          words={
+            typeof window !== 'undefined' && window.innerWidth < 680 && isRandom
+              ? hashtags.slice(0, 50)
+              : hashtags
+          }
+          options={options}
+          callbacks={callbacks}
+          size={[
+            typeof window !== 'undefined' && window.innerWidth < 680
+              ? window.innerWidth - 24
+              : 680,
+            isRandom ? 700 : 420,
+          ]}
+        />
+      </div>
     </div>
-  </div>
+  );
 }
