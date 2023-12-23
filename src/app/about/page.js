@@ -5,6 +5,7 @@ import useHost from '@/app/hooks/use-host';
 import useI18n from '@/app/hooks/use-i18n';
 import { SITE_NAME } from '../utils/constants';
 import defaultMetadata from '../utils/default-metadata';
+import logAccess from '../utils/log-access';
 
 export async function generateMetadata() {
   // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -24,6 +25,8 @@ export default async function About() {
   const db = getFirestore();
   const aboutRef = await db.doc('/about/about').get();
   const aboutData = aboutRef.data();
+
+  logAccess(db, host('/about'));
 
   return (
     <>

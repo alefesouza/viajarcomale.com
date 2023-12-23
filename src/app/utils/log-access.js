@@ -1,16 +1,15 @@
 import { FieldValue } from 'firebase-admin/firestore';
-import { headers, cookies } from 'next/headers';
+import { headers } from 'next/headers';
 import useHost from '@/app/hooks/use-host';
+import getCookie from './get-cookies';
 
 export default function logAccess(db, path) {
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const host = useHost();
   const headersList = headers();
   const userAgent = headersList.get('user-agent') || '';
-  const cookieStore = cookies();
   const ignoreAnalytics =
-    (cookieStore.get('__session') &&
-      cookieStore.get('__session').value === 'true') ||
+    getCookie('ignore_analytics') ||
     host().includes('localhost') ||
     (headersList.get('x-pathname').includes('/webstories') &&
       headersList.get('x-searchparams').includes('ignore_analytics=true'));

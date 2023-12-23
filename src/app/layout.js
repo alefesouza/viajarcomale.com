@@ -12,6 +12,7 @@ import Autocomplete from './components/autocomplete';
 import Link from 'next/link';
 import NavbarLinks from './components/navbar-links';
 import defaultMetadata from './utils/default-metadata';
+import getCookie from './utils/get-cookies';
 
 export async function generateMetadata() {
   return defaultMetadata();
@@ -33,11 +34,8 @@ export default function RootLayout({ children }) {
     paths[6] &&
     (paths[5] === 'stories' || paths[7]);
 
-  const cookieStore = cookies();
   const ignoreAnalytics =
-    (cookieStore.get('__session') &&
-      cookieStore.get('__session').value === 'true') ||
-    host().includes('localhost');
+    getCookie('ignore_analytics') || host().includes('localhost');
 
   const sharedTags = (
     <>
@@ -257,7 +255,7 @@ export default function RootLayout({ children }) {
       )}
 
       {!isAMP && (
-        <body className={isMediaSingle ? 'single-media-page' : null}>
+        <body className={[isMediaSingle ? 'single-media-page' : null, getCookie('window_controls_overlay') ? 'window-controls-overlay' : null].filter(c => c).join(' ')}>
           {!ignoreAnalytics && (
             <noscript>
               <iframe

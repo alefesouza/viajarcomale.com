@@ -427,19 +427,54 @@
   if ('windowControlsOverlay' in navigator) {
     const body = document.querySelector('body');
 
-    if (navigator.windowControlsOverlay.visible) {
-      document.querySelector('body').classList.add('window-controls-overlay');
+    function setCookie(name, value, days) {
+      var expires = '';
+      if (days) {
+        var date = new Date();
+        date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+        expires = '; expires=' + date.toUTCString();
+      }
+      document.cookie = name + '=' + (value || '') + expires + '; path=/';
+    }
+
+    function getCookie(name) {
+      var nameEQ = name + '=';
+      var ca = document.cookie.split(';');
+      for (var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+      }
+      return '';
     }
 
     navigator.windowControlsOverlay.addEventListener('geometrychange', () => {
       const isOverlayVisible = navigator.windowControlsOverlay.visible;
 
+      const session = getCookie('__session');
+      console.log(session);
+
       if (isOverlayVisible) {
         body.classList.add('window-controls-overlay');
+
+        if (!session.includes('window_controls_overlay')) {
+          setCookie(
+            '__session',
+            session + (session ? '&' : '') + 'window_controls_overlay%3Dtrue',
+            30
+          );
+        }
         return;
       }
 
       body.classList.remove('window-controls-overlay');
+      setCookie(
+        '__session',
+        session
+          .replace('&window_controls_overlay%3Dtrue', '')
+          .replace('window_controls_overlay%3Dtrue', ''),
+        30
+      );
     });
   }
 

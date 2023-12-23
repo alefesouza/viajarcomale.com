@@ -1,6 +1,6 @@
 import useHost from '@/app/hooks/use-host';
 import { redirect, permanentRedirect } from 'next/navigation';
-import { cookies } from 'next/headers';
+import getCookie from '@/app/utils/get-cookies';
 
 // Remove Next.js assets from Web Stories pages.
 export async function GET(req) {
@@ -8,11 +8,8 @@ export async function GET(req) {
   let { pathname, searchParams } = new URL(req.url);
   const sort = searchParams.get('sort');
 
-  const cookieStore = cookies();
   const ignoreAnalytics =
-    (cookieStore.get('__session') &&
-      cookieStore.get('__session').value === 'true') ||
-    host().includes('localhost');
+    getCookie('ignore_analytics') || host().includes('localhost');
 
   if (pathname.includes('/highlights/')) {
     const [, , , country, , city] = pathname.split('/');
