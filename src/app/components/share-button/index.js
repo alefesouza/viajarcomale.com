@@ -1,6 +1,6 @@
-'use client'
+'use client';
 
-import { SITE_NAME } from "@/app/utils/constants";
+import { SITE_NAME } from '@/app/utils/constants';
 import useI18nClient from '@/app/hooks/use-i18n-client';
 
 export default function ShareButton({ text, url }) {
@@ -19,10 +19,22 @@ export default function ShareButton({ text, url }) {
     }
 
     const clipBoard = navigator.clipboard;
-    clipBoard.writeText((text || document.title) + ' ' + (url || window.location.href)).then(() => {
-      alert(i18n('Link copied to clipboard.'));
-    });
-  }
+    clipBoard
+      .writeText((text || document.title) + ' ' + (url || window.location.href))
+      .then(() => {
+        alert(i18n('Link copied to clipboard.'));
+      });
+  };
 
-  return <div role="button" onClick={onShareClick} style={{height: 32}}><img src="/images/share.svg" alt={i18n('Share')} title={i18n('Share')} width="32px" style={{ cursor: 'pointer' }}></img></div>
+  return (
+    <div role="button" onClick={onShareClick} style={{ height: 32 }}>
+      <img
+        src="/images/share.svg"
+        alt={i18n('Share')}
+        title={i18n('Share')}
+        width="32px"
+        style={{ cursor: 'pointer' }}
+      ></img>
+    </div>
+  );
 }

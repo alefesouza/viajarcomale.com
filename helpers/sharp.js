@@ -14,12 +14,14 @@ async function* getFiles(dir) {
   }
 }
 
-;(async () => {
+(async () => {
   for await (const f of getFiles('./photos')) {
     sharp(f)
       .rotate()
       .resize(500)
       .jpeg({ mozjpeg: true })
-      .toFile(f.replace('/photos/', '/resize/'), (err, info) => { console.log(err) });
+      .toFile(f.replace('/photos/', '/resize/'), (err, info) => {
+        console.log(err);
+      });
   }
 })();

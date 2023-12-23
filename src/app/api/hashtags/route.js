@@ -9,10 +9,15 @@ export async function GET() {
   const host = useHost();
   const isBR = host().includes('viajarcomale.com.br');
   const db = getFirestore();
-  const allHashtagsRef = await db.collection('caches').doc('static_pages').collection('static_pages').doc('hashtags').get();
+  const allHashtagsRef = await db
+    .collection('caches')
+    .doc('static_pages')
+    .collection('static_pages')
+    .doc('hashtags')
+    .get();
   const allHashtags = allHashtagsRef.data();
   let theHashtags = [];
-  
+
   if (allHashtags.a_should_update) {
     const snapshot = await db.collection('hashtags').get();
     const hashtagDocs = [];
@@ -22,8 +27,10 @@ export async function GET() {
       hashtagDocs.push(data);
     });
 
-    const hashtags = hashtagDocs.map(h => h.name).filter(h => h)
-    const hashtagsPt = hashtagDocs.map(h => h.name_pt || h.name).filter(h => h);
+    const hashtags = hashtagDocs.map((h) => h.name).filter((h) => h);
+    const hashtagsPt = hashtagDocs
+      .map((h) => h.name_pt || h.name)
+      .filter((h) => h);
 
     theHashtags = isBR ? hashtagsPt : hashtags;
 

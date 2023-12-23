@@ -14,14 +14,14 @@ export async function generateMetadata() {
 
   const title = i18n('Map') + ' - ' + SITE_NAME;
   const description = i18n('The map of the places I have been.');
-  
+
   return defaultMetadata(title, description);
 }
 
 export default async function MapPage() {
   const i18n = useI18n();
   const host = useHost();
-  
+
   const cacheRef = '/caches/static_pages/static_pages/locations';
 
   const db = getFirestore();
@@ -40,7 +40,7 @@ export default async function MapPage() {
 
     db.doc(cacheRef).set({
       locations,
-      last_update: (new Date().toISOString()).split('T')[0],
+      last_update: new Date().toISOString().split('T')[0],
     });
   } else {
     locations = cache.data().locations;
@@ -48,18 +48,29 @@ export default async function MapPage() {
 
   logAccess(db, host('/map'));
 
-  return <div>
-    <div className="container">
-      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <Link href="/" id="back-button" scroll={false}>
-          <img src={host('/images/back.svg')} alt={i18n('Back')} width="32px"></img>
-        </Link>
+  return (
+    <div>
+      <div className="container">
+        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <Link href="/" id="back-button" scroll={false}>
+            <img
+              src={host('/images/back.svg')}
+              alt={i18n('Back')}
+              width="32px"
+            ></img>
+          </Link>
 
-        <ShareButton />
+          <ShareButton />
+        </div>
       </div>
-    </div>
 
-    <h2 style={{ textAlign: 'center' }}>{i18n('Places I have been')}</h2>
-    <LocationsMap locations={ locations } loadingText={i18n('Loading')} resetZoomText={i18n('Reset Zoom')} apiKey={process.env.NEXT_MAPS_API_KEY} />
-  </div>
+      <h2 style={{ textAlign: 'center' }}>{i18n('Places I have been')}</h2>
+      <LocationsMap
+        locations={locations}
+        loadingText={i18n('Loading')}
+        resetZoomText={i18n('Reset Zoom')}
+        apiKey={process.env.NEXT_MAPS_API_KEY}
+      />
+    </div>
+  );
 }

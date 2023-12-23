@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import Select, { components } from 'react-select';
 import useI18nClient from '@/app/hooks/use-i18n-client';
@@ -8,11 +8,18 @@ import arrayShuffle from '@/app/utils/array-shuffle';
 import { ITEMS_PER_PAGE } from '@/app/utils/constants';
 
 export default function Autocomplete() {
-  const router = useRouter()
+  const router = useRouter();
   const i18n = useI18nClient();
-  
-  const featuredHashtags = [i18n('#favorites'), i18n('#food'), i18n('#observationdeck')];
-  const featuredOptions = featuredHashtags.map((item) => ({ label: item, value: item }));
+
+  const featuredHashtags = [
+    i18n('#favorites'),
+    i18n('#food'),
+    i18n('#observationdeck'),
+  ];
+  const featuredOptions = featuredHashtags.map((item) => ({
+    label: item,
+    value: item,
+  }));
   const [allOptions, setAllOptions] = useState(featuredOptions);
   const [allHashtags, setAllHashtags] = useState(featuredOptions);
   const [randomHashtags, setRandomHashtags] = useState([]);
@@ -26,7 +33,7 @@ export default function Autocomplete() {
     option: (provided, state) => ({
       ...provided,
       backgroundColor: state.isSelected ? '#2096cc' : 'inherit',
-      '&:hover': { backgroundColor: state.isSelected ? '#2096cc' : '#deebff' }
+      '&:hover': { backgroundColor: state.isSelected ? '#2096cc' : '#deebff' },
     }),
   };
   const [customStyle, setCustomStyles] = useState(defaultStyling);
@@ -36,17 +43,18 @@ export default function Autocomplete() {
     const array = Array.from(Array(hashtags.length).keys());
     const randomArray = arrayShuffle(array).slice(0, ITEMS_PER_PAGE);
     const randomHashtags = randomArray.map((i) => hashtags[i]);
-    
+
     setRandomHashtags(randomHashtags);
     setAllOptions([...featuredOptions, ...randomHashtags]);
-  }
+  };
 
   const updateHashtags = async () => {
     const today = new Date().toISOString().split('T')[0];
-    
+
     if (today === localStorage.getItem('hashtags_updated')) {
-      const hashtags = JSON.parse(localStorage.getItem('hashtags'))
-        .map(h => ({ label: '#' + h, value: '#' + h }));
+      const hashtags = JSON.parse(localStorage.getItem('hashtags')).map(
+        (h) => ({ label: '#' + h, value: '#' + h })
+      );
       setAllHashtags(hashtags);
 
       if (!randomHashtags.length) {
@@ -60,15 +68,21 @@ export default function Autocomplete() {
     const result = await fetch('/api/hashtags');
     const data = await result.text();
 
-    const hashtags = JSON.parse(data).map(h => ({ label: '#' + h, value: '#' + h }));
+    const hashtags = JSON.parse(data).map((h) => ({
+      label: '#' + h,
+      value: '#' + h,
+    }));
     setAllHashtags([...featuredOptions, ...hashtags]);
 
     localStorage.setItem('hashtags', data);
-    localStorage.setItem('hashtags_updated', new Date().toISOString().split('T')[0]);
+    localStorage.setItem(
+      'hashtags_updated',
+      new Date().toISOString().split('T')[0]
+    );
     updateRandomHashtags(hashtags);
 
     setIsLoading(false);
-  }
+  };
 
   const onChange = (e) => {
     if (window.location.pathname === '/hashtags/' + e.value.replace('#', '')) {
@@ -78,22 +92,22 @@ export default function Autocomplete() {
     document.querySelector('#loader-spinner').style.display = 'block';
 
     router.push('/hashtags/' + e.value.replace('#', ''));
-  }
+  };
 
   const onInputChange = (e) => {
     setText(e);
 
     if (e.length <= 1) {
-      setAllOptions([...featuredOptions, ...randomHashtags])
+      setAllOptions([...featuredOptions, ...randomHashtags]);
       return;
     }
-  
+
     setAllOptions(allHashtags);
-  }
+  };
 
   const onFocus = () => {
     updateHashtags();
-  }
+  };
 
   useEffect(() => {
     if (!navigator.windowControlsOverlay) {
@@ -111,7 +125,9 @@ export default function Autocomplete() {
       option: (provided, state) => ({
         ...provided,
         backgroundColor: state.isSelected ? '#2096cc' : 'inherit',
-        '&:hover': { backgroundColor: state.isSelected ? '#2096cc' : '#deebff' }
+        '&:hover': {
+          backgroundColor: state.isSelected ? '#2096cc' : '#deebff',
+        },
       }),
       valueContainer: (provided) => ({
         ...provided,
@@ -135,7 +151,7 @@ export default function Autocomplete() {
 
     const geometrychange = () => {
       const isOverlayVisible = navigator.windowControlsOverlay.visible;
-  
+
       if (isOverlayVisible) {
         setCustomStyles(theCustomStyles);
         return;
@@ -144,24 +160,33 @@ export default function Autocomplete() {
       setCustomStyles(defaultStyling);
     };
 
-    navigator.windowControlsOverlay.addEventListener('geometrychange', geometrychange);
+    navigator.windowControlsOverlay.addEventListener(
+      'geometrychange',
+      geometrychange
+    );
 
     return () => {
       if (!navigator.windowControlsOverlay) {
         return;
       }
-      
-      navigator.windowControlsOverlay.removeEventListener('geometrychange', geometrychange);
-    }
+
+      navigator.windowControlsOverlay.removeEventListener(
+        'geometrychange',
+        geometrychange
+      );
+    };
   }, []);
 
   const onShuffleClick = (e) => {
-    if (e.nativeEvent instanceof PointerEvent && e.nativeEvent.pointerType === 'touch') {
+    if (
+      e.nativeEvent instanceof PointerEvent &&
+      e.nativeEvent.pointerType === 'touch'
+    ) {
       return;
     }
-    
+
     updateRandomHashtags(allHashtags);
-  }
+  };
 
   const Menu = (props) => {
     return (
@@ -170,22 +195,36 @@ export default function Autocomplete() {
           <div>
             <div>{props.children}</div>
           </div>
-          {text.length <= 1 && <div style={{ textAlign: 'center', padding: 5 }}>
-            <button
-              className="btn btn-primary"
-              style={{ width: '100%' }}
-              onClick={ onShuffleClick }
-              onTouchStart={ onShuffleClick }
-            >
-              {i18n('Shuffle')}
-            </button>
-          </div>}
+          {text.length <= 1 && (
+            <div style={{ textAlign: 'center', padding: 5 }}>
+              <button
+                className="btn btn-primary"
+                style={{ width: '100%' }}
+                onClick={onShuffleClick}
+                onTouchStart={onShuffleClick}
+              >
+                {i18n('Shuffle')}
+              </button>
+            </div>
+          )}
         </components.Menu>
       </>
     );
   };
 
-  return <div className="autocomplete">
-    <Select options={allOptions} placeholder={ i18n('Hashtag Search') } onInputChange={onInputChange} onChange={onChange} onFocus={onFocus} isLoading={isLoading} styles={customStyle} components={{ Menu }} instanceId={useId()} />
-  </div>
+  return (
+    <div className="autocomplete">
+      <Select
+        options={allOptions}
+        placeholder={i18n('Hashtag Search')}
+        onInputChange={onInputChange}
+        onChange={onChange}
+        onFocus={onFocus}
+        isLoading={isLoading}
+        styles={customStyle}
+        components={{ Menu }}
+        instanceId={useId()}
+      />
+    </div>
+  );
 }

@@ -7,5 +7,5 @@ items.slice(0, 40).forEach(async (item) => {
   const description = await translate(item.description, 'pt', 'en');
   item.description = description.translation;
 
-  fs.writeFileSync('helpers/items.json', JSON.stringify(items))
+  fs.writeFileSync('helpers/items.json', JSON.stringify(items));
 });

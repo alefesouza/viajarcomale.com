@@ -6,16 +6,28 @@ import useI18nClient from '@/app/hooks/use-i18n-client';
 import { useRouter } from 'next/navigation';
 
 export default function VisitedCountries() {
-  const router = useRouter()
+  const router = useRouter();
   const i18n = useI18nClient();
 
   return (
     <div
-      style={{ cursor: 'pointer', marginBottom: 20, width: '100%', maxWidth: 1300, marginLeft: 'auto', marginRight: 'auto' }}
+      style={{
+        cursor: 'pointer',
+        marginBottom: 20,
+        width: '100%',
+        maxWidth: 1300,
+        marginLeft: 'auto',
+        marginRight: 'auto',
+      }}
     >
       <Chart
         chartType="GeoChart"
-        data={[['Country'], ...countries.map((c) => [{ v: c.name, f: i18n(c.name) + ' ' + c.flag}])]}
+        data={[
+          ['Country'],
+          ...countries.map((c) => [
+            { v: c.name, f: i18n(c.name) + ' ' + c.flag },
+          ]),
+        ]}
         width="100%"
         options={{
           backgroundColor: 'transparent',
