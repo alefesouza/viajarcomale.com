@@ -32,6 +32,7 @@
     "sharp": "^0.32.6",
     "spawn-sync": "^2.0.0",
     "tinyduration": "^3.3.0",
+    "ua-parser-js": "^1.0.37",
     "workbox-window": "^7.0.0"
   }
 }

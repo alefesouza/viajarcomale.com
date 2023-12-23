@@ -25,9 +25,9 @@ export default function defaultMetadata(title, description, media, isSingle) {
     const metadata = getMetadata(media, isBR);
 
     images = [{
-      url: (media.type === 'instagram-story' ? FILE_DOMAIN_SQUARE : FILE_DOMAIN) + media.file.replace('.mp4', '-thumb.png'),
+      url: (media.type === 'instagram-story' || media.type === 'instagram-highlight' ? FILE_DOMAIN_SQUARE : FILE_DOMAIN) + media.file.replace('.mp4', '-thumb.png'),
       width: media.width,
-      height: media.type === 'instagram-story' ? media.width : media.height,
+      height: media.type === 'instagram-story' || media.type === 'instagram-highlight' ? media.width : media.height,
       type: media.file.includes('.png') ? 'image/png' : 'image/jpeg',
       alt: metadata.description,
     }];

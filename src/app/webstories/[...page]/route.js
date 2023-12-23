@@ -1,13 +1,43 @@
 import useHost from '@/app/hooks/use-host';
-import { redirect } from 'next/navigation';
+import { redirect, permanentRedirect } from 'next/navigation';
+import { cookies } from 'next/headers';
 
 // Remove Next.js assets from Web Stories pages.
 export async function GET(req) {
   const host = useHost();
-  const { pathname, searchParams } = new URL(req.url);
+  let { pathname, searchParams } = new URL(req.url);
   const sort = searchParams.get('sort');
 
-  const request = await fetch(host(pathname.replace('/webstories', '') + '/webstories') + '?fixer=true' + (sort !== 'desc' ? '&sort=' + sort : ''));
+  const cookieStore = cookies();
+  const ignoreAnalytics =
+    (cookieStore.get('__session') &&
+      cookieStore.get('__session').value === 'true') ||
+    host().includes('localhost');
+
+  if (pathname.includes('/highlights/')) {
+    const [, , , country, , city] = pathname.split('/');
+    pathname =
+      '/webstories/countries/' + country + '/cities/' + city + '/stories';
+
+    permanentRedirect(pathname);
+  }
+
+  const request = await fetch(
+    host(pathname.replace('/webstories', '') + '/webstories') +
+      '?fixer=true' +
+      (ignoreAnalytics ? '&ignore_analytics=true' : '') +
+      (sort !== 'desc' ? '&sort=' + sort : ''),
+    {
+      headers: {
+        'User-Agent': req.headers.get('user-agent'),
+      },
+    }
+  );
+
+  if (request.redirected) {
+    redirect(request.url);
+  }
+
   const data = await request.text();
 
   let $ = require('cheerio').load(data);
@@ -25,8 +55,12 @@ export async function GET(req) {
   $('[autoplay]').attr('autoplay', '');
   $('[itemscope]').attr('itemscope', '');
   $('.cover-link').attr('href', host(pathname.replace('/webstories', '')));
-  $('head').append(`<style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style>`)
-  $('head').append(`<noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>`)
+  $('head').append(
+    `<style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style>`
+  );
+  $('head').append(
+    `<noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>`
+  );
 
   return new Response($.html(), {
     headers: { 'Content-Type': 'text/html; charset=utf-8' },

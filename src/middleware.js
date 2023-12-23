@@ -6,7 +6,7 @@ export default function middleware(req) {
    const pathname = req.nextUrl.pathname;
 
    const searchParams = req.nextUrl.searchParams;
-   
+
    if (pathname.endsWith('/webstories') && searchParams.get('fixer') !== 'true') {
       return NextResponse.redirect(new URL('/webstories' + pathname.replace('/webstories', ''), origin ? `https://${origin.replace('www.', '')}` : process.env.NEXT_PUBLIC_SITE_URL));
    }
@@ -16,6 +16,7 @@ export default function middleware(req) {
    }
 
    headers.set('x-pathname', pathname);
+   headers.set('x-searchparams', searchParams.toString());
 
    return NextResponse.next({
       request: {
