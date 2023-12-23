@@ -8,6 +8,7 @@ export default function LocationsMap({ locations, loadingText, resetZoomText, ap
   const isBR = typeof window !== 'undefined' && window.location.href.includes('viajarcomale.com.br');
 
   const [currentLocation, setCurrentLocation] = useState({ lat: 0, lng: 0 });
+  const [center, setCenter] = useState({ lat: 0, lng: 0 });
 
   let mapRef = null;
 
@@ -19,11 +20,17 @@ export default function LocationsMap({ locations, loadingText, resetZoomText, ap
   });
 
   const setLocation = (location) => {
-    setCurrentLocation({
+    const latLng = {
       lat: parseFloat(location.latitude),
       lng: parseFloat(location.longitude),
-    });
-    mapRef.state.map.setZoom(window.innerWidth < 493 ? 11 : 12);
+    };
+
+    setCurrentLocation(latLng);
+
+    if (mapRef.state.map.getZoom() <= 7) {
+      setCenter(latLng)
+      mapRef.state.map.setZoom(window.innerWidth < 493 ? 11 : 12);
+    }
   }
 
   const resetZoom = () => {
@@ -46,7 +53,7 @@ export default function LocationsMap({ locations, loadingText, resetZoomText, ap
           height: window.innerWidth < 493 ? '40vh' : '100vh'
         }}
         zoom={window.innerWidth < 493 ? 1 : window.innerWidth <= 1440 ? 2 : 3}
-        center={currentLocation}
+        center={center}
         mapContainerClassName="map-container"
       >
         {locations.map((l, i) => <Marker location={l} key={i} currentLocation={currentLocation} setLocation={setLocation} isBR={isBR} />)}
