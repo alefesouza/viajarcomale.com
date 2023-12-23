@@ -60,6 +60,10 @@ const langs = {
     'The map of the places I have been.':
       'O mapa dos lugares que eu já visitei.',
 
+    // About
+    About: 'Sobre',
+    'About Viajar com Alê website.': 'Sobre o site do Viajar com Alê.',
+
     // Hashtags
     'Main Hashtags': 'Hashtags principais',
     'Random Hashtags': 'Hashtags aleatórias',

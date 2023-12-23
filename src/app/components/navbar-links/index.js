@@ -47,6 +47,16 @@ const NavbarLinks = () => {
           {i18n('Hashtags')}
         </Link>
       </li>
+      <li
+        className={
+          'nav-item' +
+          (headersList.get('x-pathname') === '/about' ? ' active' : '')
+        }
+      >
+        <Link className="nav-link" href="/about">
+          {i18n('About')}
+        </Link>
+      </li>
     </ul>
   );
 };

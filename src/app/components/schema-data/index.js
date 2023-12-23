@@ -37,7 +37,7 @@ export default function SchemaData({
         itemProp="license"
         content="https://creativecommons.org/licenses/by-nc/4.0/deed.en"
       />
-      <span itemProp="acquireLicensePage" content={host('/contact')} />
+      <span itemProp="acquireLicensePage" content={host('/about')} />
 
       {media.file && media.file.includes('.mp4') && (
         <>

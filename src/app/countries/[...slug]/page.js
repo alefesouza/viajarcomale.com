@@ -513,7 +513,7 @@ export default async function Country({ params: { slug }, searchParams }) {
 
   const sortPicker = (type) => (
     <div className="container-fluid">
-      <div className={styles.sort_picker}>
+      <div className="sort_picker">
         <span>{i18n('Sorting')}:</span>
 
         {[

@@ -266,6 +266,13 @@
       document
         .querySelector('#title-bar .nav-item:nth-child(4)')
         .classList.add('active');
+    } else if (window.location.pathname == '/about') {
+      document
+        .querySelector('.navbar .nav-item:nth-child(5)')
+        .classList.add('active');
+      document
+        .querySelector('#title-bar .nav-item:nth-child(5)')
+        .classList.add('active');
     }
 
     firstAccess = false;

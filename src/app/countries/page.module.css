@@ -61,12 +61,6 @@
   text-decoration: underline;
 }
 
-.sort_picker {
-  display: flex;
-  align-items: center;
-  margin-top: 24px; 
-}
-
 .short_video_links {
   display: flex;
   align-items: center;

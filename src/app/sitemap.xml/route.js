@@ -12,7 +12,7 @@ customInitApp();
 export async function GET() {
   const host = useHost();
   const isBR = host().includes('viajarcomale.com.br');
-  const lastmod = '2023-12-20';
+  const lastmod = '2023-12-23';
 
   const db = getFirestore();
   const reference = host('sitemap.json')
@@ -145,6 +145,9 @@ export async function GET() {
         },
         {
           ...makeLoc('/hashtags'),
+        },
+        {
+          ...makeLoc('/about'),
         },
         ...countries.flatMap((c) => [
           {

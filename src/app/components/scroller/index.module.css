@@ -159,11 +159,6 @@
 
 .location a {
   margin-top: 4px;
-  color: #2096cc;
-}
-
-.location a:hover {
-  text-decoration: underline;
 }
 
 .video_thumbnail {
