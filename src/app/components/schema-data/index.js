@@ -35,7 +35,7 @@ export default function SchemaData({
       />
       <span
         itemProp="license"
-        content="https://creativecommons.org/licenses/by-nc/4.0/deed.en"
+        content="https://creativecommons.org/licenses/by-nc/4.0/"
       />
       <span itemProp="acquireLicensePage" content={host('/about')} />
 
