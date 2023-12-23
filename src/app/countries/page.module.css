@@ -1,6 +1,6 @@
 .country {
   padding: 8px;
-  border: 1px solid #000000;
+  border: 1px solid #212529;
   border-radius: 20px;
   display: flex;
   align-items: center;
@@ -22,6 +22,14 @@
   gap: 10px;
   grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
   text-align: center;
+}
+
+.country_selector a {
+  color: #212529;
+}
+
+.country_selector a:hover {
+  text-decoration: none;
 }
 
 .instagram_highlights {

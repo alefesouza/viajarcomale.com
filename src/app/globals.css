@@ -59,7 +59,7 @@ body {
   padding: 16px 20px;
   box-shadow: rgba(10, 11, 13, 0.08) 0px 2px 4px 0px;
   font-size: 16px;
-  color: #000000;
+  color: #212529;
   position: relative;
   outline: none;
   background-color: rgba(255, 255, 255, 0.8);
@@ -120,7 +120,7 @@ body {
   padding: 16px 20px;
   box-shadow: rgba(10, 11, 13, 0.08) 0px 2px 4px 0px;
   font-size: 16px;
-  color: #000000;
+  color: #212529;
   position: relative;
   outline: none;
   background-color: rgba(255, 255, 255, 0.8);
@@ -174,9 +174,9 @@ body {
 
 .language {
   padding: 8px;
-  border: 1px solid #000000;
+  border: 1px solid #212529;
   border-radius: 40px;
-  color: #000000;
+  color: #212529;
 }
 
 .language:hover {
@@ -236,7 +236,7 @@ body {
 }
 
 .email_icon {
-  color: #000000;
+  color: #212529;
   text-decoration: none;
   font-size: 32px;
   cursor: pointer;
@@ -442,6 +442,10 @@ body {
   top: calc(env(titlebar-area-height, 0) + 10px);
 }
 
+.window-controls-overlay .viewer-container {
+  margin-top: env(titlebar-area-height, 0);
+}
+
 .navbar {
     position: relative;
     display: -ms-flexbox;
@@ -519,6 +523,7 @@ body {
 
 .center_link a:hover, .center_link button:hover {
   background-color: #1a87b9;
+  text-decoration: none;
 }
 
 .center_link a[disabled], .center_link button[disabled] {
@@ -662,7 +667,7 @@ a:hover {
 }
 
 .sort_picker a, .maximize-button, h2 a {
-  color: #000000;
+  color: #212529;
 }
 
 .sort_picker a:hover, .maximize-button:hover {

@@ -5,8 +5,9 @@
 
 .pagination a {
   padding: 10px 10px;
-  border: 1px solid #000000;
+  border: 1px solid #212529;
   display: inline-block;
+  color: #212529;
 }
 
 .mobile_pagination a {
@@ -67,6 +68,7 @@
 
 .pagination a:hover {
   background-color: #dddddd;
+  text-decoration: none;
 }
 
 .pagination_disabled {
