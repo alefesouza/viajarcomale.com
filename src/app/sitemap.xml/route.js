@@ -28,7 +28,7 @@ export async function GET() {
 
   let obj = {};
 
-  if (!cacheExists[0] || host().includes('localhost')) {
+  if (!cacheExists[0]) {
     const countriesSnapshot = await db.collection('countries').get();
     let countries = [];
 
@@ -323,7 +323,7 @@ export async function GET() {
       .save(JSON.stringify(obj));
   }
 
-  if (cacheExists[0] && !host().includes('localhost')) {
+  if (cacheExists[0]) {
     const contents = await storage
       .bucket('viajarcomale.appspot.com')
       .file(reference)

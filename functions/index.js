@@ -46,6 +46,7 @@ exports.onMediaUpdated = onDocumentUpdated(
     }
 
     if (
+      !newValue.location_slug_update &&
       newValue.locations &&
       JSON.stringify(oldValue.locations) !== JSON.stringify(newValue.locations)
     ) {
@@ -61,8 +62,17 @@ exports.onMediaUpdated = onDocumentUpdated(
       locationsSnapshot.forEach((doc) => {
         const data = doc.data();
 
+        if (
+          newValue.location_data &&
+          newValue.location_data.find((l) => l.slug === data.slug)
+        ) {
+          return;
+        }
+
         locations.push({
           name: data.name,
+          name_pt: data.name_pt || null,
+          alternative_names: data.alternative_names || [],
           slug: data.slug,
         });
 
@@ -99,6 +109,10 @@ exports.onMediaUpdated = onDocumentUpdated(
       update.location_data = locations;
     }
 
+    if (newValue.location_slug_update) {
+      update.location_slug_update = FieldValue.delete();
+    }
+
     return event.data.after.ref.update(update);
   }
 );
@@ -112,35 +126,68 @@ exports.onLocationUpdated = onDocumentUpdated(
     const db = getFirestore();
     const batch = db.batch();
 
-    if (oldValue.name !== newValue.name) {
+    if (oldValue.slug !== newValue.slug) {
+      batch.set(
+        db.doc(`/countries/${newValue.country}/locations/${newValue.slug}`),
+        newValue
+      );
+    }
+
+    if (
+      oldValue.name !== newValue.name ||
+      oldValue.name_pt !== newValue.name_pt ||
+      oldValue.slug !== newValue.slug ||
+      JSON.stringify(oldValue.alternative_names) !==
+        JSON.stringify(newValue.alternative_names)
+    ) {
       const mediasSnapshot = await db
         .collection('countries')
         .doc(newValue.country)
         .collection('medias')
-        .where('locations', 'array-contains', newValue.slug)
+        .where('locations', 'array-contains', oldValue.slug)
         .get();
 
       mediasSnapshot.forEach((doc) => {
         let locationData = doc.data().location_data;
+        let locations = doc.data().locations;
 
         if (locationData) {
-          const locationIndex = locationData.findIndex(
-            (l) => l.slug === newValue.slug
+          const locationDataIndex = locationData.findIndex(
+            (l) => l.slug === oldValue.slug
           );
 
-          if (locationData[locationIndex]) {
-            locationData[locationIndex] = newValue;
+          if (locationData[locationDataIndex]) {
+            locationData[locationDataIndex] = newValue;
+          }
+
+          if (newValue.slug !== oldValue.slug) {
+            const locationIndex = locations.findIndex(
+              (l) => l === oldValue.slug
+            );
+
+            if (locationData[locationIndex]) {
+              locations[locationIndex] = newValue.slug;
+            }
           }
         } else {
           locationData = [newValue];
         }
 
-        batch.update(doc.ref, {
+        const mediaUpdate = {
+          locations,
           location_data: locationData.map((l) => ({
             name: l.name,
+            name_pt: l.name_pt || null,
             slug: l.slug,
+            alternative_names: l.alternative_names || [],
           })),
-        });
+        };
+
+        if (oldValue.slug !== newValue.slug) {
+          mediaUpdate.location_slug_update = true;
+        }
+
+        batch.update(doc.ref, mediaUpdate);
       });
     }
 
