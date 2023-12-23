@@ -3,20 +3,51 @@ import useI18n from '@/app/hooks/use-i18n';
 import { SITE_NAME } from '@/app/utils/constants';
 import countries from '@/app/utils/countries';
 import Link from 'next/link';
+import { headers } from 'next/headers';
+import { UAParser } from 'ua-parser-js';
 
 export default function Top() {
   const host = useHost();
   const i18n = useI18n();
-  
-  return <div className="profile">
-    <Link href={ host('/') }>
-      <img src={ host('profile-photo.jpg') } srcSet={ host('profile-photo-2x.jpg') + ' 2x' } width={96} height={96} alt={i18n('Profile Photo')} className="profile_picture" />
-    </Link>
+  const isWindows =
+    new UAParser(headers().get('user-agent')).getOS().name === 'Windows';
 
-    <Link href={ host('/') }><h2 className="profile_name">{SITE_NAME}</h2></Link>
+  return (
+    <div className="profile">
+      <Link href={host('/')}>
+        <img
+          src={host('profile-photo.jpg')}
+          srcSet={host('profile-photo-2x.jpg') + ' 2x'}
+          width={96}
+          height={96}
+          alt={i18n('Profile Photo')}
+          className="profile_picture"
+        />
+      </Link>
 
-    <span className="profile_description">
-      {countries.map(c => <Link href={'/countries/' + c.slug} key={c.name} prefetch={false}>{c.flag}</Link>)}
-    </span>
-  </div>;
+      <Link href={host('/')}>
+        <h2 className="profile_name">{SITE_NAME}</h2>
+      </Link>
+
+      <span className="profile_description">
+        {countries.map((c) => (
+          <Link href={'/countries/' + c.slug} key={c.name} prefetch={false}>
+            {isWindows ? (
+              <>
+                <img
+                  src={host('/flags/' + c.slug + '.png')}
+                  alt={i18n(c.name)}
+                  width={18}
+                  height={18}
+                />
+                &nbsp;
+              </>
+            ) : (
+              c.flag
+            )}
+          </Link>
+        ))}
+      </span>
+    </div>
+  );
 }

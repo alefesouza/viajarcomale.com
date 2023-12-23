@@ -182,7 +182,6 @@ a {
 #portuguese-language-switcher {   
   position: absolute;
   top: 138px;
-  display: none;
 }
 
 .single-media-page #portuguese-language-switcher {
@@ -603,6 +602,12 @@ a {
   left: 50%;
   width: 90px;
   height: 90px;
-  opacity: 0.instagram_media_7;
+  opacity: 0.7;
   transform: translate(-50%, -50%);
+}
+
+.windows-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
