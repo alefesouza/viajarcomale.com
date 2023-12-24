@@ -86,14 +86,6 @@ export default function RootLayout({ children }) {
       <meta property="og:site_name" content={SITE_NAME} />
       <meta property="fb:app_id" content="2951171431683266" />
       <meta property="fb:page_id" content="61550287721638" />
-      <meta
-        property="article:author"
-        content="https://www.facebook.com/viajarcomale"
-      />
-      <meta
-        property="article:publisher"
-        content="https://www.facebook.com/viajarcomale"
-      />
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:site" content="@viajarcomale" />
       <meta name="twitter:site:id" content="1693645649789480960" />
@@ -255,7 +247,16 @@ export default function RootLayout({ children }) {
       )}
 
       {!isAMP && (
-        <body className={[isMediaSingle ? 'single-media-page' : null, getCookie('window_controls_overlay') ? 'window-controls-overlay' : null].filter(c => c).join(' ')}>
+        <body
+          className={[
+            isMediaSingle ? 'single-media-page' : null,
+            getCookie('window_controls_overlay')
+              ? 'window-controls-overlay'
+              : null,
+          ]
+            .filter((c) => c)
+            .join(' ')}
+        >
           {!ignoreAnalytics && (
             <noscript>
               <iframe

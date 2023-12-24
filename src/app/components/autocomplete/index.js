@@ -50,8 +50,9 @@ export default function Autocomplete() {
 
   const updateHashtags = async () => {
     const today = new Date().toISOString().split('T')[0];
+    const hashtagsUpdated = localStorage.getItem('hashtags_updated');
 
-    if (today === localStorage.getItem('hashtags_updated')) {
+    if (hashtagsUpdated) {
       const hashtags = JSON.parse(localStorage.getItem('hashtags')).map(
         (h) => ({ label: '#' + h, value: '#' + h })
       );
@@ -60,6 +61,9 @@ export default function Autocomplete() {
       if (!randomHashtags.length) {
         updateRandomHashtags(hashtags);
       }
+    }
+
+    if (today === hashtagsUpdated) {
       return;
     }
 
@@ -79,7 +83,10 @@ export default function Autocomplete() {
       'hashtags_updated',
       new Date().toISOString().split('T')[0]
     );
-    updateRandomHashtags(hashtags);
+
+    if (!hashtagsUpdated) {
+      updateRandomHashtags(hashtags);
+    }
 
     setIsLoading(false);
   };
