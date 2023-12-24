@@ -26,7 +26,15 @@ export default async function WebStories({
   const isWindows =
     new UAParser(headersList.get('user-agent')).getOS().name === 'Windows';
 
-  const firstItem = highlightItem ? highlightItem : items[0] || {};
+  let firstItem = highlightItem ? highlightItem : items[0] || {};
+  if (highlightItem) {
+    const itemHighlight = items.find((i) => i.file === highlightItem.file);
+
+    if (itemHighlight) {
+      highlightItem = itemHighlight;
+    }
+  }
+
   const theCover = firstItem?.file?.replace('.mp4', '-thumb.png');
   const ignoreAnalytics = headersList
     .get('x-searchparams')
@@ -48,6 +56,8 @@ export default async function WebStories({
 
   const needSplit = storyTitle.split(' ').length == 1;
 
+  const { description } = getMetadata(firstItem, isBR);
+
   return (
     <amp-story
       standalone
@@ -65,13 +75,10 @@ export default async function WebStories({
             width={firstItem.width}
             height={firstItem.height}
             layout="responsive"
-            alt={
-              isBR && firstItem.description_pt
-                ? firstItem.description_pt
-                : firstItem.description
-            }
+            alt={description}
             style={{ filter: 'brightness(70%)' }}
           ></amp-img>
+          <SchemaData media={firstItem} isWebStories={true} />
         </amp-story-grid-layer>
         <amp-story-grid-layer template="vertical">
           <amp-img
