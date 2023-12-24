@@ -51,7 +51,7 @@ export default function defaultMetadata(title, description, media, isSingle) {
   } else {
     images = [
       {
-        url: host('media.jpg'),
+        url: host('cover.jpg'),
         width: 1280,
         height: 630,
         type: 'image/jpg',
