@@ -54,16 +54,51 @@ export async function generateMetadata({ params: { country, city, stories } }) {
     redirect('/');
   }
 
+  const highlight = theCity.highlight;
+
+  let theMedia = null;
+
+  const db = getFirestore();
+
+  if (highlight) {
+    const mediaRef = await db
+      .collection('countries')
+      .doc(country)
+      .collection('cities')
+      .doc(city)
+      .collection('medias')
+      .doc(highlight)
+      .get();
+    theMedia = mediaRef.data();
+  }
+
+  if (!theMedia) {
+    const instagramHighLightsSnapshot = await db
+      .collection('countries')
+      .doc(country)
+      .collection('cities')
+      .doc(city)
+      .collection('medias')
+      .where('type', '==', 'story')
+      .where('is_highlight', '==', true)
+      .get();
+
+    instagramHighLightsSnapshot.forEach((media) => {
+      const data = media.data();
+      data.type == 'instagram-highlight';
+      delete data.location_data;
+      delete data.hashtags;
+      delete data.hashtags_pt;
+      theMedia = data;
+    });
+  }
+
   if (stories && stories[0] !== 'webstories') {
     return generateMediaMetadata({
       params: {
         country,
         city,
-        media: [
-          theCity.highlight.replace('media-highlight', 'story') +
-            '-' +
-            stories[0],
-        ],
+        media: [city + '-story-' + stories[0]],
       },
     });
   }
@@ -74,17 +109,6 @@ export async function generateMetadata({ params: { country, city, stories } }) {
   ) {
     redirect(`/countries/${country}/cities/${city}/stories`);
   }
-
-  const highlight = theCity.highlight;
-
-  const db = getFirestore();
-  const mediaRef = await db
-    .collection('countries')
-    .doc(country)
-    .collection('medias')
-    .doc(highlight)
-    .get();
-  let theMedia = mediaRef.data();
 
   const location = [
     isBR && theCity.name_pt ? theCity.name_pt : theCity.name,
@@ -156,16 +180,48 @@ export default async function Highlight({
 
   let theCity = countryData.cities.find((c) => c.slug === city);
 
+  const db = getFirestore();
+  let theMedia = null;
+
+  if (theCity.highlight) {
+    const mediaRef = await db
+      .collection('countries')
+      .doc(country)
+      .collection('cities')
+      .doc(theCity.slug)
+      .collection('medias')
+      .doc(theCity.highlight)
+      .get();
+    theMedia = mediaRef.data();
+  }
+
+  if (!theMedia) {
+    const instagramHighLightsSnapshot = await db
+      .collection('countries')
+      .doc(country)
+      .collection('cities')
+      .doc(city)
+      .collection('medias')
+      .where('type', '==', 'story')
+      .where('is_highlight', '==', true)
+      .get();
+
+    instagramHighLightsSnapshot.forEach((media) => {
+      const data = media.data();
+      data.type == 'instagram-highlight';
+      delete data.location_data;
+      delete data.hashtags;
+      delete data.hashtags_pt;
+      theMedia = data;
+    });
+  }
+
   if (stories && stories[0] !== 'webstories') {
     return Country({
       params: {
         country,
         city,
-        media: [
-          theCity.highlight.replace('media-highlight', 'story') +
-            '-' +
-            stories[0],
-        ],
+        media: [city + '-story-' + stories[0]],
       },
     });
   }
@@ -174,7 +230,6 @@ export default async function Highlight({
     sort === 'asc' ? 'asc' : 'desc'
   }`;
 
-  const db = getFirestore();
   const cache = await db.doc(cacheRef).get();
 
   let isRandom = sort === 'random';
@@ -185,26 +240,23 @@ export default async function Highlight({
 
   let photos = [];
 
-  const mediaRef = await db
-    .collection('countries')
-    .doc(country)
-    .collection('medias')
-    .doc(theCity.highlight)
-    .get();
-  let theMedia = mediaRef.data();
-
   if (!cache.exists) {
     const photosSnapshot = await db
       .collection('countries')
       .doc(country)
+      .collection('cities')
+      .doc(city)
       .collection('medias')
-      .where('highlight', '==', theCity.highlight)
+      .where('type', '==', 'story')
       .orderBy('date', sort)
       .get();
 
     photosSnapshot.forEach((photo) => {
       const data = photo.data();
-      data.link = theMedia.link;
+      data.link =
+        'https://www.instagram.com/stories/highlights/' +
+        data.original_id +
+        '/';
 
       photos = [...photos, data];
     });
@@ -239,7 +291,7 @@ export default async function Highlight({
       ('?sort=' + sort)
   );
 
-  let instagramStories = photos.filter((p) => p.type === 'instagram-story');
+  let instagramStories = photos.filter((p) => p.type === 'story');
 
   if (stories && stories[0] === 'webstories') {
     const location = [

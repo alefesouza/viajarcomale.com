@@ -136,8 +136,9 @@ export default async function WebStories({
       {items.map((item) => {
         const { description } = getMetadata(item, isBR);
 
-        const split = item.id.split('-');
-        item.id = split[split.length - 1];
+        item.id = item.id
+          .replace(item.city + '-post-', '')
+          .replace(item.city + '-story-', '');
 
         return (
           <amp-story-page

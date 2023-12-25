@@ -8,7 +8,7 @@ const admin = require('firebase-admin');
 admin.initializeApp();
 
 exports.onMediaCreated = onDocumentCreated(
-  '/countries/{countryId}/medias/{mediaId}',
+  '/countries/{countryId}/cities/{mediaId}/medias/{mediaId}',
   async (event) => {
     const newValue = event.data.data();
     const update = {};
@@ -31,7 +31,7 @@ exports.onMediaCreated = onDocumentCreated(
 );
 
 exports.onMediaUpdated = onDocumentUpdated(
-  '/countries/{countryId}/medias/{mediaId}',
+  '/countries/{countryId}/cities/{cityId}/medias/{mediaId}',
   async (event) => {
     const oldValue = event.data.before.data();
     const newValue = event.data.after.data();
@@ -55,6 +55,7 @@ exports.onMediaUpdated = onDocumentUpdated(
         .collection('countries')
         .doc(newValue.country)
         .collection('locations')
+        .doc(newValue.city)
         .where('slug', 'in', newValue.locations)
         .get();
 
@@ -80,10 +81,10 @@ exports.onMediaUpdated = onDocumentUpdated(
           let key = '';
 
           switch (newValue.type) {
-            case 'instagram':
+            case 'post':
               key = 'posts';
               break;
-            case 'instagram-story':
+            case 'story':
               key = 'stories';
               break;
             case '360photo':
@@ -118,7 +119,7 @@ exports.onMediaUpdated = onDocumentUpdated(
 );
 
 exports.onLocationUpdated = onDocumentUpdated(
-  '/countries/{countryId}/locations/{locationId}',
+  '/countries/{countryId}/cities/{cityId}/locations/{locationId}',
   async (event) => {
     const oldValue = event.data.before.data();
     const newValue = event.data.after.data();
@@ -128,7 +129,9 @@ exports.onLocationUpdated = onDocumentUpdated(
 
     if (oldValue.slug !== newValue.slug) {
       batch.set(
-        db.doc(`/countries/${newValue.country}/locations/${newValue.slug}`),
+        db.doc(
+          `/countries/${newValue.country}/cities/${newValue.city}/locations/${newValue.slug}`
+        ),
         newValue
       );
     }

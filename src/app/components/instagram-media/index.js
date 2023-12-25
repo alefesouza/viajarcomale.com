@@ -18,12 +18,9 @@ export default function InstagramMedia({
   const host = useHost();
   const i18n = useI18n();
 
-  if (media.id.startsWith('story-')) {
-    const split = media.id.split('-');
-    media.id = split[split.length - 1];
-  } else {
-    media.id = media.id.replace('media-', '');
-  }
+  media.id = media.id
+    .replace(media.city + '-post-', '')
+    .replace(media.city + '-story-', '');
 
   const mediaElement =
     media.file_type === 'video' || media.file.includes('.mp4') ? (
@@ -70,9 +67,9 @@ export default function InstagramMedia({
       media.country +
       '/cities/' +
       media.city +
-      (media.id.length <= 3 ? '/stories/' : '/posts/') +
+      (media.type === 'story' ? '/stories/' : '/posts/') +
       media.id +
-      (isMain && !media.img_index && media.id.length > 3 ? '/1' : '') +
+      (isMain && !media.img_index && media.type === 'post' ? '/1' : '') +
       (media.img_index ? '/' + media.img_index : '')
   );
 
@@ -81,7 +78,7 @@ export default function InstagramMedia({
       key={media.file}
       className={
         'instagram_media_gallery_item' +
-        (isMain && media.type === 'instagram-story' && media.mode === 'portrait'
+        (isMain && media.type === 'story' && media.mode === 'portrait'
           ? ' ' + 'instagram_media_portrait'
           : '') +
         (media.gallery && media.gallery.length && !expandGalleries
@@ -117,9 +114,10 @@ export default function InstagramMedia({
           href={
             media.highlight
               ? 'https://www.instagram.com/stories/highlights/' +
-                media.highlight.replace('media-highlight-', '') +
+                media.original_id +
                 '/'
-              : media.link +
+              : 'https://www.instagram.com/p/' +
+                media.original_id +
                 (media.img_index ? '?img_index=' + media.img_index : '')
           }
           target="_blank"

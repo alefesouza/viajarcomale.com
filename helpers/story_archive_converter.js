@@ -1,5 +1,25 @@
 // fixedLat = [...$0.children].map((item) => ({ file: (item.querySelector('img')||item.querySelector('video')).src, date: item.querySelector('._3-94').textContent, latitude: [...item.querySelectorAll('div')].find(el => el.textContent == 'Latitude')?.nextElementSibling?.textContent, longitude: [...item.querySelectorAll('div')].find(el => el.textContent == 'Longitude')?.nextElementSibling?.textContent, description: item.querySelector('._2pim') && item.querySelector('._2pim').textContent }))
 
+// let items = [];
+
+// document.querySelectorAll('img,video').forEach(m => {
+//     m.onclick = function(e) {
+//         e.preventDefault();
+
+//         const hashtags = prompt('Hashtags');
+//         const location = prompt('Location');
+//         const newHashtags = prompt('New Hashtags');
+
+//         items.push({
+//             original_file: m.src,
+//             location,
+//             hashtags,
+//             newHashtags,
+//             city,
+//         })
+//     }
+// })
+
 // items = brussels.split('\n----\n').map((i) => {
 //   let [location, hashtags, newHashtags] = i.split('\n');
 //   const [thePlace, alternativeLocations] = location.split(' $ ');
@@ -31,7 +51,7 @@
 // const fs = require('fs');
 
 const fs = require('fs');
-const stories = require('./the-stories.json');
+const items = require('./the-stories.json');
 const sizeOf = require('image-size');
 const sharp = require('sharp');
 const mt = require('media-thumbnail');
@@ -65,210 +85,225 @@ function string_to_slug(str) {
 const imageMagick = gm.subClass({ imageMagick: true });
 
 const theHighlights = {};
-stories.reverse().forEach(async (item) => {
-  if (!fs.existsSync('./to_send/' + item.country + '/' + item.city)) {
-    fs.mkdirSync('./to_send/' + item.country + '/' + item.city, {
-      recursive: true,
-    });
-  }
+const main = async () => {
+  let i = 0;
 
-  if (!fs.existsSync('./to_send/500/' + item.country + '/' + item.city)) {
-    fs.mkdirSync('./to_send/500/' + item.country + '/' + item.city, {
-      recursive: true,
-    });
-  }
-
-  if (!fs.existsSync('./to_send/portrait/' + item.country + '/' + item.city)) {
-    fs.mkdirSync('./to_send/portrait/' + item.country + '/' + item.city, {
-      recursive: true,
-    });
-  }
-
-  if (!fs.existsSync('./to_send/landscape/' + item.country + '/' + item.city)) {
-    fs.mkdirSync('./to_send/landscape/' + item.country + '/' + item.city, {
-      recursive: true,
-    });
-  }
-
-  if (!fs.existsSync('./to_send/square/' + item.country + '/' + item.city)) {
-    fs.mkdirSync('./to_send/square/' + item.country + '/' + item.city, {
-      recursive: true,
-    });
-  }
-
-  if (!theHighlights[item.highlight]) {
-    theHighlights[item.highlight] = 0;
-  }
-
-  theHighlights[item.highlight]++;
-
-  item.original_file = item.file;
-  item.id =
-    item.highlight.replace('media-highlight', 'story') +
-    '-' +
-    theHighlights[item.highlight];
-  item.order = parseInt(theHighlights[item.highlight]);
-  item.mode = 'portrait';
-
-  const date = new Date(item.date);
-  date.addHours(2);
-  item.date = date.toISOString().replace('T', ' ').substring(0, 19);
-
-  let file = './' + item.country + '/' + item.city + '/' + item.file;
-
-  if (!fs.existsSync(file)) {
-    file = './' + item.file;
-  }
-
-  if (item.file.includes('.mp4') || !item.file.includes('.')) {
-    item.width = 720;
-    item.height = 1280;
-  } else {
-    const dimensions = sizeOf(file);
-
-    item.width = dimensions.width;
-    item.height = dimensions.height;
-  }
-  item.mode = 'portrait';
-
-  const fileToSend =
-    './to_send/' +
-    item.country +
-    '/' +
-    item.city +
-    '/' +
-    item.id +
-    (item.file.includes('.mp4') || !item.file.includes('.') ? '.mp4' : '.jpg');
-
-  fs.copyFileSync(file, fileToSend);
-
-  if (item.file.includes('.mp4') || !item.file.includes('.')) {
-    await mt.forVideo(fileToSend, fileToSend.replace('.mp4', '-thumb.png'), {
-      width: 720,
-    });
-
-    const duration = await getVideoDurationInSeconds(file);
-    item.duration = duration;
-  }
-
-  sharp(fileToSend.replace('.mp4', '-thumb.png'))
-    .rotate()
-    .resize(500)
-    .jpeg({ mozjpeg: true })
-    .toFile(
-      fileToSend
-        .replace('.mp4', '-thumb.png')
-        .replace('/to_send/', '/to_send/500/'),
-      (err, info) => {
-        console.log(err);
-      }
-    );
-
-  imageMagick(fileToSend.replace('.mp4', '-thumb.png'))
-    .crop(
-      item.width,
-      item.width * 0.75,
-      0,
-      item.height / 2 - (item.width * 0.75) / 2
-    )
-    .write(
-      fileToSend
-        .replace('.mp4', '-thumb.png')
-        .replace('/to_send/', '/to_send/landscape/'),
-      function (err) {
-        if (err) {
-          console.log(err);
-          return;
-        }
-      }
-    );
-
-  imageMagick(fileToSend.replace('.mp4', '-thumb.png'))
-    .crop(
-      item.width,
-      item.width * 1.25,
-      0,
-      item.height / 2 - (item.width * 1.25) / 2
-    )
-    .write(
-      fileToSend
-        .replace('.mp4', '-thumb.png')
-        .replace('/to_send/', '/to_send/portrait/'),
-      function (err) {
-        if (err) {
-          console.log(err);
-          return;
-        }
-      }
-    );
-
-  imageMagick(fileToSend.replace('.mp4', '-thumb.png'))
-    .crop(item.width, item.width, 0, (item.height - item.width) / 2)
-    .write(
-      fileToSend
-        .replace('.mp4', '-thumb.png')
-        .replace('/to_send/', '/to_send/square/'),
-      function (err) {
-        if (err) {
-          console.log(err);
-          return;
-        }
-      }
-    );
-
-  item.file =
-    '/stories/' +
-    item.country +
-    '/' +
-    item.city +
-    '/' +
-    item.id +
-    (item.file.includes('.mp4') || !item.file.includes('.') ? '.mp4' : '.jpg');
-  item.hashtags = [
-    ...(item?.hashtags?.split(' ') || []),
-    ...(item?.newHashtags?.split(` / `) || []),
-  ].join(' ');
-
-  if (item.location) {
-    const [name, namePt] = item.location.split(' / ');
-
-    item.location_data = [
-      {
-        name: name,
-        slug: string_to_slug(name),
-        latitude: item.latitute,
-        longitude: item.longitude,
-        country: item.country,
-        city: item.city,
-      },
-    ];
-
-    if (namePt) {
-      item.location_data.name_pt = namePt;
+  for (const item of items) {
+    if (!fs.existsSync('./to_send/' + item.country + '/' + item.city)) {
+      fs.mkdirSync('./to_send/' + item.country + '/' + item.city, {
+        recursive: true,
+      });
     }
 
-    if (item.alternative_names) {
-      item.location_data.alternative_names = item.alternative_names;
+    if (!fs.existsSync('./to_send/500/' + item.country + '/' + item.city)) {
+      fs.mkdirSync('./to_send/500/' + item.country + '/' + item.city, {
+        recursive: true,
+      });
     }
 
-    item.locations = [item.location_data[0].slug];
+    if (
+      !fs.existsSync('./to_send/portrait/' + item.country + '/' + item.city)
+    ) {
+      fs.mkdirSync('./to_send/portrait/' + item.country + '/' + item.city, {
+        recursive: true,
+      });
+    }
 
-    delete item.latitude;
-    delete item.latitute;
-    delete item.longitude;
-    delete item.alternative_names;
+    if (
+      !fs.existsSync('./to_send/landscape/' + item.country + '/' + item.city)
+    ) {
+      fs.mkdirSync('./to_send/landscape/' + item.country + '/' + item.city, {
+        recursive: true,
+      });
+    }
+
+    if (!fs.existsSync('./to_send/square/' + item.country + '/' + item.city)) {
+      fs.mkdirSync('./to_send/square/' + item.country + '/' + item.city, {
+        recursive: true,
+      });
+    }
+
+    if (!theHighlights[item.highlight]) {
+      theHighlights[item.highlight] = 0;
+    }
+
+    theHighlights[item.highlight]++;
+
+    item.original_file = item.file;
+    item.id =
+      item.highlight.replace('media-highlight', 'story') +
+      '-' +
+      theHighlights[item.highlight];
+    item.order = parseInt(theHighlights[item.highlight]);
+    item.mode = 'portrait';
+
+    const date = new Date(item.date);
+    date.addHours(2);
+    item.date = date.toISOString().replace('T', ' ').substring(0, 19);
+
+    let file = './stories/' + item.country + '/' + item.city + '/' + item.file;
+
+    if (!fs.existsSync(file)) {
+      file = './stories/' + item.file;
+    }
+
+    if (item.file.includes('.mp4') || !item.file.includes('.')) {
+      item.width = 720;
+      item.height = 1280;
+    } else {
+      const dimensions = sizeOf(file);
+
+      item.width = dimensions.width;
+      item.height = dimensions.height;
+    }
+    item.mode = 'portrait';
+
+    const fileToSend =
+      './to_send/' +
+      item.country +
+      '/' +
+      item.city +
+      '/' +
+      item.id +
+      (item.file.includes('.mp4') || !item.file.includes('.')
+        ? '.mp4'
+        : '.jpg');
+
+    fs.copyFileSync(file, fileToSend);
+
+    if (item.file.includes('.mp4') || !item.file.includes('.')) {
+      await mt.forVideo(fileToSend, fileToSend.replace('.mp4', '-thumb.png'), {
+        width: 720,
+      });
+
+      const duration = await getVideoDurationInSeconds(file);
+      item.duration = duration;
+    }
+
+    sharp(fileToSend.replace('.mp4', '-thumb.png'))
+      .rotate()
+      .resize(500)
+      .jpeg({ mozjpeg: true })
+      .toFile(
+        fileToSend
+          .replace('.mp4', '-thumb.png')
+          .replace('/to_send/', '/to_send/500/'),
+        (err, info) => {
+          console.log(err);
+        }
+      );
+
+    imageMagick(fileToSend.replace('.mp4', '-thumb.png'))
+      .crop(
+        item.width,
+        item.width * 0.75,
+        0,
+        item.height / 2 - (item.width * 0.75) / 2
+      )
+      .write(
+        fileToSend
+          .replace('.mp4', '-thumb.png')
+          .replace('/to_send/', '/to_send/landscape/'),
+        function (err) {
+          if (err) {
+            console.log(err);
+            return;
+          }
+        }
+      );
+
+    imageMagick(fileToSend.replace('.mp4', '-thumb.png'))
+      .crop(
+        item.width,
+        item.width * 1.25,
+        0,
+        item.height / 2 - (item.width * 1.25) / 2
+      )
+      .write(
+        fileToSend
+          .replace('.mp4', '-thumb.png')
+          .replace('/to_send/', '/to_send/portrait/'),
+        function (err) {
+          if (err) {
+            console.log(err);
+            return;
+          }
+        }
+      );
+
+    imageMagick(fileToSend.replace('.mp4', '-thumb.png'))
+      .crop(item.width, item.width, 0, (item.height - item.width) / 2)
+      .write(
+        fileToSend
+          .replace('.mp4', '-thumb.png')
+          .replace('/to_send/', '/to_send/square/'),
+        function (err) {
+          if (err) {
+            console.log(err);
+            return;
+          }
+        }
+      );
+
+    item.file =
+      '/stories/' +
+      item.country +
+      '/' +
+      item.city +
+      '/' +
+      item.id +
+      (item.file.includes('.mp4') || !item.file.includes('.')
+        ? '.mp4'
+        : '.jpg');
+    console.log(item.file);
+    item.hashtags = [
+      ...(item?.hashtags?.split(' ') || []),
+      ...(item?.newHashtags?.split(` / `) || []),
+    ].join(' ');
+
+    if (item.location) {
+      const [name, namePt] = item.location.split(' / ');
+
+      item.location_data = [
+        {
+          name: name,
+          slug: string_to_slug(name),
+          latitude: item.latitude,
+          longitude: item.longitude,
+          country: item.country,
+          city: item.city,
+        },
+      ];
+
+      if (namePt) {
+        item.location_data.name_pt = namePt;
+      }
+
+      if (item.alternative_names) {
+        item.location_data.alternative_names = item.alternative_names;
+      }
+
+      item.locations = [item.location_data[0].slug];
+
+      delete item.latitude;
+      delete item.latitute;
+      delete item.longitude;
+      delete item.alternative_names;
+    }
   }
-});
 
-fs.writeFileSync('./the-result.json', JSON.stringify(stories, null, 4));
-fs.writeFileSync(
-  './the-locations.json',
-  JSON.stringify(
-    stories.filter((c) => c.location_data).flatMap((c) => c.location_data),
-    null,
-    4
-  )
-);
+  fs.writeFileSync('./the-result.json', JSON.stringify(items, null, 4));
+  fs.writeFileSync(
+    './the-locations.json',
+    JSON.stringify(
+      items.filter((c) => c.location_data).flatMap((c) => c.location_data),
+      null,
+      4
+    )
+  );
+};
+
+main();
 
 // items.forEach((data, i) => {
 

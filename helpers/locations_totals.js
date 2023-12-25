@@ -18,14 +18,14 @@ querySnapshot2.forEach((theDoc) => {
     stories: medias.filter(
       (c) =>
         c.country === data.country &&
-        c.type === 'instagram-story' &&
+        c.type === 'story' &&
         c.locations &&
         c.locations.includes(data.slug)
     ).length,
     posts: medias.filter(
       (c) =>
         c.country === data.country &&
-        c.type === 'instagram' &&
+        c.type === 'post' &&
         c.locations &&
         c.locations.includes(data.slug)
     ).length,

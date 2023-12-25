@@ -47,3 +47,5 @@ serviceworker.js*
 /photos
 items.json
 *adminsdk*
+/helpers/*.json
+/helpers/**

@@ -120,7 +120,7 @@ export async function generateMetadata({
     .where('hashtags', 'array-contains', finalHashtag.name);
 
   if (isWebStories) {
-    coverSnapshot = coverSnapshot.where('type', '==', 'instagram-story');
+    coverSnapshot = coverSnapshot.where('type', '==', 'story');
   }
 
   coverSnapshot = await coverSnapshot
@@ -326,9 +326,9 @@ export default async function Country({
   );
 
   let instagramPhotos = photos.filter(
-    (p) => p.type === 'instagram' || p.type === 'instagram-gallery'
+    (p) => p.type === 'post' || p.type === 'post-gallery'
   );
-  const instagramStories = photos.filter((p) => p.type === 'instagram-story');
+  const instagramStories = photos.filter((p) => p.type === 'story');
   const shortVideos = photos.filter((p) => p.type === 'short-video');
   const youtubeVideos = photos.filter((p) => p.type === 'youtube');
   const _360photos = photos.filter((p) => p.type === '360photo');

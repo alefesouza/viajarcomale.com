@@ -34,14 +34,12 @@ export default function defaultMetadata(title, description, media, isSingle) {
     images = [
       {
         url:
-          (media.type === 'instagram-story' ||
-          media.type === 'instagram-highlight'
+          (media.type === 'story' || media.type === 'instagram-highlight'
             ? FILE_DOMAIN_SQUARE
             : FILE_DOMAIN) + media.file.replace('.mp4', '-thumb.png'),
         width: media.width,
         height:
-          media.type === 'instagram-story' ||
-          media.type === 'instagram-highlight'
+          media.type === 'story' || media.type === 'instagram-highlight'
             ? media.width
             : media.height,
         type: media.file.includes('.png') ? 'image/png' : 'image/jpeg',

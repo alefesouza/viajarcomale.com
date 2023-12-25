@@ -2,7 +2,7 @@ import useI18n from '@/app/hooks/use-i18n';
 import useHost from '@/app/hooks/use-host';
 import { getFirestore } from 'firebase-admin/firestore';
 import styles from './page.module.css';
-import { redirect } from 'next/navigation';
+import { permanentRedirect, redirect } from 'next/navigation';
 import InstagramMedia from '@/app/components/instagram-media';
 import Link from 'next/link';
 import ShareButton from '@/app/components/share-button';
@@ -83,13 +83,15 @@ export async function generateMetadata({ params: { country, city, media } }) {
   const mediaRef = await db
     .collection('countries')
     .doc(country)
+    .collection('cities')
+    .doc(city)
     .collection('medias')
-    .doc(media[0].startsWith('story-') ? media[0] : 'media-' + media[0])
+    .doc(media[0].includes('-story-') ? media[0] : city + '-post-' + media[0])
     .get();
   let theMedia = mediaRef.data();
 
   if (!theMedia) {
-    redirect('/');
+    redirect('/countries/' + country + '/cities/' + city);
   }
 
   if (theMedia.gallery && theMedia.gallery.length) {
@@ -111,7 +113,7 @@ export async function generateMetadata({ params: { country, city, media } }) {
     title,
     description,
     theMedia,
-    media[1] || theMedia.type === 'instagram-story'
+    media[1] || theMedia.type === 'story'
   );
 }
 
@@ -128,6 +130,38 @@ export default async function Country({ params: { country, city, media } }) {
     );
   }
 
+  const db = getFirestore();
+
+  if (!media[0].includes(city + '-story-') && isNaN(parseInt(media[0]))) {
+    let base = '/countries/' + country + '/cities/' + city;
+
+    const mediaSnapshot = await db
+      .collection('countries')
+      .doc(country)
+      .collection('cities')
+      .doc(city)
+      .collection('medias')
+      .where('original_id', '==', media[0])
+      .get();
+
+    if (mediaSnapshot.size == 0) {
+      redirect(base);
+    }
+
+    mediaSnapshot.forEach((doc) => {
+      const data = doc.data();
+
+      permanentRedirect(
+        base +
+          '/posts/' +
+          data.id.replace(city + '-post-', '') +
+          (media[1] ? '/' + media[1] : '')
+      );
+    });
+
+    return;
+  }
+
   const countryData = await getCountry(country, city);
 
   if (!countryData) {
@@ -140,14 +174,24 @@ export default async function Country({ params: { country, city, media } }) {
     redirect('/');
   }
 
-  const db = getFirestore();
   const mediaRef = await db
     .collection('countries')
     .doc(country)
+    .collection('cities')
+    .doc(city)
     .collection('medias')
-    .doc(media[0].startsWith('story-') ? media[0] : 'media-' + media[0])
+    .doc(
+      media[0].startsWith(city + '-story-')
+        ? media[0]
+        : city + '-post-' + media[0]
+    )
     .get();
   let theMedia = mediaRef.data();
+
+  if (!theMedia) {
+    redirect('/countries/' + country + '/cities/' + city);
+  }
+
   let galleryLength = 0;
 
   if (theMedia.gallery && theMedia.gallery.length) {
@@ -200,7 +244,7 @@ export default async function Country({ params: { country, city, media } }) {
     },
   ];
 
-  if (theMedia.type === 'instagram-story') {
+  if (theMedia.type === 'story') {
     breadcrumbs.push({
       name: i18n('Stories'),
       item: '/countries/' + country + '/cities/' + city + '/stories',
@@ -209,11 +253,10 @@ export default async function Country({ params: { country, city, media } }) {
 
   let mediaId = null;
 
-  if (theMedia.id.startsWith('story-')) {
-    const split = theMedia.id.split('-');
-    mediaId = split[split.length - 1];
+  if (theMedia.type === 'story') {
+    mediaId = theMedia.id.replace(city + '-story-', '');
   } else {
-    mediaId = theMedia.id.replace('media-', '');
+    mediaId = theMedia.id.replace(city + '-post-', '');
   }
 
   const basePath =
@@ -221,7 +264,7 @@ export default async function Country({ params: { country, city, media } }) {
     country +
     '/cities/' +
     city +
-    (mediaId.length <= 3 ? '/stories/' : '/posts/') +
+    (theMedia.type === 'story' ? '/stories/' : '/posts/') +
     mediaId;
 
   breadcrumbs.push({
@@ -243,7 +286,7 @@ export default async function Country({ params: { country, city, media } }) {
     host(
       '/' +
         city +
-        (mediaId.length <= 3 ? '/stories/' : '/posts/') +
+        (theMedia.type === 'story' ? '/stories/' : '/posts/') +
         mediaId +
         (media[1] ? '/' + media[1] : '')
     )
@@ -255,7 +298,7 @@ export default async function Country({ params: { country, city, media } }) {
         className={isWindows ? 'windows-header' : null}
         style={{
           justifyContent:
-            media[1] || theMedia.type === 'instagram-story' ? 'center' : null,
+            media[1] || theMedia.type === 'story' ? 'center' : null,
         }}
       >
         <Link
@@ -298,7 +341,7 @@ export default async function Country({ params: { country, city, media } }) {
             country +
             '/cities/' +
             city +
-            (theMedia.type === 'instagram-story' ? '/stories' : '') +
+            (theMedia.type === 'story' ? '/stories' : '') +
             (mediaIndex ? '/posts/' + theMedia.id.replace('media-', '') : '')
           }
           id="back-button"
@@ -311,19 +354,18 @@ export default async function Country({ params: { country, city, media } }) {
         <ShareButton />
       </div>
 
-      {!media[1] && theMedia.type !== 'instagram-story' && <div>{header}</div>}
+      {!media[1] && theMedia.type !== 'story' && <div>{header}</div>}
 
       <div
         className={styles.media}
         style={{
-          marginTop:
-            media[1] || theMedia.type === 'instagram-story' ? 14 : null,
+          marginTop: media[1] || theMedia.type === 'story' ? 14 : null,
         }}
       >
         <InstagramMedia
           media={theMedia}
           isBR={isBR}
-          withoutLink={media[1] || theMedia.type === 'instagram-story'}
+          withoutLink={media[1] || theMedia.type === 'story'}
           expandGalleries
           fullQuality
           isMain
@@ -357,7 +399,7 @@ export default async function Country({ params: { country, city, media } }) {
           ))}
       </div>
 
-      {(media[1] || theMedia.type === 'instagram-story') && (
+      {(media[1] || theMedia.type === 'story') && (
         <div style={{ textAlign: 'center' }}>{header}</div>
       )}
 

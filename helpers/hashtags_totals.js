@@ -16,14 +16,10 @@ querySnapshot2.forEach((theDoc) => {
 
   const totals = {
     stories: medias.filter(
-      (c) =>
-        c.type === 'instagram-story' &&
-        c.hashtags &&
-        c.hashtags.includes(data.name)
+      (c) => c.type === 'story' && c.hashtags && c.hashtags.includes(data.name)
     ).length,
     posts: medias.filter(
-      (c) =>
-        c.type === 'instagram' && c.hashtags && c.hashtags.includes(data.name)
+      (c) => c.type === 'post' && c.hashtags && c.hashtags.includes(data.name)
     ).length,
     photos360: medias.filter(
       (c) =>

@@ -82,8 +82,9 @@ export default function Scroller({
           data-scroller-scroll
         >
           {items.map((p) => {
-            const split = p.id.split('-');
-            p.id = split[split.length - 1];
+            p.id = p.id
+              .replace(p.city + '-post-', '')
+              .replace(p.city + '-story-', '');
 
             return (
               <div
@@ -130,8 +131,16 @@ export default function Scroller({
                 >
                   {isStories && p.file.includes('.mp4') ? (
                     <img
-                      src={
-                        FILE_DOMAIN_500 + p.file.replace('.mp4', '-thumb.png')
+                      src={FILE_DOMAIN + p.file.replace('.mp4', '-thumb.png')}
+                      srcSet={
+                        isYouTubeVideos
+                          ? p.image
+                          : `${
+                              FILE_DOMAIN_500 +
+                              p.file.replace('.mp4', '-thumb.png')
+                            } 500w, ${
+                              FILE_DOMAIN + p.file.replace('.mp4', '-thumb.png')
+                            } ${p.width}w`
                       }
                       alt={isBR ? p.description_pt : p.description}
                       className={styles.vertical_content}
@@ -140,12 +149,19 @@ export default function Scroller({
                     />
                   ) : (
                     <img
-                      src={isYouTubeVideos ? p.image : FILE_DOMAIN + p.file}
+                      src={
+                        isYouTubeVideos
+                          ? p.image
+                          : FILE_DOMAIN + p.file.replace('.mp4', '-thumb.png')
+                      }
                       srcSet={
                         isYouTubeVideos
                           ? p.image
-                          : `${FILE_DOMAIN_500 + p.file} 500w, ${
-                              FILE_DOMAIN + p.file
+                          : `${
+                              FILE_DOMAIN_500 +
+                              p.file.replace('.mp4', '-thumb.png')
+                            } 500w, ${
+                              FILE_DOMAIN + p.file.replace('.mp4', '-thumb.png')
                             } ${p.width}w`
                       }
                       sizes={
@@ -228,7 +244,7 @@ export default function Scroller({
                       <a
                         href={
                           'https://www.instagram.com/stories/highlights/' +
-                          p.highlight.replace('media-highlight-', '') +
+                          p.original_id +
                           '/'
                         }
                         target="_blank"
@@ -247,7 +263,7 @@ export default function Scroller({
                           p.country +
                           '/cities/' +
                           p.city +
-                          (p.id.length <= 3 ? '/stories/' : '/posts/') +
+                          (p.type === 'story' ? '/stories/' : '/posts/') +
                           p.id
                       )}
                     />
