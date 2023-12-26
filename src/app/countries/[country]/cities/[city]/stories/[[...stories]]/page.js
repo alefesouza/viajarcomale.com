@@ -160,28 +160,6 @@ export default async function Highlight({
 
   let theCity = countryData.cities.find((c) => c.slug === city);
 
-  const db = getFirestore();
-  let theMedia = null;
-
-  const instagramHighLightsSnapshot = await db
-    .collection('countries')
-    .doc(country)
-    .collection('cities')
-    .doc(city)
-    .collection('medias')
-    .where('type', '==', 'story')
-    .where('is_highlight', '==', true)
-    .get();
-
-  instagramHighLightsSnapshot.forEach((media) => {
-    const data = media.data();
-    data.type == 'instagram-highlight';
-    delete data.location_data;
-    delete data.hashtags;
-    delete data.hashtags_pt;
-    theMedia = data;
-  });
-
   if (stories && stories[0] !== 'webstories') {
     return Country({
       params: {
@@ -196,6 +174,7 @@ export default async function Highlight({
     sort === 'asc' ? 'asc' : 'desc'
   }`;
 
+  const db = getFirestore();
   const cache = await db.doc(cacheRef).get();
 
   let isRandom = sort === 'random';
@@ -270,7 +249,6 @@ export default async function Highlight({
         title={location}
         storyTitle={location}
         items={instagramStories}
-        highlightItem={theMedia}
         countryData={countryData}
       />
     );

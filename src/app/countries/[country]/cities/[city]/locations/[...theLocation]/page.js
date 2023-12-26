@@ -129,7 +129,7 @@ export async function generateMetadata({
   coverSnapshot.forEach((photo) => {
     const data = photo.data();
 
-    if ((cover && cover.type === 'instagram') || !cover) {
+    if ((cover && cover.type === 'post') || !cover) {
       cover = data;
     }
   });
@@ -305,7 +305,7 @@ export default async function Country({
   );
 
   let instagramPhotos = photos.filter(
-    (p) => p.type === 'post' || p.type === 'instagram-gallery'
+    (p) => p.type === 'post' || p.type === 'post-gallery'
   );
   const instagramStories = photos.filter((p) => p.type === 'story');
   const shortVideos = photos.filter((p) => p.type === 'short-video');

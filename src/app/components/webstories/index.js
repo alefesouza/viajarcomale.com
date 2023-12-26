@@ -16,8 +16,8 @@ export default async function WebStories({
   title,
   storyTitle,
   items,
-  highlightItem,
   countryData,
+  hashtag,
 }) {
   const i18n = useI18n();
   const host = useHost();
@@ -26,14 +26,19 @@ export default async function WebStories({
   const isWindows =
     new UAParser(headersList.get('user-agent')).getOS().name === 'Windows';
 
-  let firstItem = highlightItem ? highlightItem : items[0] || {};
-  if (highlightItem) {
-    const itemHighlight = items.find((i) => i.file === highlightItem.file);
+  let highlightItem = items.find((i) => i.is_highlight);
 
-    if (itemHighlight) {
-      highlightItem = itemHighlight;
+  if (hashtag) {
+    const highlight = items.find(
+      (i) => i.highlight_hashtags && i.highlight_hashtags.includes(hashtag)
+    );
+
+    if (highlight) {
+      highlightItem = highlight;
     }
   }
+
+  let firstItem = highlightItem ? highlightItem : items[0] || {};
 
   const theCover = firstItem?.file?.replace('.mp4', '-thumb.png');
   const ignoreAnalytics = headersList

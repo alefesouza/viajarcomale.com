@@ -3,11 +3,7 @@ import useHost from '@/app/hooks/use-host';
 import Link from 'next/link';
 import { getFirestore } from 'firebase-admin/firestore';
 import styles from './page.module.css';
-import {
-  FILE_DOMAIN,
-  FILE_DOMAIN_SQUARE,
-  SITE_NAME,
-} from '@/app/utils/constants';
+import { SITE_NAME } from '@/app/utils/constants';
 import Scroller from '@/app/components/scroller';
 import { permanentRedirect, redirect } from 'next/navigation';
 import InstagramMedia from '@/app/components/instagram-media';
@@ -115,25 +111,33 @@ export async function generateMetadata({
     (finalHashtag.name_pt ? finalHashtag.name_pt : finalHashtag.name);
 
   const sort = getSort(searchParams, theHashtag[1] === 'webstories', false);
-  let coverSnapshot = db
+  let coverSnapshot = await db
     .collectionGroup('medias')
-    .where('hashtags', 'array-contains', finalHashtag.name);
-
-  if (isWebStories) {
-    coverSnapshot = coverSnapshot.where('type', '==', 'story');
-  }
-
-  coverSnapshot = await coverSnapshot
-    .orderBy('date', sort)
-    .limit(isWebStories ? 1 : 2)
+    .where('highlight_hashtags', 'array-contains', finalHashtag.name)
+    .limit(1)
     .get();
+
+  if (coverSnapshot.size === 0) {
+    coverSnapshot = db
+      .collectionGroup('medias')
+      .where('hashtags', 'array-contains', finalHashtag.name);
+
+    if (isWebStories) {
+      coverSnapshot = coverSnapshot.where('type', '==', 'story');
+    }
+
+    coverSnapshot = await coverSnapshot
+      .orderBy('date', sort)
+      .limit(isWebStories ? 1 : 2)
+      .get();
+  }
 
   let cover = null;
 
   coverSnapshot.forEach((photo) => {
     const data = photo.data();
 
-    if ((cover && cover.type === 'instagram') || !cover) {
+    if ((cover && cover.type === 'post') || !cover) {
       cover = data;
     }
   });
@@ -349,6 +353,7 @@ export default async function Country({
         title={`#${hashtagPt ? hashtagPt.name_pt : hashtag}`}
         storyTitle={`#${hashtagPt ? hashtagPt.name_pt : hashtag}`}
         items={instagramStories}
+        hashtag={hashtagPt ? hashtagPt.name_pt : hashtag}
       />
     );
   }
