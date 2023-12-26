@@ -10,12 +10,14 @@ import getMetadata from '../utils/get-metadata';
 customInitApp();
 
 export async function GET() {
+  // const host = (string = '') =>
+  //   new URL(string, 'https://viajarcomale.com.br/').toString();
   const host = useHost();
   const isBR = host().includes('viajarcomale.com.br');
   const lastmod = '2023-12-26';
 
   const db = getFirestore();
-  const reference = host('sitemap.json')
+  const reference = host('sitemap.xml')
     .split('//')[1]
     .replaceAll('/', '-')
     .replace('www.', '');
@@ -315,10 +317,8 @@ export async function GET() {
       ],
     };
 
-    storage
-      .bucket('viajarcomale.appspot.com')
-      .file(reference)
-      .save(JSON.stringify(obj));
+    obj = parse('urlset', obj, { declaration: { encoding: 'UTF-8' } });
+    storage.bucket('viajarcomale.appspot.com').file(reference).save(obj);
   }
 
   if (cacheExists[0]) {
@@ -326,15 +326,12 @@ export async function GET() {
       .bucket('viajarcomale.appspot.com')
       .file(reference)
       .download();
-    obj = JSON.parse(contents);
+    obj = contents;
   }
 
   logAccess(db, host('/sitemap.xml').replace('https://viajarcomale', ''));
 
-  return new Response(
-    parse('urlset', obj, { declaration: { encoding: 'UTF-8' } }),
-    {
-      headers: { 'Content-Type': 'application/xml' },
-    }
-  );
+  return new Response(obj, {
+    headers: { 'Content-Type': 'application/xml' },
+  });
 }
