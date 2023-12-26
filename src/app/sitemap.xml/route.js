@@ -12,7 +12,7 @@ customInitApp();
 export async function GET() {
   const host = useHost();
   const isBR = host().includes('viajarcomale.com.br');
-  const lastmod = '2023-12-24';
+  const lastmod = '2023-12-25';
 
   const db = getFirestore();
   const reference = host('sitemap.json')
@@ -57,7 +57,7 @@ export async function GET() {
     hashtagsSnapshot.forEach((doc) => {
       hashtags.push(doc.data());
     });
-    const highlights = medias.filter((m) => m.type === 'instagram-highlight');
+    const highlights = medias.filter((m) => m.is_highlight);
 
     const mediaProcessing = (media, gallery, position) => {
       const item = gallery || media;
