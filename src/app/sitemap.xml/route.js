@@ -53,10 +53,11 @@ export async function GET() {
       locations.push(data);
     });
     const hashtagsSnapshot = await db.collectionGroup('hashtags').get();
-    const hashtags = [];
+    let hashtags = [];
     hashtagsSnapshot.forEach((doc) => {
       hashtags.push(doc.data());
     });
+    hashtags = hashtags.filter((h) => !h.is_country && !h.is_city);
     const highlights = medias.filter((m) => m.is_highlight);
 
     const mediaProcessing = (media, gallery, position) => {

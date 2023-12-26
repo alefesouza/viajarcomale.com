@@ -153,7 +153,6 @@ export default async function Country({ params: { slug }, searchParams }) {
       theShuffle < 1 ||
       theShuffle > 15
     ) {
-      console.log(1);
       redirect('/');
     }
   }
@@ -163,7 +162,6 @@ export default async function Country({ params: { slug }, searchParams }) {
     (!searchParams.shuffle || Object.keys(searchParams).length > 2) &&
     !searchParams.indexes
   ) {
-    console.log(2);
     redirect('/');
   }
 

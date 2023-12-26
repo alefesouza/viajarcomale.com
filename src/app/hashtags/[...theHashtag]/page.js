@@ -99,6 +99,19 @@ export async function generateMetadata({
 
   const finalHashtag = hashtagPt || hashtagEn;
 
+  if (finalHashtag.is_country && finalHashtag?.metadata?.country_slug) {
+    permanentRedirect('/countries/' + finalHashtag.metadata.country_slug);
+  }
+
+  if (finalHashtag.is_city && finalHashtag?.metadata?.city_slug) {
+    permanentRedirect(
+      '/countries/' +
+        finalHashtag.metadata.country_slug +
+        '/cities/' +
+        finalHashtag.metadata.city_slug
+    );
+  }
+
   const enUrl =
     'https://viajarcomale.com' +
     (isWebStories ? '/webstories' : '') +

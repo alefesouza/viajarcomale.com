@@ -356,13 +356,7 @@ export default function Scroller({
 
                 {!isInstagramHighlights &&
                   p.hashtags &&
-                  p.hashtags.length > 0 && (
-                    <Hashtags
-                      hashtags={
-                        isBR && p.hashtags_pt ? p.hashtags_pt : p.hashtags
-                      }
-                    />
-                  )}
+                  p.hashtags.length > 0 && <Hashtags item={p} isBR={isBR} />}
 
                 <SchemaData media={p} withOptional={isInstagramHighlights} />
               </div>

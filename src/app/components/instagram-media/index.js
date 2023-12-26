@@ -174,11 +174,7 @@ export default function InstagramMedia({
         )}
 
       {!media.is_gallery && media.hashtags && media.hashtags.length > 0 && (
-        <Hashtags
-          hashtags={
-            isBR && media.hashtags_pt ? media.hashtags_pt : media.hashtags
-          }
-        />
+        <Hashtags item={media} isBR={isBR} />
       )}
 
       <SchemaData

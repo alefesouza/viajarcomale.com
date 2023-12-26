@@ -9,7 +9,9 @@ export default function getMetadata(media, isBR, position) {
     isBR && media.cityData.name_pt
       ? media.cityData.name_pt
       : media.cityData.name,
-    i18n(media.countryData.name),
+    isBR && media.countryData.name_pt
+      ? media.countryData.name_pt
+      : media.countryData.name,
   ].join(' - ');
   const locationTitle =
     media.location_data &&
