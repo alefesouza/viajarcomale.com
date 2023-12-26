@@ -6,7 +6,7 @@ export default function useI18n() {
 
   const host =
     headersList.get('x-forwarded-host') && headersList.get('x-forwarded-host');
-  const isBR = true;
+  const isBR = host === 'viajarcomale.com.br';
 
   return (string, options = {}) => {
     let text = isBR && langs['pt-BR'][string] ? langs['pt-BR'][string] : string;

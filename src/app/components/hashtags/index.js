@@ -20,8 +20,7 @@ const stringToSlug = (str) => {
   return str;
 };
 
-export default function Hashtags({ item }) {
-  const isBR = true;
+export default function Hashtags({ item, isBR }) {
   const city = stringToSlug(
     isBR && item.cityData.name_pt ? item.cityData.name_pt : item.cityData.name
   ).replaceAll('-', '');

@@ -104,11 +104,15 @@ export async function generateMetadata({
   }
 
   if (finalHashtag.is_city && finalHashtag?.metadata?.city_slug) {
+    const hasWebStories = headers().get('x-pathname').includes('/webstories');
+
     permanentRedirect(
-      '/countries/' +
+      (hasWebStories ? '/webstories' : '') +
+        '/countries/' +
         finalHashtag.metadata.country_slug +
         '/cities/' +
-        finalHashtag.metadata.city_slug
+        finalHashtag.metadata.city_slug +
+        (hasWebStories ? '/stories' : '')
     );
   }
 
