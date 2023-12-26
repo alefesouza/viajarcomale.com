@@ -17,7 +17,7 @@ export default function getMetadata(media, isBR, position) {
       .slice(0, 2)
       .map(
         (c) =>
-          (isBR && c.name_pt ? c.name_pt : c.name) +
+          ((isBR && c.name_pt ? c.name_pt : c.name) || '') +
           (c.alternative_names
             ? ' (' + c.alternative_names.join(', ') + ')'
             : '')
