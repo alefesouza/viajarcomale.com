@@ -54,8 +54,9 @@ exports.onMediaUpdated = onDocumentUpdated(
       const locationsSnapshot = await db
         .collection('countries')
         .doc(newValue.country)
-        .collection('locations')
+        .collection('cities')
         .doc(newValue.city)
+        .collection('locations')
         .where('slug', 'in', newValue.locations)
         .get();
 

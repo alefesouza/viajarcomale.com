@@ -341,7 +341,7 @@ export default function Scroller({
                                 ? location.name_pt
                                 : location.name}
                               {location.alternative_names &&
-                                location.alternative_names.length &&
+                                location.alternative_names.length > 0 &&
                                 ' (' +
                                   location.alternative_names.join(', ') +
                                   ')'}

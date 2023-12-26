@@ -287,48 +287,6 @@ export default async function Country({
     newShuffle = randomIntFromInterval(1, 15);
   }
 
-  const sortPicker = (type) => (
-    <div className="container-fluid">
-      <div className="sort_picker">
-        <span>{i18n('Sorting')}:</span>
-
-        {[
-          { name: 'Latest', value: 'desc' },
-          { name: 'Oldest', value: 'asc' },
-          { name: 'Random', value: 'random' },
-        ].map((o) => (
-          <Link
-            key={o}
-            href={
-              o.value === 'random'
-                ? sort === 'random'
-                  ? '/hashtags/' + hashtag
-                  : '/hashtags/' +
-                    hashtag +
-                    '?sort=random&shuffle=' +
-                    newShuffle
-                : o.value !== 'desc'
-                ? '?sort=' + o.value
-                : '/hashtags/' + hashtag
-            }
-            scroll={false}
-          >
-            <label>
-              <input
-                type="radio"
-                name={'sort-' + type}
-                value={o.value}
-                checked={sort === o.value}
-                readOnly
-              />
-              {i18n(o.name)}
-            </label>
-          </Link>
-        ))}
-      </div>
-    </div>
-  );
-
   let instagramPhotos = photos.filter(
     (p) => p.type === 'post' || p.type === 'post-gallery'
   );
@@ -412,6 +370,48 @@ export default async function Country({
     });
   }
 
+  const sortPicker = (type) => (
+    <div className="container-fluid">
+      <div className="sort_picker">
+        <span>{i18n('Sorting')}:</span>
+
+        {[
+          { name: 'Latest', value: 'desc' },
+          { name: 'Oldest', value: 'asc' },
+          { name: 'Random', value: 'random' },
+        ].map((o) => (
+          <Link
+            key={o}
+            href={
+              o.value === 'random'
+                ? sort === 'random'
+                  ? '/hashtags/' + currentHashtag
+                  : '/hashtags/' +
+                    currentHashtag +
+                    '?sort=random&shuffle=' +
+                    newShuffle
+                : o.value !== 'desc'
+                ? '?sort=' + o.value
+                : '/hashtags/' + currentHashtag
+            }
+            scroll={false}
+          >
+            <label>
+              <input
+                type="radio"
+                name={'sort-' + type}
+                value={o.value}
+                checked={sort === o.value}
+                readOnly
+              />
+              {i18n(o.name)}
+            </label>
+          </Link>
+        ))}
+      </div>
+    </div>
+  );
+
   return (
     <div>
       <div className="container">
@@ -467,7 +467,7 @@ export default async function Country({
             title="Stories"
             items={instagramStories}
             isStories
-            webStoriesHref={host('/webstories/hashtags/' + hashtag)}
+            webStoriesHref={host('/webstories/hashtags/' + currentHashtag)}
             sort={sort}
           />
         )}
@@ -486,7 +486,7 @@ export default async function Country({
                 {!expandGalleries ? (
                   <Link
                     href={
-                      `/hashtags/${hashtag}/expand` +
+                      `/hashtags/${currentHashtag}/expand` +
                       (sort !== 'desc' ? '?sort=' + sort : '')
                     }
                     scroll={false}
@@ -497,7 +497,7 @@ export default async function Country({
                 ) : (
                   <Link
                     href={
-                      `/hashtags/${hashtag}` +
+                      `/hashtags/${currentHashtag}` +
                       (sort !== 'desc' ? '?sort=' + sort : '')
                     }
                     scroll={false}

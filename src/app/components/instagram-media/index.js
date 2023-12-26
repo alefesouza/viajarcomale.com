@@ -81,7 +81,7 @@ export default function InstagramMedia({
         (isMain && media.type === 'story' && media.mode === 'portrait'
           ? ' ' + 'instagram_media_portrait'
           : '') +
-        (media.gallery && media.gallery.length && !expandGalleries
+        (media.gallery && media.gallery.length > 0 && !expandGalleries
           ? ' ' + 'instagram_media_is_gallery'
           : '')
       }
@@ -163,7 +163,7 @@ export default function InstagramMedia({
                       ? location.name_pt
                       : location.name}
                     {location.alternative_names &&
-                      location.alternative_names.length &&
+                      location.alternative_names.length > 0 &&
                       ' (' + location.alternative_names.join(', ') + ')'}
                   </Link>
                   {i < media.location_data.length - 1 ? ', ' : ''}
