@@ -342,7 +342,9 @@ export default async function Country({ params: { country, city, media } }) {
             '/cities/' +
             city +
             (theMedia.type === 'story' ? '/stories' : '') +
-            (mediaIndex ? '/posts/' + theMedia.id.replace('media-', '') : '')
+            (mediaIndex
+              ? '/posts/' + theMedia.id.replace(city + '-post-', '')
+              : '')
           }
           id="back-button"
           scroll={false}
