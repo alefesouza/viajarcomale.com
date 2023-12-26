@@ -7,6 +7,7 @@ export default function SchemaData({
   media,
   isWebStories = false,
   isExpand = false,
+  withOptional = false,
 }) {
   const host = useHost();
   const isBR = host().includes('viajarcomale.com.br');
@@ -82,7 +83,7 @@ export default function SchemaData({
   if (!isWebStories) {
     return (
       <>
-        {isExpand && media.img_index && optionalContent}
+        {((isExpand && media.img_index) || withOptional) && optionalContent}
         {content}
       </>
     );

@@ -54,44 +54,24 @@ export async function generateMetadata({ params: { country, city, stories } }) {
     redirect('/');
   }
 
-  const highlight = theCity.highlight;
-
   let theMedia = null;
 
   const db = getFirestore();
 
-  if (highlight) {
-    const mediaRef = await db
-      .collection('countries')
-      .doc(country)
-      .collection('cities')
-      .doc(city)
-      .collection('medias')
-      .doc(highlight)
-      .get();
-    theMedia = mediaRef.data();
-  }
+  const instagramHighLightsSnapshot = await db
+    .collection('countries')
+    .doc(country)
+    .collection('cities')
+    .doc(city)
+    .collection('medias')
+    .where('type', '==', 'story')
+    .where('is_highlight', '==', true)
+    .get();
 
-  if (!theMedia) {
-    const instagramHighLightsSnapshot = await db
-      .collection('countries')
-      .doc(country)
-      .collection('cities')
-      .doc(city)
-      .collection('medias')
-      .where('type', '==', 'story')
-      .where('is_highlight', '==', true)
-      .get();
-
-    instagramHighLightsSnapshot.forEach((media) => {
-      const data = media.data();
-      data.type == 'instagram-highlight';
-      delete data.location_data;
-      delete data.hashtags;
-      delete data.hashtags_pt;
-      theMedia = data;
-    });
-  }
+  instagramHighLightsSnapshot.forEach((media) => {
+    const data = media.data();
+    theMedia = data;
+  });
 
   if (stories && stories[0] !== 'webstories') {
     return generateMediaMetadata({
@@ -183,38 +163,24 @@ export default async function Highlight({
   const db = getFirestore();
   let theMedia = null;
 
-  if (theCity.highlight) {
-    const mediaRef = await db
-      .collection('countries')
-      .doc(country)
-      .collection('cities')
-      .doc(theCity.slug)
-      .collection('medias')
-      .doc(theCity.highlight)
-      .get();
-    theMedia = mediaRef.data();
-  }
+  const instagramHighLightsSnapshot = await db
+    .collection('countries')
+    .doc(country)
+    .collection('cities')
+    .doc(city)
+    .collection('medias')
+    .where('type', '==', 'story')
+    .where('is_highlight', '==', true)
+    .get();
 
-  if (!theMedia) {
-    const instagramHighLightsSnapshot = await db
-      .collection('countries')
-      .doc(country)
-      .collection('cities')
-      .doc(city)
-      .collection('medias')
-      .where('type', '==', 'story')
-      .where('is_highlight', '==', true)
-      .get();
-
-    instagramHighLightsSnapshot.forEach((media) => {
-      const data = media.data();
-      data.type == 'instagram-highlight';
-      delete data.location_data;
-      delete data.hashtags;
-      delete data.hashtags_pt;
-      theMedia = data;
-    });
-  }
+  instagramHighLightsSnapshot.forEach((media) => {
+    const data = media.data();
+    data.type == 'instagram-highlight';
+    delete data.location_data;
+    delete data.hashtags;
+    delete data.hashtags_pt;
+    theMedia = data;
+  });
 
   if (stories && stories[0] !== 'webstories') {
     return Country({

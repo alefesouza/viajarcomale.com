@@ -112,14 +112,14 @@ export async function generateMetadata({ params: { slug }, searchParams }) {
       .collection('cities')
       .doc(city)
       .collection('medias')
-      .where('type', '==', 'instagram-highlight')
+      .where('is_highlight', '==', true)
       .limit(1)
       .get();
   } else {
     coverSnapshot = await db
       .collectionGroup('medias')
       .where('country', '==', countryData.slug)
-      .where('type', '==', 'instagram-highlight')
+      .where('is_highlight', '==', true)
       .orderBy('date', 'desc')
       .limit(1)
       .get();
@@ -238,8 +238,7 @@ export default async function Country({ params: { slug }, searchParams }) {
             .collection('cities')
             .doc(city)
             .collection('medias')
-            .where('type', '==', 'instagram-highlight')
-            .orderBy('order', sort)
+            .where('is_highlight', '==', true)
             .get();
           shortVideosSnapshot = await db
             .collection('countries')
@@ -272,9 +271,8 @@ export default async function Country({ params: { slug }, searchParams }) {
           instagramHighLightsSnapshot = await db
             .collectionGroup('medias')
             .where('country', '==', country)
-            .where('type', '==', 'instagram-highlight')
-            .orderBy('city_location_id', sort)
-            .orderBy('order', sort)
+            .where('is_highlight', '==', true)
+            .orderBy('date', sort)
             .get();
           shortVideosSnapshot = await db
             .collectionGroup('medias')
@@ -358,44 +356,6 @@ export default async function Country({ params: { slug }, searchParams }) {
         const data = media.data();
         instagramHighLights = [...instagramHighLights, data];
       });
-
-      if (instagramHighLights.length === 0) {
-        instagramHighLightsSnapshot = await db
-          .collection('countries')
-          .doc(country)
-          .collection('cities')
-          .doc(city)
-          .collection('medias')
-          .where('type', '==', 'story')
-          .where('is_highlight', '==', true)
-          .get();
-
-        instagramHighLightsSnapshot.forEach((media) => {
-          const data = media.data();
-          data.type == 'instagram-highlight';
-          delete data.location_data;
-          delete data.hashtags;
-          delete data.hashtags_pt;
-          instagramHighLights = [...instagramHighLights, data];
-        });
-      } else if (!city) {
-        instagramHighLightsSnapshot = await db
-          .collectionGroup('medias')
-          .where('country', '==', country)
-          .where('type', '==', 'story')
-          .where('is_highlight', '==', true)
-          .orderBy('date', sort)
-          .get();
-
-        instagramHighLightsSnapshot.forEach((media) => {
-          const data = media.data();
-          data.type == 'instagram-highlight';
-          delete data.location_data;
-          delete data.hashtags;
-          delete data.hashtags_pt;
-          instagramHighLights = [...instagramHighLights, data];
-        });
-      }
 
       shortVideosSnapshot.forEach((media) => {
         const data = media.data();

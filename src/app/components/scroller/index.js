@@ -305,11 +305,16 @@ export default function Scroller({
                   </div>
                 )}
 
-                <div>
-                  {isBR && p.description_pt ? p.description_pt : p.description}
-                </div>
+                {!isInstagramHighlights && (
+                  <div>
+                    {isBR && p.description_pt
+                      ? p.description_pt
+                      : p.description}
+                  </div>
+                )}
 
-                {p.locations &&
+                {!isInstagramHighlights &&
+                  p.locations &&
                   p.location_data &&
                   p.location_data.length > 0 && (
                     <div style={{ marginTop: 4 }} className={styles.location}>
@@ -348,15 +353,17 @@ export default function Scroller({
                     </div>
                   )}
 
-                {p.hashtags && p.hashtags.length > 0 && (
-                  <Hashtags
-                    hashtags={
-                      isBR && p.hashtags_pt ? p.hashtags_pt : p.hashtags
-                    }
-                  />
-                )}
+                {!isInstagramHighlights &&
+                  p.hashtags &&
+                  p.hashtags.length > 0 && (
+                    <Hashtags
+                      hashtags={
+                        isBR && p.hashtags_pt ? p.hashtags_pt : p.hashtags
+                      }
+                    />
+                  )}
 
-                <SchemaData media={p} />
+                <SchemaData media={p} withOptional={isInstagramHighlights} />
               </div>
             );
           })}
