@@ -82,13 +82,14 @@ export default function Scroller({
           data-scroller-scroll
         >
           {items.map((p) => {
+            const originalId = p.id;
             p.id = p.id
               .replace(p.city + '-post-', '')
               .replace(p.city + '-story-', '');
 
             return (
               <div
-                key={p.id}
+                key={originalId}
                 className={
                   styles.scroller_item +
                   (is360Photos || isYouTubeVideos
