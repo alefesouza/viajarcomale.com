@@ -20,7 +20,7 @@ export default function getMetadata(media, isBR, position) {
       .map(
         (c) =>
           ((isBR && c.name_pt ? c.name_pt : c.name) || '') +
-          (c.alternative_names
+          (c.alternative_names && c.alternative_names.length
             ? ' (' + c.alternative_names.join(', ') + ')'
             : '')
       )
@@ -31,12 +31,12 @@ export default function getMetadata(media, isBR, position) {
       .map(
         (c) =>
           (isBR && c.name_pt ? c.name_pt : c.name) +
-          (c.alternative_names
+          (c.alternative_names && c.alternative_names.length
             ? ' (' + c.alternative_names.join(', ') + ')'
             : '')
       )
       .join(', ');
-  const keywords =
+  const hashtags =
     isBR && media.hashtags_pt ? media.hashtags_pt : media.hashtags;
   const description =
     (isBR && media.description_pt ? media.description_pt : media.description) ||
@@ -47,7 +47,11 @@ export default function getMetadata(media, isBR, position) {
       : description;
 
   const title = [
-    shortDescription,
+    media.type === 'youtube'
+      ? isBR && media.title_pt
+        ? media.title_pt
+        : media.title
+      : shortDescription,
     media.img_index || position ? 'Item ' + (media.img_index || position) : '',
     locationTitle,
     locationCity,
@@ -55,6 +59,22 @@ export default function getMetadata(media, isBR, position) {
   ]
     .filter((c) => c)
     .join(' - ');
+
+  let embedVideo = null;
+
+  if (media.type === 'youtube') {
+    const url = new URL(media.link);
+    const id = url.searchParams.get('v');
+
+    embedVideo = 'https://www.youtube.com/embed/' + id;
+  }
+
+  if (media.type === 'short-video') {
+    const split = media.youtube_link.split('/');
+    const id = split[split.length - 1];
+
+    embedVideo = 'https://www.youtube.com/embed/' + id;
+  }
 
   const theDescription =
     [
@@ -77,6 +97,8 @@ export default function getMetadata(media, isBR, position) {
   return {
     title,
     description: theDescription,
-    keywords,
+    hashtags,
+    locationDescription,
+    embedVideo,
   };
 }

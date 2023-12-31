@@ -60,9 +60,9 @@
   const loadingSpinner = document.querySelector('#loader-spinner');
 
   function showSpinner(e) {
-    const link = e?.target?.href || e?.target?.parentElement?.href;
+    const link = e?.target?.href || e?.target?.closest('a')?.href;
 
-    if ((e?.target?.parentElement?.target || e?.target?.target) === '_blank') {
+    if ((e?.target?.closest('a')?.target || e?.target?.target) === '_blank') {
       return;
     }
 
@@ -275,18 +275,37 @@
         .classList.add('active');
     }
 
-    firstAccess = false;
-
     const paths = window.location.pathname.split('/');
     const isMediaSingle =
       paths[1] === 'countries' &&
       paths[3] === 'cities' &&
-      (paths[5] === 'posts' || paths[5] === 'stories') &&
+      (paths[5] === 'posts' ||
+        paths[5] === 'stories' ||
+        paths[5] === 'videos' ||
+        paths[5] === 'short-videos') &&
       paths[6] &&
-      (paths[5] === 'stories' || paths[7]);
+      (paths[5] === 'stories' ||
+        paths[5] === 'videos' ||
+        paths[5] === 'short-videos' ||
+        paths[7]);
 
     if (isMediaSingle) {
       document.querySelector('body').classList.add('single-media-page');
+
+      if (paths[5] === 'short-videos') {
+        const tiktokLoader = document.querySelector('#tiktok-loader');
+
+        if (tiktokLoader) {
+          tiktokLoader.remove();
+
+          // Required because the script does not run on router navigation.
+          const script = document.createElement('script');
+          script.src = 'https://www.tiktok.com/embed.js';
+          script.id = 'tiktok-loader';
+          script.setAttribute('async', '');
+          document.head.appendChild(script);
+        }
+      }
 
       const image = document.querySelector('img[itemprop="contentUrl"]');
 
@@ -396,6 +415,10 @@
   const elementToObserve = document.querySelector('main');
 
   observer = new MutationObserver(function () {
+    if (document.querySelector('.tiktok-embed iframe')) {
+      return;
+    }
+
     loadingSpinner.style.display = 'none';
 
     setupLinks('main');

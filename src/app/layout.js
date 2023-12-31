@@ -30,9 +30,15 @@ export default function RootLayout({ children }) {
   const isMediaSingle =
     paths[1] === 'countries' &&
     paths[3] === 'cities' &&
-    (paths[5] === 'posts' || paths[5] === 'stories') &&
+    (paths[5] === 'posts' ||
+      paths[5] === 'stories' ||
+      paths[5] === 'videos' ||
+      paths[5] === 'short-videos') &&
     paths[6] &&
-    (paths[5] === 'stories' || paths[7]);
+    (paths[5] === 'stories' ||
+      paths[5] === 'videos' ||
+      paths[5] === 'short-videos' ||
+      paths[7]);
 
   const ignoreAnalytics =
     getCookie('ignore_analytics') || host().includes('localhost');

@@ -28,17 +28,26 @@ export default function defaultMetadata(title, description, media, isSingle) {
 
   let images = [];
 
-  if (media) {
-    const metadata = getMetadata(media, isBR);
+  let metadata = {};
 
+  if (media) {
+    metadata = getMetadata(media, isBR);
+  }
+
+  if (media) {
     images = [
       {
         url:
-          (media.type === 'story' ? FILE_DOMAIN_SQUARE : FILE_DOMAIN) +
-          media.file.replace('.mp4', '-thumb.png'),
+          media.type !== 'youtube'
+            ? (media.type === 'story' ? FILE_DOMAIN_SQUARE : FILE_DOMAIN) +
+              media.file.replace('.mp4', '-thumb.png')
+            : media.image,
         width: media.width,
         height: media.type === 'story' ? media.width : media.height,
-        type: media.file.includes('.png') ? 'image/png' : 'image/jpeg',
+        type:
+          media.file && media.file.includes('.png')
+            ? 'image/png'
+            : 'image/jpeg',
         alt: metadata.description,
       },
     ];
@@ -48,11 +57,17 @@ export default function defaultMetadata(title, description, media, isSingle) {
         url: host('cover.jpg'),
         width: 1280,
         height: 630,
-        type: 'image/jpg',
+        type: 'image/jpeg',
         alt: description || defaultDescription,
       },
     ];
   }
+
+  const isVideo =
+    media &&
+    (media.type === 'youtube' ||
+      media.type === 'short-video' ||
+      media.file.includes('.mp4'));
 
   return {
     title: title || defaultTitle,
@@ -63,23 +78,25 @@ export default function defaultMetadata(title, description, media, isSingle) {
       images,
       url: canonical,
       videos:
-        isSingle && media && media.file.includes('.mp4')
+        isSingle && isVideo
           ? [
               {
-                url: FILE_DOMAIN + media.file,
-                width: media.width,
-                height: media.height,
-                type: 'video/mp4',
+                url: metadata.embedVideo
+                  ? metadata.embedVideo
+                  : FILE_DOMAIN + media.file,
+                width: media.width || 1280,
+                height: media.height || 720,
+                type:
+                  media.file && media.file.includes('.mp4')
+                    ? 'video/mp4'
+                    : 'text/html',
               },
             ]
           : null,
-      type:
-        isSingle && media && media.file.includes('.mp4')
-          ? 'video.movie'
-          : 'website',
-      ...(isSingle && media && media.file.includes('.mp4')
+      type: isSingle && isVideo ? 'video.movie' : 'website',
+      ...(isSingle && isVideo
         ? {
-            duration: Math.ceil(media.duration),
+            duration: media.duration ? Math.ceil(media.duration) : null,
             releaseDate: media.date.replace(' ', 'T') + '+03:00',
             directors: ['Alefe Souza - ' + SITE_NAME],
             tags:

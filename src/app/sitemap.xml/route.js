@@ -11,10 +11,10 @@ customInitApp();
 
 export async function GET() {
   // const host = (string = '') =>
-  //   new URL(string, 'https://viajarcomale.com.br/').toString();
+  //   new URL(string, 'https://viajarcomale.com/').toString();
   const host = useHost();
   const isBR = host().includes('viajarcomale.com.br');
-  const lastmod = '2023-12-26';
+  const lastmod = '2023-12-30';
 
   const db = getFirestore();
   const reference = host('sitemap.xml')
@@ -41,7 +41,9 @@ export async function GET() {
     const mediasSnapshot = await db.collectionGroup('medias').get();
     const medias = [];
     mediasSnapshot.forEach((doc) => {
-      medias.push(doc.data());
+      const data = doc.data();
+      data.path = doc.ref.path;
+      medias.push(data);
     });
     const locationsSnapshot = await db.collectionGroup('locations').get();
     const locations = [];
@@ -69,18 +71,31 @@ export async function GET() {
         return {};
       }
 
-      if (item.file.includes('.mp4')) {
-        const { title, description } = getMetadata(media, isBR, position);
+      if (
+        item.type === 'youtube' ||
+        item.type === 'short-video' ||
+        item.file.includes('.mp4')
+      ) {
+        const { title, description, embedVideo } = getMetadata(
+          media,
+          isBR,
+          position
+        );
 
-        return {
+        const data = {
           'video:video': [
             {
               'video:thumbnail_loc':
-                FILE_DOMAIN + item.file.replace('.mp4', '-thumb.png'),
-              'video:content_loc': FILE_DOMAIN + item.file,
+                item.type === 'youtube'
+                  ? item.image
+                  : FILE_DOMAIN + item.file.replace('.mp4', '-thumb.png'),
+              [item.type === 'youtube' || item.type === 'short-video'
+                ? 'video:player_loc'
+                : 'video:content_loc']: embedVideo
+                ? embedVideo
+                : FILE_DOMAIN + item.file,
               'video:title': title,
               'video:description': description,
-              'video:duration': parseInt(item.duration),
               'video:publication_date': media.date
                 ? media.date.replace(' ', 'T') + '+03:00'
                 : media.cityData.end + 'T12:00:00+03:00',
@@ -90,6 +105,12 @@ export async function GET() {
             },
           ],
         };
+
+        if (item.duration) {
+          data['video:video'][0]['video:duration'] = parseInt(item.duration);
+        }
+
+        return data;
       }
 
       return {
@@ -261,59 +282,99 @@ export async function GET() {
         ...medias
           .filter((m) => m.type === 'story')
           .map((m) => {
+            const [, country, , city] = m.path.split('/');
+
             return {
               ...makeLoc(
                 '/countries/' +
-                  m.country +
+                  country +
                   '/cities/' +
-                  m.city +
+                  city +
                   '/stories/' +
-                  m.id.replace(m.city + '-story-', '')
+                  m.id.replace(city + '-story-', '')
+              ),
+              ...mediaProcessing(m, null),
+            };
+          }),
+        ...medias
+          .filter((m) => m.type === 'youtube')
+          .map((m) => {
+            const [, country, , city] = m.path.split('/');
+
+            return {
+              ...makeLoc(
+                '/countries/' +
+                  country +
+                  '/cities/' +
+                  city +
+                  '/videos/' +
+                  m.id.replace(city + '-youtube-', '')
+              ),
+              ...mediaProcessing(m, null),
+            };
+          }),
+        ...medias
+          .filter((m) => m.type === 'short-video')
+          .map((m) => {
+            const [, country, , city] = m.path.split('/');
+
+            return {
+              ...makeLoc(
+                '/countries/' +
+                  country +
+                  '/cities/' +
+                  city +
+                  '/short-videos/' +
+                  m.id.replace(city + '-short-video-', '')
               ),
               ...mediaProcessing(m, null),
             };
           }),
         ...medias
           .filter((m) => m.type === 'post')
-          .flatMap((m) => [
-            {
-              ...makeLoc(
-                '/countries/' +
-                  m.country +
-                  '/cities/' +
-                  m.city +
-                  '/posts/' +
-                  m.id.replace(m.city + '-post-', '')
-              ),
-            },
-            {
-              ...makeLoc(
-                '/countries/' +
-                  m.country +
-                  '/cities/' +
-                  m.city +
-                  '/posts/' +
-                  m.id.replace(m.city + '-post-', '') +
-                  '/1'
-              ),
-              ...mediaProcessing(m, null),
-            },
-            ...(m.gallery
-              ? m.gallery.map((g, i) => ({
-                  ...makeLoc(
-                    '/countries/' +
-                      m.country +
-                      '/cities/' +
-                      m.city +
-                      '/posts/' +
-                      m.id.replace(m.city + '-post-', '') +
-                      '/' +
-                      (i + 2)
-                  ),
-                  ...mediaProcessing(m, g, i + 2),
-                }))
-              : []),
-          ]),
+          .flatMap((m) => {
+            const [, country, , city] = m.path.split('/');
+
+            return [
+              {
+                ...makeLoc(
+                  '/countries/' +
+                    country +
+                    '/cities/' +
+                    city +
+                    '/posts/' +
+                    m.id.replace(city + '-post-', '')
+                ),
+              },
+              {
+                ...makeLoc(
+                  '/countries/' +
+                    country +
+                    '/cities/' +
+                    city +
+                    '/posts/' +
+                    m.id.replace(city + '-post-', '') +
+                    '/1'
+                ),
+                ...mediaProcessing(m, null),
+              },
+              ...(m.gallery
+                ? m.gallery.map((g, i) => ({
+                    ...makeLoc(
+                      '/countries/' +
+                        country +
+                        '/cities/' +
+                        city +
+                        '/posts/' +
+                        m.id.replace(city + '-post-', '') +
+                        '/' +
+                        (i + 2)
+                    ),
+                    ...mediaProcessing(m, g, i + 2),
+                  }))
+                : []),
+            ];
+          }),
       ],
     };
 
