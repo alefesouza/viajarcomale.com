@@ -58,7 +58,7 @@
   position: relative;
 }
 
-.scroller_item .item_360_photo img {
+.scroller_item .item_360_photo img[loading] {
   width: 300px;
 }
 
@@ -80,7 +80,7 @@
     flex: 0 0 400px;
   }
 
-  .scroller_items .item_360_photo img {
+  .scroller_items .item_360_photo img[loading] {
     width: 400px;
   }
 
@@ -88,7 +88,7 @@
     flex: 0 0 350px;
   }
 
-  .instagram_highlights_items .item_360_photo img {
+  .instagram_highlights_items .item_360_photo img[loading] {
     width: 350px;
   }
 }

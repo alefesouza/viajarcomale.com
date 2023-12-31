@@ -10,7 +10,7 @@ import {
 } from '@/app/utils/constants';
 import Scroller from '@/app/components/scroller';
 import { redirect } from 'next/navigation';
-import InstagramMedia from '@/app/components/instagram-media';
+import Media from '@/app/components/media';
 import ShareButton from '@/app/components/share-button';
 import randomIntFromInterval from '@/app/utils/random-int';
 import WebStories from '@/app/components/webstories';
@@ -20,11 +20,16 @@ import StructuredBreadcrumbs from '@/app/components/structured-breadcrumbs';
 import defaultMetadata from '@/app/utils/default-metadata';
 import { headers } from 'next/headers';
 import { UAParser } from 'ua-parser-js';
+import expandDate from '@/app/utils/expand-date';
 
 async function getCountry(country, city) {
   const db = getFirestore();
   const countryDoc = await db.collection('countries').doc(country).get();
   const countryData = countryDoc.data();
+
+  if (!countryData) {
+    redirect('/');
+  }
 
   if (city && !countryData.cities.find((c) => c.slug === city)) {
     return false;
@@ -93,10 +98,10 @@ export async function generateMetadata({
     i18n(countryData.name),
   ].join(' - ');
   const title = [
-    isBR && theMedia.name_pt ? theMedia.name_pt : theMedia.name,
-    theMedia.alternative_names
-      ? ' (' + theMedia.alternative_names.join(', ') + ')'
-      : '',
+    (isBR && theMedia.name_pt ? theMedia.name_pt : theMedia.name) +
+      (theMedia.alternative_names
+        ? ' (' + theMedia.alternative_names.join(', ') + ')'
+        : ''),
     finalLocation,
     isWebStories ? 'Web Stories' : '',
     SITE_NAME,
@@ -110,10 +115,11 @@ export async function generateMetadata({
     }
   );
 
-  const sort = getSort(searchParams, theLocation[1] === 'webstories', false);
+  const sort = getSort(searchParams, false, false);
   let coverSnapshot = db
     .collectionGroup('medias')
-    .where('locations', 'array-contains', location);
+    .where('locations', 'array-contains', location)
+    .where('city', '==', city);
 
   if (isWebStories) {
     coverSnapshot = coverSnapshot.where('type', '==', 'story');
@@ -175,7 +181,7 @@ export default async function Country({
   const location = decodeURIComponent(queryLocation);
 
   const expandGalleries = expand;
-  let sort = getSort(searchParams, expand === 'webstories');
+  let sort = getSort(searchParams, theLocation[1] === 'webstories');
 
   const countryData = await getCountry(country, city);
 
@@ -185,7 +191,7 @@ export default async function Country({
 
   let theCity = countryData.cities.find((c) => c.slug === city);
 
-  const cacheRef = `/caches/locations/locations/${location}/sort/${
+  const cacheRef = `/caches/locations/locations-cache/${location}/sort/${
     sort === 'asc' ? 'asc' : 'desc'
   }`;
 
@@ -212,17 +218,15 @@ export default async function Country({
 
   if (!cache.exists) {
     const photosSnapshot = await db
-      .collection('countries')
-      .doc(country)
-      .collection('cities')
-      .doc(city)
-      .collection('medias')
+      .collectionGroup('medias')
       .where('locations', 'array-contains', location)
+      .where('city', '==', city)
       .orderBy('order', sort)
       .get();
 
     photosSnapshot.forEach((photo) => {
       const data = photo.data();
+      data.path = photo.ref.path;
 
       photos = [...photos, data];
     });
@@ -323,25 +327,21 @@ export default async function Country({
   }
 
   if (expand == 'webstories') {
-    const finalLocation = [
+    const title = [
+      (isBR && theMedia.name_pt ? theMedia.name_pt : theMedia.name) +
+        (theMedia.alternative_names
+          ? ' (' + theMedia.alternative_names.join(', ') + ')'
+          : ''),
       isBR && theCity.name_pt ? theCity.name_pt : theCity.name,
       i18n(countryData.name),
     ].join(' - ');
-    const storyTitle = [
-      isBR && theMedia.name_pt ? theMedia.name_pt : theMedia.name,
-      theMedia.alternative_names
-        ? ' (' + theMedia.alternative_names.join(', ') + ')'
-        : '',
-    ]
-      .filter((c) => c)
-      .join(' - ');
-    const title = storyTitle + ' - ' + finalLocation;
 
     return (
       <WebStories
         title={title}
-        storyTitle={storyTitle}
+        storyTitle={title}
         items={instagramStories}
+        countryData={countryData}
       />
     );
   }
@@ -400,6 +400,13 @@ export default async function Country({
     });
   }
 
+  const dates = instagramStories.flatMap((c) => c.date);
+  const orderedDates = dates.sort(function (a, b) {
+    a = a.split('/').reverse().join('');
+    b = b.split('/').reverse().join('');
+    return a > b ? 1 : a < b ? -1 : 0;
+  });
+
   return (
     <div>
       <div className="container">
@@ -434,7 +441,10 @@ export default async function Country({
       </div>
 
       <div className="container-fluid">
-        <h2 className={isWindows ? 'windows-header' : null}>
+        <h2
+          className={isWindows ? 'windows-header' : null}
+          style={{ marginBottom: 0 }}
+        >
           {isBR && theMedia.name_pt ? theMedia.name_pt : theMedia.name}
           {theMedia.alternative_names &&
             ' (' + theMedia.alternative_names.join(', ') + ')'}{' '}
@@ -463,9 +473,38 @@ export default async function Country({
             countryData.flag
           )}
         </h2>
+
+        <div>
+          {orderedDates.length
+            ? expandDate(orderedDates[0], isBR) +
+              ' - ' +
+              expandDate(orderedDates[orderedDates.length - 1], isBR)
+            : expandDate(theCity.start, isBR) +
+              ' - ' +
+              expandDate(theCity.end, isBR)}
+        </div>
       </div>
 
       <div className={styles.galleries}>
+        {instagramStories.length > 1 && sortPicker('stories')}
+
+        {instagramStories.length > 0 && (
+          <Scroller
+            title="Stories"
+            items={instagramStories}
+            isStories
+            webStoriesHref={host(
+              '/webstories/countries/' +
+                country +
+                '/cities/' +
+                city +
+                '/locations/' +
+                location
+            )}
+            sort={sort}
+          />
+        )}
+
         {shortVideos.length > 1 && sortPicker('short')}
 
         {shortVideos.length > 0 && (
@@ -490,25 +529,6 @@ export default async function Country({
 
         {_360photos.length > 0 && (
           <Scroller title={i18n('360 Photos')} items={_360photos} is360Photos />
-        )}
-
-        {instagramStories.length > 1 && sortPicker('stories')}
-
-        {instagramStories.length > 0 && (
-          <Scroller
-            title="Stories"
-            items={instagramStories}
-            isStories
-            webStoriesHref={host(
-              '/webstories/countries/' +
-                country +
-                '/cities/' +
-                city +
-                '/locations/' +
-                location
-            )}
-            sort={sort}
-          />
         )}
 
         {instagramPhotos.filter((p) => !p.file_type).length > 1 &&
@@ -549,7 +569,7 @@ export default async function Country({
 
               <div className={styles.instagram_highlights_items}>
                 {instagramPhotos.map((p) => (
-                  <InstagramMedia
+                  <Media
                     key={p.id}
                     media={p}
                     isBR={isBR}

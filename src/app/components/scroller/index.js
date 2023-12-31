@@ -6,6 +6,8 @@ import { FILE_DOMAIN, FILE_DOMAIN_500 } from '@/app/utils/constants';
 import ShareButton from '../share-button';
 import Hashtags from '../hashtags';
 import SchemaData from '../schema-data';
+import expandDate from '@/app/utils/expand-date';
+import getTypePath from '@/app/utils/get-type-path';
 
 export default function Scroller({
   title,
@@ -83,9 +85,12 @@ export default function Scroller({
         >
           {items.map((p) => {
             const originalId = p.id;
+            const [, country, , city] = p.path.split('/');
             p.id = p.id
-              .replace(p.city + '-post-', '')
-              .replace(p.city + '-story-', '');
+              .replace(city + '-post-', '')
+              .replace(city + '-story-', '')
+              .replace(city + '-youtube-', '')
+              .replace(city + '-short-video-', '');
 
             return (
               <div
@@ -105,26 +110,31 @@ export default function Scroller({
                     isInstagramHighlights
                       ? host(
                           '/countries/' +
-                            p.country +
+                            country +
                             '/cities/' +
-                            p.city +
+                            city +
                             '/stories'
                         )
-                      : isShortVideos
-                      ? p.tiktok_link
-                      : isStories
+                      : isShortVideos || isStories || isYouTubeVideos
                       ? host(
                           '/countries/' +
-                            p.country +
+                            country +
                             '/cities/' +
-                            p.city +
-                            '/stories/' +
+                            city +
+                            '/' +
+                            getTypePath(p.type) +
+                            '/' +
                             p.id
                         )
                       : p.link
                   }
                   target={
-                    isInstagramHighlights || isStories ? '_self' : '_blank'
+                    isInstagramHighlights ||
+                    isStories ||
+                    isYouTubeVideos ||
+                    isShortVideos
+                      ? '_self'
+                      : '_blank'
                   }
                   style={{ display: 'block', position: 'relative' }}
                   className={is360Photos ? styles.item_360_photo : ''}
@@ -208,13 +218,33 @@ export default function Scroller({
                           </a>
                         )
                     )}
+
+                    <ShareButton
+                      text={isBR ? p.description_pt : p.description}
+                      url={host(
+                        '/countries/' +
+                          country +
+                          '/cities/' +
+                          city +
+                          '/' +
+                          getTypePath(p.type) +
+                          '/' +
+                          p.id
+                      )}
+                    />
                   </div>
                 )}
 
                 {isInstagramHighlights && (
                   <div className={styles.external_links}>
                     {
-                      <a href={p.link} target="_blank">
+                      <a
+                        href={
+                          'https://www.instagram.com/stories/highlights/' +
+                          p.original_id
+                        }
+                        target="_blank"
+                      >
                         <img
                           src={host('/logos/instagram.png')}
                           alt={i18n('Instagram Icon')}
@@ -229,19 +259,15 @@ export default function Scroller({
                           : p.cityData.name
                       }
                       url={host(
-                        '/countries/' +
-                          p.country +
-                          '/cities/' +
-                          p.city +
-                          '/stories'
+                        '/countries/' + country + '/cities/' + city + '/stories'
                       )}
                     />
                   </div>
                 )}
 
-                {isStories && (
+                {(isStories || isYouTubeVideos) && (
                   <div className={styles.external_links}>
-                    {
+                    {isStories && (
                       <a
                         href={
                           'https://www.instagram.com/stories/highlights/' +
@@ -255,7 +281,16 @@ export default function Scroller({
                           alt={i18n('Instagram Icon')}
                         />
                       </a>
-                    }
+                    )}
+
+                    {isYouTubeVideos && (
+                      <a href={p.link} target="_blank">
+                        <img
+                          src={host('/logos/youtube.png')}
+                          alt={i18n('YouTube Icon')}
+                        />
+                      </a>
+                    )}
 
                     <ShareButton
                       text={isBR ? p.description_pt : p.description}
@@ -264,7 +299,9 @@ export default function Scroller({
                           p.country +
                           '/cities/' +
                           p.city +
-                          (p.type === 'story' ? '/stories/' : '/posts/') +
+                          '/' +
+                          getTypePath(p.type) +
+                          '/' +
                           p.id
                       )}
                     />
@@ -314,6 +351,10 @@ export default function Scroller({
                   </div>
                 )}
 
+                {!isInstagramHighlights && p.type === 'story' && (
+                  <div style={{ marginTop: 4 }}>{expandDate(p.date, isBR)}</div>
+                )}
+
                 {!isInstagramHighlights &&
                   p.locations &&
                   p.location_data &&
@@ -323,7 +364,7 @@ export default function Scroller({
                         p.location_data.length > 1 ? 'Locations' : 'Location'
                       )}
                       :{' '}
-                      <span itemProp="contentLocation">
+                      <span>
                         {p.location_data.map((location, i) => (
                           <>
                             <Link

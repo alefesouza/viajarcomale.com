@@ -5,7 +5,7 @@ import { getFirestore } from 'firebase-admin/firestore';
 import styles from './page.module.css';
 import { SITE_NAME } from '@/app/utils/constants';
 import { redirect } from 'next/navigation';
-import InstagramMedia from '@/app/components/instagram-media';
+import Media from '@/app/components/media';
 import ShareButton from '@/app/components/share-button';
 import randomIntFromInterval from '@/app/utils/random-int';
 import WebStories from '@/app/components/webstories';
@@ -17,6 +17,8 @@ import Country, {
   generateMetadata as generateMediaMetadata,
 } from '../../posts/[...media]/page';
 import { UAParser } from 'ua-parser-js';
+import expandDate from '@/app/utils/expand-date';
+import getSort from '@/app/utils/get-sort';
 
 async function getCountry(country, city) {
   const db = getFirestore();
@@ -138,19 +140,7 @@ export default async function Highlight({
   const isWindows =
     new UAParser(headers().get('user-agent')).getOS().name === 'Windows';
 
-  let sort =
-    (searchParams.sort &&
-      ['asc', 'desc', 'random'].includes(searchParams.sort) &&
-      searchParams.sort) ||
-    'desc';
-
-  if (stories && stories[0] === 'webstories') {
-    if (!searchParams.sort || sort === 'desc') {
-      sort = 'asc';
-    } else if (sort === 'asc') {
-      sort = 'desc';
-    }
-  }
+  let sort = getSort(searchParams, stories && stories[0] === 'webstories');
 
   const countryData = await getCountry(country, city);
 
@@ -170,7 +160,7 @@ export default async function Highlight({
     });
   }
 
-  const cacheRef = `/caches/stories/stories/${theCity.slug}/sort/${
+  const cacheRef = `/caches/stories/stories-cache/${theCity.slug}/sort/${
     sort === 'asc' ? 'asc' : 'desc'
   }`;
 
@@ -198,6 +188,7 @@ export default async function Highlight({
 
     photosSnapshot.forEach((photo) => {
       const data = photo.data();
+      data.path = photo.ref.path;
       data.link =
         'https://www.instagram.com/stories/highlights/' +
         data.original_id +
@@ -357,7 +348,10 @@ export default async function Highlight({
       </div>
 
       <div className="container-fluid">
-        <h2 className={isWindows ? 'windows-header' : null}>
+        <h2
+          style={{ marginBottom: 0 }}
+          className={isWindows ? 'windows-header' : null}
+        >
           {i18n('Stories')} -{' '}
           <Link
             href={'/countries/' + country + '/cities/' + city}
@@ -387,6 +381,9 @@ export default async function Highlight({
             countryData.flag
           )}
         </h2>
+        <div>
+          {expandDate(theCity.start, isBR)} - {expandDate(theCity.end, isBR)}
+        </div>
       </div>
 
       <div className="center_link" style={{ marginTop: 28 }}>
@@ -418,13 +415,7 @@ export default async function Highlight({
 
               <div className="instagram_highlights_items">
                 {instagramStories.map((p) => (
-                  <InstagramMedia
-                    key={p.id}
-                    media={p}
-                    isBR={isBR}
-                    hasPoster
-                    isListing
-                  />
+                  <Media key={p.id} media={p} isBR={isBR} hasPoster isListing />
                 ))}
               </div>
             </div>

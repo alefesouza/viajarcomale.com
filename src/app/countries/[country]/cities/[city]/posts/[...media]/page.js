@@ -3,7 +3,7 @@ import useHost from '@/app/hooks/use-host';
 import { getFirestore } from 'firebase-admin/firestore';
 import styles from './page.module.css';
 import { permanentRedirect, redirect } from 'next/navigation';
-import InstagramMedia from '@/app/components/instagram-media';
+import Media from '@/app/components/media';
 import Link from 'next/link';
 import ShareButton from '@/app/components/share-button';
 import StructuredBreadcrumbs from '@/app/components/structured-breadcrumbs';
@@ -14,6 +14,8 @@ import defaultMetadata from '@/app/utils/default-metadata';
 import logAccess from '@/app/utils/log-access';
 import { headers } from 'next/headers';
 import { UAParser } from 'ua-parser-js';
+import expandDate from '@/app/utils/expand-date';
+import getTypePath from '@/app/utils/get-type-path';
 
 async function getCountry(country, city) {
   const db = getFirestore();
@@ -86,7 +88,7 @@ export async function generateMetadata({ params: { country, city, media } }) {
     .collection('cities')
     .doc(city)
     .collection('medias')
-    .doc(media[0].includes('-story-') ? media[0] : city + '-post-' + media[0])
+    .doc(media[0].includes(city + '-') ? media[0] : city + '-post-' + media[0])
     .get();
   let theMedia = mediaRef.data();
 
@@ -113,7 +115,10 @@ export async function generateMetadata({ params: { country, city, media } }) {
     title,
     description,
     theMedia,
-    media[1] || theMedia.type === 'story'
+    media[1] ||
+      theMedia.type === 'story' ||
+      theMedia.type === 'youtube' ||
+      theMedia.type === 'short-video'
   );
 }
 
@@ -132,7 +137,12 @@ export default async function Country({ params: { country, city, media } }) {
 
   const db = getFirestore();
 
-  if (!media[0].includes(city + '-story-') && isNaN(parseInt(media[0]))) {
+  if (
+    !media[0].includes(city + '-story-') &&
+    !media[0].includes(city + '-youtube-') &&
+    !media[0].includes(city + '-short-video-') &&
+    isNaN(parseInt(media[0]))
+  ) {
     let base = '/countries/' + country + '/cities/' + city;
 
     const mediaSnapshot = await db
@@ -180,17 +190,15 @@ export default async function Country({ params: { country, city, media } }) {
     .collection('cities')
     .doc(city)
     .collection('medias')
-    .doc(
-      media[0].startsWith(city + '-story-')
-        ? media[0]
-        : city + '-post-' + media[0]
-    )
+    .doc(media[0].includes(city + '-') ? media[0] : city + '-post-' + media[0])
     .get();
   let theMedia = mediaRef.data();
 
   if (!theMedia) {
     redirect('/countries/' + country + '/cities/' + city);
   }
+
+  theMedia.path = mediaRef.ref.path;
 
   let galleryLength = 0;
 
@@ -251,20 +259,17 @@ export default async function Country({ params: { country, city, media } }) {
     });
   }
 
-  let mediaId = null;
-
-  if (theMedia.type === 'story') {
-    mediaId = theMedia.id.replace(city + '-story-', '');
-  } else {
-    mediaId = theMedia.id.replace(city + '-post-', '');
-  }
+  const split = theMedia.id.split('-');
+  let mediaId = split[split.length - 1];
 
   const basePath =
     '/countries/' +
     country +
     '/cities/' +
     city +
-    (theMedia.type === 'story' ? '/stories/' : '/posts/') +
+    '/' +
+    getTypePath(theMedia.type) +
+    '/' +
     mediaId;
 
   breadcrumbs.push({
@@ -286,19 +291,26 @@ export default async function Country({ params: { country, city, media } }) {
     host(
       '/' +
         city +
-        (theMedia.type === 'story' ? '/stories/' : '/posts/') +
+        '/' +
+        getTypePath(theMedia.type) +
+        '/' +
         mediaId +
         (media[1] ? '/' + media[1] : '')
     )
   );
 
   const header = (
-    <>
+    <div
+      style={{
+        marginBottom: media[1] || theMedia.type === 'story' ? null : '0.83em',
+      }}
+    >
       <h2
         className={isWindows ? 'windows-header' : null}
         style={{
           justifyContent:
             media[1] || theMedia.type === 'story' ? 'center' : null,
+          marginBottom: 0,
         }}
       >
         <Link
@@ -329,7 +341,10 @@ export default async function Country({ params: { country, city, media } }) {
           countryData.flag
         )}
       </h2>
-    </>
+      <div>
+        {expandDate(theCity.start, isBR)} - {expandDate(theCity.end, isBR)}
+      </div>
+    </div>
   );
 
   return (
@@ -356,7 +371,10 @@ export default async function Country({ params: { country, city, media } }) {
         <ShareButton />
       </div>
 
-      {!media[1] && theMedia.type !== 'story' && <div>{header}</div>}
+      {!media[1] &&
+        theMedia.type !== 'story' &&
+        theMedia.type !== 'youtube' &&
+        theMedia.type !== 'short-video' && <div>{header}</div>}
 
       <div
         className={styles.media}
@@ -364,10 +382,15 @@ export default async function Country({ params: { country, city, media } }) {
           marginTop: media[1] || theMedia.type === 'story' ? 14 : null,
         }}
       >
-        <InstagramMedia
+        <Media
           media={theMedia}
           isBR={isBR}
-          withoutLink={media[1] || theMedia.type === 'story'}
+          withoutLink={
+            media[1] ||
+            theMedia.type === 'story' ||
+            theMedia.type === 'youtube' ||
+            theMedia.type === 'short-video'
+          }
           expandGalleries
           fullQuality
           isMain
@@ -389,7 +412,7 @@ export default async function Country({ params: { country, city, media } }) {
           theMedia.gallery.length > 0 &&
           theMedia.gallery.map((g) => (
             <div key={g.file} style={{ marginTop: 16 }}>
-              <InstagramMedia
+              <Media
                 key={g.file}
                 media={g}
                 isBR={isBR}
@@ -401,13 +424,25 @@ export default async function Country({ params: { country, city, media } }) {
           ))}
       </div>
 
-      {(media[1] || theMedia.type === 'story') && (
+      {(media[1] ||
+        theMedia.type === 'story' ||
+        theMedia.type === 'youtube' ||
+        theMedia.type === 'short-video') && (
         <div style={{ textAlign: 'center' }}>{header}</div>
       )}
 
       <StructuredBreadcrumbs breadcrumbs={breadcrumbs} />
 
-      <Script src="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.6/viewer.min.js"></Script>
+      {theMedia.type === 'short-video' && !theMedia.is_photos && (
+        <Script
+          id="tiktok-loader"
+          async
+          src="https://www.tiktok.com/embed.js"
+        ></Script>
+      )}
+      {(theMedia.type === 'post' || theMedia.type === 'story') && (
+        <Script src="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.6/viewer.min.js"></Script>
+      )}
     </div>
   );
 }

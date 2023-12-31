@@ -10,12 +10,13 @@ import StructuredBreadcrumbs from '@/app/components/structured-breadcrumbs';
 import arrayShuffle from '@/app/utils/array-shuffle';
 import Scroller from '@/app/components/scroller';
 import randomIntFromInterval from '@/app/utils/random-int';
-import InstagramMedia from '@/app/components/instagram-media';
+import Media from '@/app/components/media';
 import ShareButton from '@/app/components/share-button';
 import logAccess from '@/app/utils/log-access';
 import defaultMetadata from '@/app/utils/default-metadata';
 import { headers } from 'next/headers';
 import { UAParser } from 'ua-parser-js';
+import expandDate from '@/app/utils/expand-date';
 
 function getDataFromRoute(slug, searchParams) {
   const [country, path1, path2, path3, path4, path5] = slug;
@@ -177,7 +178,7 @@ export default async function Country({ params: { slug }, searchParams }) {
     searchParams
   );
 
-  const cacheRef = `/caches/countries/countries/${country}/caches${
+  const cacheRef = `/caches/countries/countries-cache/${country}/caches${
     city ? '/' + city : '/country'
   }/page/${page}/sort/${sort === 'asc' ? 'asc' : 'desc'}`;
 
@@ -352,21 +353,25 @@ export default async function Country({ params: { slug }, searchParams }) {
     if (!cache.exists) {
       instagramHighLightsSnapshot.forEach((media) => {
         const data = media.data();
+        data.path = media.ref.path;
         instagramHighLights = [...instagramHighLights, data];
       });
 
       shortVideosSnapshot.forEach((media) => {
         const data = media.data();
+        data.path = media.ref.path;
         shortVideos = [...shortVideos, data];
       });
 
       youtubeSnapshot.forEach((media) => {
         const data = media.data();
+        data.path = media.ref.path;
         youtubeVideos = [...youtubeVideos, data];
       });
 
       _360PhotosSnapshot.forEach((media) => {
         const data = media.data();
+        data.path = media.ref.path;
         _360photos = [..._360photos, data];
       });
     }
@@ -375,6 +380,7 @@ export default async function Country({ params: { slug }, searchParams }) {
       if (totalPhotos > 0) {
         instagramPhotosSnapshot.forEach((photo) => {
           const data = photo.data();
+          data.path = photo.ref.path;
           instagramPhotos = [...instagramPhotos, data];
         });
       }
@@ -552,6 +558,17 @@ export default async function Country({ params: { slug }, searchParams }) {
     </div>
   );
 
+  let orderedDates = [];
+
+  if (!city) {
+    const dates = countryData.cities.flatMap((c) => [c.start, c.end]);
+    orderedDates = dates.sort(function (a, b) {
+      a = a.split('/').reverse().join('');
+      b = b.split('/').reverse().join('');
+      return a > b ? 1 : a < b ? -1 : 0;
+    });
+  }
+
   return (
     <div>
       <div className="container">
@@ -569,7 +586,15 @@ export default async function Country({ params: { slug }, searchParams }) {
       </div>
 
       <div className="container-fluid">
-        <h2 className={isWindows ? 'windows-header' : null}>
+        <h2
+          className={isWindows ? 'windows-header' : null}
+          style={{ marginBottom: 0 }}
+        >
+          {city
+            ? (isBR && cityData[city].name_pt
+                ? cityData[city].name_pt
+                : cityData[city].name) + ' - '
+            : ''}
           {i18n(countryData.name)}{' '}
           {isWindows ? (
             <img
@@ -582,6 +607,16 @@ export default async function Country({ params: { slug }, searchParams }) {
             countryData.flag
           )}
         </h2>
+
+        <div>
+          {city
+            ? expandDate(cityData[city].start, isBR) +
+              ' - ' +
+              expandDate(cityData[city].end, isBR)
+            : expandDate(orderedDates[0], isBR) +
+              ' - ' +
+              expandDate(orderedDates[orderedDates.length - 1], isBR)}
+        </div>
 
         <ul className="nav nav-tabs">
           <Link
@@ -699,7 +734,7 @@ export default async function Country({ params: { slug }, searchParams }) {
 
               <div className={styles.instagram_highlights_items}>
                 {instagramPhotos.map((p) => (
-                  <InstagramMedia
+                  <Media
                     key={p.id}
                     media={p}
                     isBR={isBR}
