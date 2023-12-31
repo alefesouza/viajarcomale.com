@@ -27,6 +27,10 @@ const links = [
     url: 'https://www.kwai.com/@viajarcomale',
   },
   {
+    text: 'Pinterest',
+    url: 'https://pinterest.com/viajarcomale/',
+  },
+  {
     text: 'Telegram',
     url: 'https://t.me/viajarcomale',
   },

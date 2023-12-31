@@ -6,7 +6,7 @@ import styles from './page.module.css';
 import { SITE_NAME } from '@/app/utils/constants';
 import Scroller from '@/app/components/scroller';
 import { permanentRedirect, redirect } from 'next/navigation';
-import InstagramMedia from '@/app/components/instagram-media';
+import Media from '@/app/components/media';
 import ShareButton from '@/app/components/share-button';
 import randomIntFromInterval from '@/app/utils/random-int';
 import WebStories from '@/app/components/webstories';
@@ -127,7 +127,7 @@ export async function generateMetadata({
     '/hashtags/' +
     (finalHashtag.name_pt ? finalHashtag.name_pt : finalHashtag.name);
 
-  const sort = getSort(searchParams, theHashtag[1] === 'webstories', false);
+  const sort = getSort(searchParams, false, false);
   let coverSnapshot = await db
     .collectionGroup('medias')
     .where('highlight_hashtags', 'array-contains', finalHashtag.name)
@@ -178,6 +178,9 @@ export async function generateMetadata({
         en: enUrl,
         pt: ptUrl,
       },
+      types: {
+        'application/rss+xml': host('/rss/hashtags/' + hashtag),
+      },
     },
     ...(finalHashtag?.totals?.stories > 0 && !isWebStories
       ? {
@@ -220,9 +223,9 @@ export default async function Country({
   }
 
   const expandGalleries = expand;
-  let sort = getSort(searchParams, expand === 'webstories');
+  let sort = getSort(searchParams);
 
-  const cacheRef = `/caches/hashtags/hashtags/${hashtag}/sort/${
+  const cacheRef = `/caches/hashtags/hashtags-cache/${hashtag}/sort/${
     sort === 'asc' ? 'asc' : 'desc'
   }`;
 
@@ -245,6 +248,7 @@ export default async function Country({
 
     photosSnapshot.forEach((photo) => {
       const data = photo.data();
+      data.path = photo.ref.path;
 
       photos = [...photos, data];
     });
@@ -451,6 +455,18 @@ export default async function Country({
       </div>
 
       <div className={styles.galleries}>
+        {instagramStories.length > 1 && sortPicker('stories')}
+
+        {instagramStories.length > 0 && (
+          <Scroller
+            title="Stories"
+            items={instagramStories}
+            isStories
+            webStoriesHref={host('/webstories/hashtags/' + currentHashtag)}
+            sort={sort}
+          />
+        )}
+
         {shortVideos.length > 1 && sortPicker('short')}
 
         {shortVideos.length > 0 && (
@@ -475,18 +491,6 @@ export default async function Country({
 
         {_360photos.length > 0 && (
           <Scroller title={i18n('360 Photos')} items={_360photos} is360Photos />
-        )}
-
-        {instagramStories.length > 1 && sortPicker('stories')}
-
-        {instagramStories.length > 0 && (
-          <Scroller
-            title="Stories"
-            items={instagramStories}
-            isStories
-            webStoriesHref={host('/webstories/hashtags/' + currentHashtag)}
-            sort={sort}
-          />
         )}
 
         {instagramPhotos.filter((p) => !p.file_type).length > 1 &&
@@ -527,7 +531,7 @@ export default async function Country({
 
               <div className={styles.instagram_highlights_items}>
                 {instagramPhotos.map((p) => (
-                  <InstagramMedia
+                  <Media
                     key={p.id}
                     media={p}
                     isBR={isBR}
