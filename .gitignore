@@ -49,3 +49,5 @@ items.json
 *adminsdk*
 /helpers/*.json
 /helpers/**
+*.log
+/data

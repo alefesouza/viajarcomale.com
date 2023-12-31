@@ -11,4 +11,5 @@ User-agent: AwarioBot
 User-agent: MJ12bot
 User-agent: AhrefsBot
 User-agent: SemrushBot
+User-agent: DataForSeoBot
 Disallow: /
