@@ -8,11 +8,13 @@ export default function SchemaData({
   isWebStories = false,
   isExpand = false,
   withOptional = false,
+  includeVideoTags = false,
 }) {
   const host = useHost();
   const isBR = host().includes('viajarcomale.com.br');
 
-  const { title, description, keywords } = getMetadata(media, isBR);
+  const { title, description, hashtags, locationDescription, embedVideo } =
+    getMetadata(media, isBR);
 
   const content = (
     <>
@@ -21,6 +23,7 @@ export default function SchemaData({
       <span itemProp="creditText" content={SITE_NAME} />
       <span itemProp="creator" itemScope itemType="http://schema.org/Person">
         <span itemProp="name" content="Alefe Souza"></span>
+        <span itemProp="image" content={host('/profile-photo-2x.jpg')}></span>
       </span>
       <span
         itemProp="copyrightNotice"
@@ -39,6 +42,7 @@ export default function SchemaData({
         content="https://creativecommons.org/licenses/by-nc/4.0/"
       />
       <span itemProp="acquireLicensePage" content={host('/about')} />
+      <span itemProp="genre" content="Travel" />
 
       {media.file && media.file.includes('.mp4') && (
         <>
@@ -52,30 +56,64 @@ export default function SchemaData({
           />
         </>
       )}
+      <span
+        itemProp="contentLocation"
+        itemScope
+        itemType="https://schema.org/Place"
+      >
+        {locationDescription && (
+          <span itemProp="name" content={locationDescription} />
+        )}
+        {media.location_data?.[0]?.latitude && (
+          <span
+            itemProp="geo"
+            itemScope
+            itemType="https://schema.org/GeoCoordinates"
+          >
+            <span
+              itemProp="latitude"
+              content={media.location_data[0].latitude}
+            />
+            <span
+              itemProp="longitude"
+              content={media.location_data[0].longitude}
+            />
+          </span>
+        )}
+        <span
+          itemProp="address"
+          itemScope
+          itemType="https://schema.org/PostalAddress"
+        >
+          <span
+            itemProp="addressLocality"
+            content={
+              isBR && media.cityData.name_pt
+                ? media.cityData.name_pt
+                : media.cityData.name
+            }
+          />
+          <span itemProp="addressCountry" content={media.countryData.iso} />
+        </span>
+      </span>
+      {includeVideoTags && (
+        <>
+          <span itemProp="embedUrl" content={embedVideo} />
+          <span
+            itemProp="thumbnailUrl"
+            content={
+              media.type === 'youtube' ? media.image : FILE_DOMAIN + media.file
+            }
+          />
+        </>
+      )}
     </>
   );
 
   const optionalContent = (
     <>
-      {media.location_data && media.location_data.length > 0 && (
-        <span
-          itemProp="contentLocation"
-          content={media.location_data
-            .map(
-              (l) =>
-                (isBR && l.name_pt ? l.name_pt : l.name) +
-                (l.alternative_names && l.alternative_names.length
-                  ? ' (' + l.alternative_names.join(', ') + ')'
-                  : '')
-            )
-            .join(', ')}
-        />
-      )}
-      {keywords && keywords.length > 0 && (
-        <span
-          itemProp="keywords"
-          content={'#' + keywords.filter((l) => l).join(' #')}
-        />
+      {hashtags && hashtags.length > 0 && (
+        <span itemProp="keywords" content={'#' + hashtags.join(' #')} />
       )}
     </>
   );
