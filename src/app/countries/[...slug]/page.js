@@ -560,6 +560,8 @@ export default async function Country({ params: { slug }, searchParams }) {
 
   let orderedDates = [];
 
+  countryData.cities = countryData.cities.sort((a, b) => b.order - a.order);
+
   if (!city) {
     const dates = countryData.cities.flatMap((c) => [c.start, c.end]);
     orderedDates = dates.sort(function (a, b) {
