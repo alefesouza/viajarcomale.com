@@ -123,7 +123,7 @@ export default function Media({
           {mediaElement}
 
           {isVideo && isListing && (
-            <div className={'instagram_media_play_button'}>
+            <div className="instagram_media_play_button">
               <img src="/images/play.svg" alt={i18n('Play Button')} />
             </div>
           )}

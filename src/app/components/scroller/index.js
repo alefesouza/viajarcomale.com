@@ -195,7 +195,7 @@ export default function Scroller({
 
                   {(p.file_type === 'video' || p?.file?.includes('.mp4')) &&
                     isStories && (
-                      <div className={styles.play_button}>
+                      <div className="instagram_media_play_button">
                         <img src="/images/play.svg" alt="Play" />
                       </div>
                     )}

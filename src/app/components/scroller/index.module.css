@@ -165,16 +165,6 @@
   position: relative;
 }
 
-.play_button {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 90px;
-  height: 90px;
-  opacity: 0.7;
-  transform: translate(-50%, -50%);
-}
-
 @media(max-width: 644px) {
   .instagram_highlights_items .vertical_content {
     width: 190px;
