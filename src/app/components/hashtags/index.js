@@ -21,17 +21,20 @@ const stringToSlug = (str) => {
 };
 
 export default function Hashtags({ item, isBR }) {
+  const [, slugCountry, , slugCity] = item.path.split('/');
   const city = stringToSlug(
     isBR && item.cityData.name_pt ? item.cityData.name_pt : item.cityData.name
   ).replaceAll('-', '');
 
-  const theCountry = stringToSlug(
+  const country = stringToSlug(
     isBR && item.countryData.name_pt
       ? item.countryData.name_pt
       : item.countryData.name
   ).replaceAll('-', '');
 
-  const hashtags = isBR && item.hashtags_pt ? item.hashtags_pt : item.hashtags;
+  const hashtags = (
+    isBR && item.hashtags_pt ? item.hashtags_pt : item.hashtags
+  ).filter((l) => l);
 
   return (
     <div className={styles.item_hashtags}>
@@ -40,12 +43,20 @@ export default function Hashtags({ item, isBR }) {
         {hashtags.reverse().map((h) => {
           let link = `/hashtags/${h}`;
 
-          if (h == theCountry) {
+          if (h == country) {
             link = `/countries/${item.countryData.slug}`;
           }
 
           if (h == city) {
             link = `/countries/${item.countryData.slug}/cities/${item.cityData.slug}`;
+          }
+
+          if (h == slugCountry.replaceAll('-', '')) {
+            link = `/countries/${slugCountry}`;
+          }
+
+          if (h == slugCity.replaceAll('-', '')) {
+            link = `/countries/${slugCountry}/cities/${slugCity}`;
           }
 
           return (
