@@ -14,6 +14,7 @@ export async function GET() {
     description: i18n(
       'Travel photos and links to Viajar com Alê social networks.'
     ),
+    categories: ['travel'],
     lang: i18n('en-US'),
     start_url: '/?source=pwa',
     display: 'standalone',
@@ -103,50 +104,38 @@ export async function GET() {
           },
         ],
       },
-      {
-        name: 'Kwai',
-        short_name: 'kwai',
-        description: i18n('Access Viajar com Alê Kwai'),
-        url: '/kwai?source=pwa',
-        icons: [
-          {
-            src: host('logos/kwai96.png'),
-            sizes: '96x96',
-          },
-        ],
-      },
     ],
     screenshots: [
       {
         src: host('screenshots/1.jpg'),
-        type: 'image/jpg',
+        type: 'image/jpeg',
         sizes: '390x844',
       },
       {
         src: host('screenshots/2.jpg'),
-        type: 'image/jpg',
+        type: 'image/jpeg',
         sizes: '390x844',
       },
       {
         src: host('screenshots/3.jpg'),
-        type: 'image/jpg',
+        type: 'image/jpeg',
         sizes: '390x844',
       },
       {
         src: host('screenshots/4.jpg'),
-        type: 'image/jpg',
+        type: 'image/jpeg',
         sizes: '1280x800',
         form_factor: 'wide',
       },
       {
         src: host('screenshots/5.jpg'),
-        type: 'image/jpg',
+        type: 'image/jpeg',
         sizes: '1280x800',
         form_factor: 'wide',
       },
       {
         src: host('screenshots/6.jpg'),
-        type: 'image/jpg',
+        type: 'image/jpeg',
         sizes: '1280x800',
         form_factor: 'wide',
       },
