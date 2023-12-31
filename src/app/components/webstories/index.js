@@ -41,9 +41,6 @@ export default async function WebStories({
   let firstItem = highlightItem ? highlightItem : items[0] || {};
 
   const theCover = firstItem?.file?.replace('.mp4', '-thumb.png');
-  const ignoreAnalytics = headersList
-    .get('x-searchparams')
-    .includes('ignore_analytics=true');
 
   const textStyles = {
     background: '#ffffff',
@@ -140,10 +137,11 @@ export default async function WebStories({
       </amp-story-page>
       {items.map((item) => {
         const { description } = getMetadata(item, isBR);
+        const [, country, , city] = item.path.split('/');
 
         item.id = item.id
-          .replace(item.city + '-post-', '')
-          .replace(item.city + '-story-', '');
+          .replace(city + '-post-', '')
+          .replace(city + '-story-', '');
 
         return (
           <amp-story-page
@@ -204,9 +202,9 @@ export default async function WebStories({
               <a
                 href={host(
                   '/countries/' +
-                    item.country +
+                    country +
                     '/cities/' +
-                    item.city +
+                    city +
                     '/stories/' +
                     item.id
                 )}
@@ -218,11 +216,9 @@ export default async function WebStories({
           </amp-story-page>
         );
       })}
-      {!ignoreAnalytics && (
-        <amp-story-auto-analytics
-          gtag-id={process.env.NEXT_GA_TRACKING}
-        ></amp-story-auto-analytics>
-      )}
+      <amp-story-auto-analytics
+        gtag-id={process.env.NEXT_GA_TRACKING}
+      ></amp-story-auto-analytics>
     </amp-story>
   );
 }
