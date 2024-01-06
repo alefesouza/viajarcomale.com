@@ -64,6 +64,11 @@ const langs = {
     About: 'Sobre',
     'About Viajar com Alê website.': 'Sobre o site do Viajar com Alê.',
 
+    // Privacy Policy
+    'Privacy Policy': 'Política de Privacidade',
+    "Viajar com Alê's website privacy policy.":
+      'Política de Privacidade o site do Viajar com Alê.',
+
     // Hashtags
     'Main Hashtags': 'Hashtags principais',
     'Random Hashtags': 'Hashtags aleatórias',

@@ -11,22 +11,22 @@ export async function generateMetadata() {
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const i18n = useI18n();
 
-  const title = i18n('About') + ' - ' + SITE_NAME;
-  const description = i18n('About Viajar com Alê website.');
+  const title = i18n('Privacy Policy') + ' - ' + SITE_NAME;
+  const description = i18n("Viajar com Alê's website privacy policy.");
 
   return defaultMetadata(title, description);
 }
 
-export default async function About() {
+export default async function PrivacyPolicy() {
   const i18n = useI18n();
   const host = useHost();
   const isBR = host().includes('viajarcomale.com.br');
 
   const db = getFirestore();
-  const aboutRef = await db.doc('/pages/about').get();
-  const aboutData = aboutRef.data();
+  const privacyPolicy = await db.doc('/pages/privacy-policy').get();
+  const privacyPolicyData = privacyPolicy.data();
 
-  logAccess(db, host('/about'));
+  logAccess(db, host('/privacy-policy'));
 
   return (
     <>
@@ -47,7 +47,9 @@ export default async function About() {
         className="page"
         dangerouslySetInnerHTML={{
           __html:
-            isBR && aboutData.text_pt ? aboutData.text_pt : aboutData.text,
+            isBR && privacyPolicyData.text_pt
+              ? privacyPolicyData.text_pt
+              : privacyPolicyData.text,
         }}
       ></div>
     </>

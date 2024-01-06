@@ -14,7 +14,7 @@ export async function GET() {
   //   new URL(string, 'https://viajarcomale.com/').toString();
   const host = useHost();
   const isBR = host().includes('viajarcomale.com.br');
-  const lastmod = '2023-12-30';
+  const lastmod = '2024-01-06';
 
   const db = getFirestore();
   const reference = host('sitemap.xml')
@@ -172,6 +172,9 @@ export async function GET() {
         },
         {
           ...makeLoc('/about'),
+        },
+        {
+          ...makeLoc('/privacy-policy'),
         },
         ...countries.flatMap((c) => [
           {

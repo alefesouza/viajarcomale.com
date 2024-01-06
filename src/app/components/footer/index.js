@@ -3,6 +3,8 @@ import { headers } from 'next/headers';
 import VisitedCountries from '../visited-countries';
 import useI18n from '@/app/hooks/use-i18n';
 import { UAParser } from 'ua-parser-js';
+import styles from './index.module.css';
+import Link from 'next/link';
 
 export default function Footer() {
   const host = useHost();
@@ -67,43 +69,48 @@ export default function Footer() {
         <VisitedCountries />
       </div>
 
-      <div className="container">
-        <div style={{ textAlign: 'center', marginBottom: 80 }}>
-          <a
-            href={
-              (isBR
-                ? 'https://viajarcomale.com'
-                : 'https://viajarcomale.com.br') + headersList.get('x-pathname')
-            }
-            className="language"
-            id="language-switcher"
-          >
-            {isBR ? 'English' : 'Português'}
-          </a>
+      <div className={styles.footer + ' container'}>
+        <ul>
+          <li>
+            <a
+              href={
+                (isBR
+                  ? 'https://viajarcomale.com'
+                  : 'https://viajarcomale.com.br') +
+                headersList.get('x-pathname')
+              }
+              id="language-switcher"
+            >
+              {isBR ? 'English Website' : 'Site em Português'}
+            </a>
+          </li>
+          <li>
+            <Link href={host('/privacy-policy')}>{i18n('Privacy Policy')}</Link>
+          </li>
+        </ul>
 
-          <div
-            className="developed-by"
-            dangerouslySetInnerHTML={{
-              __html:
-                i18n('Developed by AS.dev and available on GitHub')
-                  .replace(
-                    'AS.dev',
-                    '<a href="https://as.dev" target="_blank">AS.dev</a>'
+        <div
+          className="developed-by"
+          dangerouslySetInnerHTML={{
+            __html:
+              i18n('Developed by AS.dev and available on GitHub')
+                .replace(
+                  'AS.dev',
+                  '<a href="https://as.dev" target="_blank">AS.dev</a>'
+                )
+                .replace(
+                  'GitHub',
+                  '<a href="https://github.com/alefesouza/viajarcomale.com" target="_blank">GitHub</a>'
+                ) +
+              (isWindows
+                ? '<br><br>' +
+                  i18n('Flag emojis by Twemoji').replace(
+                    'Twemoji',
+                    '<a href="https://twemoji.twitter.com/" target="_blank">Twemoji</a>'
                   )
-                  .replace(
-                    'GitHub',
-                    '<a href="https://github.com/alefesouza/viajarcomale.com" target="_blank">GitHub</a>'
-                  ) +
-                (isWindows
-                  ? '<br><br>' +
-                    i18n('Flag emojis by Twemoji').replace(
-                      'Twemoji',
-                      '<a href="https://twemoji.twitter.com/" target="_blank">Twemoji</a>'
-                    )
-                  : ''),
-            }}
-          />
-        </div>
+                : ''),
+          }}
+        />
       </div>
     </footer>
   );

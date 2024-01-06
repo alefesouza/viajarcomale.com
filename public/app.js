@@ -72,7 +72,7 @@
 
     if (
       !link.includes(window.location.origin + '/') ||
-      link === window.location.origin + '/#' ||
+      link.includes(window.location.origin + window.location.pathname + '#') ||
       link === window.location.href
     ) {
       return;
