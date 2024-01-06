@@ -11,6 +11,8 @@ import SchemaData from '../schema-data';
 import getMetadata from '@/app/utils/get-metadata';
 import { headers } from 'next/headers';
 import { UAParser } from 'ua-parser-js';
+import Script from 'next/script';
+import expandDate from '@/app/utils/expand-date';
 
 export default async function WebStories({
   title,
@@ -193,9 +195,22 @@ export default async function WebStories({
                   position: 'absolute',
                   top: 18,
                   left: 5,
+                  display: 'flex',
+                  alignContent: 'center',
+                  color: 'rgba(255, 255, 255, 0.8)',
                 }}
               >
-                @viajarcomale
+                @viajarcomale{' '}
+                <div
+                  style={{
+                    fontWeight: 'normal',
+                    fontSize: 14,
+                    marginTop: 6,
+                    marginLeft: 8,
+                  }}
+                >
+                  {expandDate(item.date, isBR, true)}
+                </div>
               </div>
             </amp-story-grid-layer>
             <amp-story-page-outlink layout="nodisplay">
