@@ -82,9 +82,11 @@ export default function Footer() {
             {isBR ? 'English Website' : 'Site em Português'}
           </a>
           <span>•</span>
-          <Link href={host('/privacy-policy')}>{i18n('Privacy Policy')}</Link>
+          <Link href={host('/privacy-policy')} prefetch={false}>
+            {i18n('Privacy Policy')}
+          </Link>
           <span>•</span>
-          <Link href={host('/contact')} target="_blank">
+          <Link href={host('/contact')} target="_blank" prefetch={false}>
             {i18n('Contact')}
           </Link>
         </div>
