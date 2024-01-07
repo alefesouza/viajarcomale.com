@@ -28,6 +28,7 @@ export default function getMetadata(media, isBR, position) {
   const locationDescription =
     media.location_data &&
     media.location_data
+      .filter((c) => (isBR && c.name_pt ? c.name_pt : c.name))
       .map(
         (c) =>
           (isBR && c.name_pt ? c.name_pt : c.name) +
@@ -36,6 +37,7 @@ export default function getMetadata(media, isBR, position) {
             : '')
       )
       .join(', ');
+
   const hashtags =
     isBR && media.hashtags_pt ? media.hashtags_pt : media.hashtags;
   const description =
@@ -76,23 +78,21 @@ export default function getMetadata(media, isBR, position) {
     embedVideo = 'https://www.youtube.com/embed/' + id;
   }
 
-  const theDescription =
-    [
-      description,
-      media.img_index ? 'Item ' + media.img_index : null,
-      locationDescription
-        ? i18n(media.location_data.length > 1 ? 'Locations' : 'Location') +
-          ': ' +
-          locationDescription
-        : '',
-    ]
-      .filter((c) => c)
-      .join(' - ') ||
-    i18n('City') +
-      ': ' +
-      (isBR && media.cityData.name_pt
-        ? media.cityData.name_pt
-        : media.cityData.name);
+  const theDescription = [
+    description,
+    media.img_index ? 'Item ' + media.img_index : null,
+    locationDescription
+      ? i18n(media.location_data.length > 1 ? 'Locations' : 'Location') +
+        ': ' +
+        locationDescription
+      : i18n('City') +
+        ': ' +
+        (isBR && media.cityData.name_pt
+          ? media.cityData.name_pt
+          : media.cityData.name),
+  ]
+    .filter((c) => c)
+    .join(' - ');
 
   return {
     title,
