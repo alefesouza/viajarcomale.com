@@ -10,9 +10,9 @@ import getMetadata from '../utils/get-metadata';
 customInitApp();
 
 export async function GET() {
-  const host = (string = '') =>
-    new URL(string, 'https://viajarcomale.com/').toString();
-  // const host = useHost();
+  // const host = (string = '') =>
+  //   new URL(string, 'https://viajarcomale.com/').toString();
+  const host = useHost();
   const isBR = host().includes('viajarcomale.com.br');
   const lastmod = '2024-01-07';
 
