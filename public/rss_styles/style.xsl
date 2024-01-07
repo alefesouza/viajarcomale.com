@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:media="http://search.yahoo.com/mrss/">
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:media="http://search.yahoo.com/mrss/" xmlns:atom="http://www.w3.org/2005/Atom">
 <xsl:template match="child::rss/channel">
 	<html>
 	<head>
@@ -12,14 +12,7 @@
 			<h1>
 				<xsl:element name="a">
 					<xsl:attribute name="href">
-						<xsl:choose>
-							<xsl:when test="(language='pt-BR')">
-								https://viajarcomale.com.br/hashtags/<xsl:value-of select="categorySlug"/>
-							</xsl:when>
-							<xsl:otherwise>
-								https://viajarcomale.com/hashtags/<xsl:value-of select="categorySlug"/>
-							</xsl:otherwise>
-						</xsl:choose>
+						<xsl:value-of select="link" />
 					</xsl:attribute>
 					<xsl:value-of select="title" />
 				</xsl:element>
@@ -46,16 +39,6 @@
 			</p>
 
 			<xsl:element name="span">
-				<xsl:attribute name="href">
-					<xsl:choose>
-						<xsl:when test="(language='pt-BR')">
-							https://viajarcomale.com.br/rss/hashtags/<xsl:value-of select="categorySlug"/>
-						</xsl:when>
-						<xsl:otherwise>
-							https://viajarcomale.com/rss/hashtags/<xsl:value-of select="categorySlug"/>
-						</xsl:otherwise>
-					</xsl:choose>
-				</xsl:attribute>
 				<xsl:attribute name="class">
 					rss copy
 				</xsl:attribute>
@@ -76,14 +59,7 @@
 
 			<xsl:element name="a">
 				<xsl:attribute name="href" >
-					<xsl:choose>
-						<xsl:when test="(language='pt-BR')">
-							https://feedly.com/i/subscription/feed/https://viajarcomale.com.br/rss/hashtags/<xsl:value-of select="categorySlug"/>
-						</xsl:when>
-						<xsl:otherwise>
-							https://feedly.com/i/subscription/feed/https://viajarcomale.com/rss/hashtags/<xsl:value-of select="categorySlug"/>
-						</xsl:otherwise>
-					</xsl:choose>
+						https://feedly.com/i/subscription/feed/<xsl:value-of select="atom:link/@href"/>
 				</xsl:attribute>
 				<xsl:attribute name="class">
 					rss
@@ -94,35 +70,6 @@
 					<xsl:attribute name="height">12</xsl:attribute>
 				</xsl:element>
 				Feedly - RSS
-			</xsl:element>
-
-			<xsl:element name="a">
-				<xsl:attribute name="href" >
-					<xsl:choose>
-						<xsl:when test="(language='pt-BR')">
-							https://viajarcomale.com.br/hashtags/<xsl:value-of select="categorySlug"/>
-						</xsl:when>
-						<xsl:otherwise>
-							https://viajarcomale.com/hashtags/<xsl:value-of select="categorySlug"/>
-						</xsl:otherwise>
-					</xsl:choose>
-				</xsl:attribute>
-				<xsl:attribute name="class">
-					rss
-				</xsl:attribute>
-				<xsl:element name="img">
-					<xsl:attribute name="src">/icons/72x72.png</xsl:attribute>
-					<xsl:attribute name="width">34</xsl:attribute>
-					<xsl:attribute name="height">34</xsl:attribute>
-				</xsl:element>
-				<xsl:choose>
-					<xsl:when test="(language='pt-BR')">
-						Página original
-					</xsl:when>
-					<xsl:otherwise>
-						Original page
-					</xsl:otherwise>
-				</xsl:choose>
 			</xsl:element>
 		</header>
 		<ul>
