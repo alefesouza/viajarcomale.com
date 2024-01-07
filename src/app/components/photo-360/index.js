@@ -10,6 +10,11 @@ export default function Photo360({ media }) {
         data-thumbnail={FILE_DOMAIN + media.file}
         data-yaw={media.yaw}
       ></div>
+
+      <span itemProp="contentUrl" content={FILE_DOMAIN + media.photo}></span>
+      <span itemProp="thumbnailUrl" content={FILE_DOMAIN + media.file}></span>
+      <span itemProp="width" content="11968"></span>
+      <span itemProp="height" content="5984"></span>
     </div>
   );
 }

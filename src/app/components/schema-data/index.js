@@ -44,6 +44,13 @@ export default function SchemaData({
       <span itemProp="acquireLicensePage" content={host('/about')} />
       <span itemProp="genre" content="Travel" />
 
+      {media.type !== '360photo' && (
+        <>
+          <span itemProp="width" content={media.width}></span>
+          <span itemProp="height" content={media.height}></span>
+        </>
+      )}
+
       {media.file && media.file.includes('.mp4') && (
         <>
           <span
