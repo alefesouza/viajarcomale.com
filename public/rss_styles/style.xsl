@@ -4,11 +4,25 @@
 	<html>
 	<head>
 		<link href="/rss_styles/style.css" rel="stylesheet" type="text/css" />
+
+			<meta name="viewport" content="width=device-width, initial-scale=1" />
 	</head>
 	<body>
 
 		<header>
-			<a href="/" class="logo">Viajar com Alê</a>
+			<div>
+				<xsl:element name="a">
+					<xsl:attribute name="href">
+						/
+					</xsl:attribute>
+					<xsl:element name="img">
+						<xsl:attribute name="src">/images/banner.png</xsl:attribute>
+						<xsl:attribute name="srcset">/images/banner-2x.png 2x</xsl:attribute>
+						<xsl:attribute name="width">325</xsl:attribute>
+						<xsl:attribute name="height">68</xsl:attribute>
+					</xsl:element>
+				</xsl:element>
+			</div>
 			<h1>
 				<xsl:element name="a">
 					<xsl:attribute name="href">

@@ -19,55 +19,91 @@ export async function GET(req) {
   let { pathname } = new URL(req.url);
 
   let hashtag = null;
+  let finalHashtag = null;
 
-  const split = pathname.split('/');
-
-  if (pathname.includes('/hashtags/')) {
-    hashtag = removeDiacritics(decodeURIComponent(split[3]));
-  }
+  let photos = [];
 
   const db = getFirestore();
-  const hashtagPtSnapshot = await db
-    .collection('hashtags')
-    .where('name_pt', '==', hashtag)
-    .get();
-  let hashtagPt = null;
-  let hashtagEn = null;
 
-  hashtagPtSnapshot.forEach((doc) => {
-    hashtagPt = doc.data();
-  });
+  if (pathname === '/rss') {
+    const cacheRef = `/caches/feeds/pages/home`;
 
-  if (!hashtagPt) {
-    const hashtagEnDoc = await db.collection('hashtags').doc(hashtag).get();
-    hashtagEn = hashtagEnDoc.data();
-  }
-
-  const finalHashtag = hashtagPt || hashtagEn;
-
-  if (!finalHashtag) {
-    redirect('/hashtags');
-  }
-
-  const cacheRef = `/caches/hashtags/hashtags-cache/${finalHashtag.name}/sort/desc`;
-
-  let cache = await db.doc(cacheRef).get();
-
-  if (!cache.exists) {
-    await fetch(host(pathname.replace('/rss', '')), {
-      headers: {
-        'User-Agent': req.headers.get('user-agent'),
-      },
-    });
-
-    cache = await db.doc(cacheRef).get();
+    let cache = await db.doc(cacheRef).get();
 
     if (!cache.exists) {
-      redirect(pathname.replace('/rss', ''));
-    }
-  }
+      const photosSnapshot = await db
+        .collectionGroup('medias')
+        .orderBy('date', 'desc')
+        .limit(20)
+        .get();
 
-  const photos = cache.data().photos;
+      photosSnapshot.forEach((doc) => {
+        const data = doc.data();
+        data.path = doc.ref.path;
+
+        photos.push(data);
+      });
+
+      db.doc(cacheRef).set({
+        photos,
+        last_update: new Date().toISOString().split('T')[0],
+      });
+    } else {
+      photos = cache.data().photos;
+    }
+  } else {
+    const split = pathname.split('/');
+
+    if (pathname.includes('/hashtags/')) {
+      hashtag = removeDiacritics(decodeURIComponent(split[3]));
+    }
+
+    if (!hashtag) {
+      redirect('/hashtags');
+    }
+
+    const hashtagPtSnapshot = await db
+      .collection('hashtags')
+      .where('name_pt', '==', hashtag)
+      .get();
+    let hashtagPt = null;
+    let hashtagEn = null;
+
+    hashtagPtSnapshot.forEach((doc) => {
+      hashtagPt = doc.data();
+    });
+
+    if (!hashtagPt) {
+      const hashtagEnDoc = await db.collection('hashtags').doc(hashtag).get();
+      hashtagEn = hashtagEnDoc.data();
+    }
+
+    finalHashtag = hashtagPt || hashtagEn;
+
+    if (!finalHashtag) {
+      redirect('/hashtags');
+    }
+
+    const cacheRef = `/caches/hashtags/hashtags-cache/${finalHashtag.name}/sort/desc`;
+
+    let cache = await db.doc(cacheRef).get();
+
+    if (!cache.exists) {
+      await fetch(host(pathname.replace('/rss', '')), {
+        headers: {
+          'User-Agent': req.headers.get('user-agent'),
+        },
+      });
+
+      cache = await db.doc(cacheRef).get();
+
+      if (!cache.exists) {
+        redirect(pathname.replace('/rss', ''));
+      }
+    }
+
+    photos = cache.data().photos;
+  }
 
   let instagramPhotos = photos.filter(
     (p) => p.type === 'post' || p.type === 'post-gallery'
@@ -125,9 +161,13 @@ export async function GET(req) {
 
   instagramPhotos = expandedList;
 
-  const title = '#' + hashtag + ' - Hashtags - ' + SITE_NAME;
+  const title = hashtag
+    ? '#' + hashtag + ' - Hashtags - ' + SITE_NAME
+    : SITE_NAME + ' - ' + i18n('Main Feed');
   const description = i18n(
-    'Photos and videos taken by Viajar com Alê with the hashtag #:hashtag:.',
+    hashtag
+      ? 'Photos and videos taken by Viajar com Alê with the hashtag #:hashtag:.'
+      : 'Main feed with the most recent photos and videos by Viajar com Alê.',
     {
       hashtag,
     }

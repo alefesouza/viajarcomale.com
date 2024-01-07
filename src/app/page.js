@@ -5,6 +5,24 @@ import useHost from './hooks/use-host';
 import Link from 'next/link';
 import logAccess from './utils/log-access';
 import { getFirestore } from 'firebase-admin/firestore';
+import defaultMetadata from './utils/default-metadata';
+
+export async function generateMetadata() {
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const host = useHost();
+
+  const defaultMeta = defaultMetadata();
+
+  return {
+    ...defaultMeta,
+    alternates: {
+      ...defaultMeta.alternates,
+      types: {
+        'application/rss+xml': host('/rss'),
+      },
+    },
+  };
+}
 
 export default async function Home() {
   const host = useHost();

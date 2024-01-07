@@ -70,25 +70,34 @@ export default function Footer() {
       </div>
 
       <div className={styles.footer + ' container'}>
-        <div style={{ display: 'flex', justifyContent: 'center', gap: 8 }}>
-          <a
-            href={
-              (isBR
-                ? 'https://viajarcomale.com'
-                : 'https://viajarcomale.com.br') + headersList.get('x-pathname')
-            }
-            id="language-switcher"
-          >
-            {isBR ? 'English Website' : 'Site em Português'}
-          </a>
-          <span>•</span>
-          <Link href={host('/privacy-policy')} prefetch={false}>
-            {i18n('Privacy Policy')}
-          </Link>
-          <span>•</span>
-          <Link href={host('/contact')} target="_blank" prefetch={false}>
-            {i18n('Contact')}
-          </Link>
+        <div className={styles.footer_links}>
+          <div>
+            <a
+              href={
+                (isBR
+                  ? 'https://viajarcomale.com'
+                  : 'https://viajarcomale.com.br') +
+                headersList.get('x-pathname')
+              }
+              id="language-switcher"
+            >
+              {isBR ? 'English Website' : 'Site em Português'}
+            </a>
+            <span>•</span>
+            <a href={host('/rss')} target="_blank">
+              RSS Feed
+            </a>
+          </div>
+          <div>
+            <span className={styles.hide_mobile}>•</span>
+            <Link href={host('/privacy-policy')} prefetch={false}>
+              {i18n('Privacy Policy')}
+            </Link>
+            <span>•</span>
+            <Link href={host('/contact')} target="_blank" prefetch={false}>
+              {i18n('Contact')}
+            </Link>
+          </div>
         </div>
 
         <div

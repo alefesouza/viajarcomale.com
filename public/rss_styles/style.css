@@ -4,17 +4,8 @@ body {
     Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
 }
 
-.logo {
-  background: url(/icons/192x192.png) no-repeat;
-  display: block;
-  height: 96px;
-  text-indent: -500px;
-  width: 96px;
-  background-size: contain;
-}
-
 header h1 {
-  color: #666;
+  color: #777;
   margin: 8px 0;
 }
 
@@ -88,6 +79,7 @@ li h2 {
 
 li img,
 video {
+  width: 100%;
   max-width: 400px;
   margin-top: 8px;
 }

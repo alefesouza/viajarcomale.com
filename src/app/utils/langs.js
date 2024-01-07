@@ -92,6 +92,11 @@ const langs = {
       'Fotos de viagens e links para as redes sociais do Viajar com Alê.',
     'Travel with Alefe': 'Viajar com Alefe',
 
+    // Feed
+    'Main Feed': 'Feed principal',
+    'Main feed with the most recent photos and videos by Viajar com Alê.':
+      'Feed principal com as fotos e vídeos mais recentes do Viajar com Alê',
+
     // Countries
     Brazil: 'Brasil',
     'United States': 'Estados Unidos',
