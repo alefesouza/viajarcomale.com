@@ -70,32 +70,23 @@ export default function Footer() {
       </div>
 
       <div className={styles.footer + ' container'}>
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
-          <ul>
-            <li>
-              <a
-                href={
-                  (isBR
-                    ? 'https://viajarcomale.com'
-                    : 'https://viajarcomale.com.br') +
-                  headersList.get('x-pathname')
-                }
-                id="language-switcher"
-              >
-                {isBR ? 'English Website' : 'Site em Português'}
-              </a>
-            </li>
-            <li>
-              <Link href={host('/privacy-policy')}>
-                {i18n('Privacy Policy')}
-              </Link>
-            </li>
-            <li>
-              <Link href={host('/contact')} target="_blank">
-                {i18n('Contact')}
-              </Link>
-            </li>
-          </ul>
+        <div style={{ display: 'flex', justifyContent: 'center', gap: 8 }}>
+          <a
+            href={
+              (isBR
+                ? 'https://viajarcomale.com'
+                : 'https://viajarcomale.com.br') + headersList.get('x-pathname')
+            }
+            id="language-switcher"
+          >
+            {isBR ? 'English Website' : 'Site em Português'}
+          </a>
+          <span>•</span>
+          <Link href={host('/privacy-policy')}>{i18n('Privacy Policy')}</Link>
+          <span>•</span>
+          <Link href={host('/contact')} target="_blank">
+            {i18n('Contact')}
+          </Link>
         </div>
 
         <div

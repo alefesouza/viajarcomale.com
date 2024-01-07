@@ -1,9 +1,7 @@
 .footer {
   background: linear-gradient(to right, rgba(248, 249, 250, .0), rgba(248, 249, 250, .15), rgba(248, 249, 250, .0));
-  padding-bottom: 80px;
   text-align: center;
-  padding-top: 15px;
-
+  padding: 24px 0;
 } 
 
 .footer ul {

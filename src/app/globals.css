@@ -318,7 +318,7 @@ body {
 }
 
 .developed-by {
-  margin-top: 16px;
+  margin-top: 24px;
 }
 
 [type=button]:not(:disabled), [type=reset]:not(:disabled), [type=submit]:not(:disabled), button:not(:disabled) {
