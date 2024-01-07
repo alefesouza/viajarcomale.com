@@ -463,7 +463,7 @@ export default async function Country({
             {finalHashtag.pinterest_link && (
               <a
                 href={
-                  hashtagPt
+                  isBR
                     ? finalHashtag.pinterest_link_pt
                     : finalHashtag.pinterest_link
                 }
