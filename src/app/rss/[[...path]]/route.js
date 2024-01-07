@@ -288,7 +288,7 @@ export async function GET(req) {
     },
   };
 
-  logAccess(db, host('/rss/hashtags/') + hashtag);
+  logAccess(db, hashtag ? host('/rss/hashtags/') + hashtag : host('/rss'));
 
   obj = parse('rss', obj, { declaration: { include: false } });
   const declaration = `<?xml version="1.0" encoding="UTF-8" ?>

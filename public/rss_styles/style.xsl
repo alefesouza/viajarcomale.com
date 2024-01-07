@@ -108,6 +108,7 @@
 						<xsl:if test="(media:content/@medium='video')">
 							<xsl:element name="video">
 								<xsl:attribute name="src"><xsl:value-of select="media:content/@url"/></xsl:attribute>
+								<xsl:attribute name="poster"><xsl:value-of select="media:content/media:thumbnail/@url"/></xsl:attribute>
 								<xsl:attribute name="controls" />
 							</xsl:element>
 						</xsl:if>
