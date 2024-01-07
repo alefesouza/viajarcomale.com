@@ -184,6 +184,48 @@
     });
   }
 
+  function initPanorama() {
+    if (!document.querySelector('#pannellum-css')) {
+      // Required because the script does not run on router navigation.
+      const link = document.createElement('link');
+      link.href =
+        'https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.css';
+      link.id = 'pannellum-css';
+      link.rel = 'stylesheet';
+      document.head.appendChild(link);
+    }
+
+    const pannellumLoader = document.querySelector('#pannellum-loader');
+
+    if (!pannellumLoader) {
+      // Required because the script does not run on router navigation.
+      const script = document.createElement('script');
+      script.src =
+        'https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.js';
+      script.id = 'pannellum-loader';
+      script.setAttribute('async', '');
+      script.onload = initPanorama;
+      document.head.appendChild(script);
+      return;
+    }
+
+    const panorama = document.querySelector('#panorama');
+
+    pannellum.viewer('panorama', {
+      type: 'equirectangular',
+      panorama: panorama.dataset.photo,
+      autoLoad: true,
+      autoRotate: -2,
+      preview: panorama.dataset.thumbnail,
+      strings: {
+        loadingLabel: window.location.host.includes('viajarcomale.com.br')
+          ? 'Carregando...'
+          : 'Loading...',
+      },
+      yaw: panorama.dataset.yaw || 0,
+    });
+  }
+
   function setupLinks(tag) {
     const currentUrl = window.location.href;
 
@@ -282,11 +324,13 @@
       (paths[5] === 'posts' ||
         paths[5] === 'stories' ||
         paths[5] === 'videos' ||
-        paths[5] === 'short-videos') &&
+        paths[5] === 'short-videos' ||
+        paths[5] === '360-photos') &&
       paths[6] &&
       (paths[5] === 'stories' ||
         paths[5] === 'videos' ||
         paths[5] === 'short-videos' ||
+        paths[5] === '360-photos' ||
         paths[7]);
 
     if (isMediaSingle) {
@@ -307,10 +351,30 @@
         }
       }
 
+      if (paths[5] === '360-photos') {
+        if (window.panorama) {
+          initPanorama();
+        } else {
+          setTimeout(() => {
+            initPanorama();
+          }, 1000);
+        }
+      }
+
       const image = document.querySelector('img[itemprop="contentUrl"]');
 
       if (image) {
         const initViewer = () => {
+          if (!document.querySelector('#viewer-css')) {
+            // Required because the script does not run on router navigation.
+            const link = document.createElement('link');
+            link.href =
+              'https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.6/viewer.min.css';
+            link.id = 'viewer-css';
+            link.rel = 'stylesheet';
+            document.head.appendChild(link);
+          }
+
           new Viewer(image, {
             toolbar: {
               zoomIn: 1,
@@ -331,13 +395,9 @@
           });
         };
 
-        if (window.Viewer) {
+        setTimeout(() => {
           initViewer();
-        } else {
-          setTimeout(() => {
-            initViewer();
-          }, 1000);
-        }
+        }, 1000);
       }
     } else {
       document.querySelector('body').classList.remove('single-media-page');
@@ -415,6 +475,18 @@
   const elementToObserve = document.querySelector('main');
 
   observer = new MutationObserver(function () {
+    const panorama = document.querySelector('#panorama');
+
+    if (panorama) {
+      if (!panorama.classList.contains('pnlm-container')) {
+        initPanorama();
+
+        loadingSpinner.style.display = 'none';
+      }
+
+      return;
+    }
+
     if (document.querySelector('.tiktok-embed iframe')) {
       return;
     }

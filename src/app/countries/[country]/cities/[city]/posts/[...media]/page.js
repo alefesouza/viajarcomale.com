@@ -118,7 +118,8 @@ export async function generateMetadata({ params: { country, city, media } }) {
     media[1] ||
       theMedia.type === 'story' ||
       theMedia.type === 'youtube' ||
-      theMedia.type === 'short-video'
+      theMedia.type === 'short-video' ||
+      theMedia.type === '360-photo'
   );
 }
 
@@ -141,6 +142,7 @@ export default async function Country({ params: { country, city, media } }) {
     !media[0].includes(city + '-story-') &&
     !media[0].includes(city + '-youtube-') &&
     !media[0].includes(city + '-short-video-') &&
+    !media[0].includes(city + '-360photo-') &&
     isNaN(parseInt(media[0]))
   ) {
     let base = '/countries/' + country + '/cities/' + city;
@@ -347,55 +349,65 @@ export default async function Country({ params: { country, city, media } }) {
     </div>
   );
 
-  return (
-    <div className="container">
-      <div className="media_navigation">
-        <Link
-          href={
-            '/countries/' +
-            country +
-            '/cities/' +
-            city +
-            (theMedia.type === 'story' ? '/stories' : '') +
-            (mediaIndex
-              ? '/posts/' + theMedia.id.replace(city + '-post-', '')
-              : '')
-          }
-          id="back-button"
-          scroll={false}
-          prefetch={false}
-        >
-          <img src="/images/back.svg" alt={i18n('Back')} width="32px"></img>
-        </Link>
+  const isSingleMedia =
+    media[1] ||
+    theMedia.type === 'story' ||
+    theMedia.type === 'youtube' ||
+    theMedia.type === 'short-video' ||
+    theMedia.type === '360photo';
 
-        <ShareButton />
+  return (
+    <>
+      <div className="container">
+        <div className="media_navigation">
+          <Link
+            href={
+              '/countries/' +
+              country +
+              '/cities/' +
+              city +
+              (theMedia.type === 'story' ? '/stories' : '') +
+              (mediaIndex
+                ? '/posts/' + theMedia.id.replace(city + '-post-', '')
+                : '')
+            }
+            id="back-button"
+            scroll={false}
+            prefetch={false}
+          >
+            <img src="/images/back.svg" alt={i18n('Back')} width="32px"></img>
+          </Link>
+
+          <ShareButton />
+        </div>
+
+        {!media[1] &&
+          theMedia.type !== 'story' &&
+          theMedia.type !== 'youtube' &&
+          theMedia.type !== 'short-video' &&
+          theMedia.type !== '360photo' && <div>{header}</div>}
       </div>
 
-      {!media[1] &&
-        theMedia.type !== 'story' &&
-        theMedia.type !== 'youtube' &&
-        theMedia.type !== 'short-video' && <div>{header}</div>}
-
       <div
-        className={styles.media}
+        className={
+          (isSingleMedia ? 'container-fluid ' : 'container ') + styles.media
+        }
         style={{
           marginTop: media[1] || theMedia.type === 'story' ? 14 : null,
+          maxWidth: isSingleMedia ? 1000 : null,
         }}
       >
         <Media
           media={theMedia}
           isBR={isBR}
-          withoutLink={
-            media[1] ||
-            theMedia.type === 'story' ||
-            theMedia.type === 'youtube' ||
-            theMedia.type === 'short-video'
-          }
+          withoutLink={isSingleMedia}
           expandGalleries
           fullQuality
           isMain
         />
+      </div>
 
+      <div className="container">
         {media[1] && galleryLength > 0 && (
           <div style={{ marginTop: 24 }}>
             <Pagination
@@ -422,27 +434,29 @@ export default async function Country({ params: { country, city, media } }) {
               />
             </div>
           ))}
+
+        {isSingleMedia && <div style={{ textAlign: 'center' }}>{header}</div>}
+
+        <StructuredBreadcrumbs breadcrumbs={breadcrumbs} />
+
+        {theMedia.type === 'short-video' && !theMedia.is_photos && (
+          <Script
+            id="tiktok-loader"
+            async
+            src="https://www.tiktok.com/embed.js"
+          ></Script>
+        )}
+        {theMedia.type === '360photo' && (
+          <Script
+            async
+            id="pannellum-loader"
+            src="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.js"
+          ></Script>
+        )}
+        {(theMedia.type === 'post' || theMedia.type === 'story') && (
+          <Script src="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.6/viewer.min.js"></Script>
+        )}
       </div>
-
-      {(media[1] ||
-        theMedia.type === 'story' ||
-        theMedia.type === 'youtube' ||
-        theMedia.type === 'short-video') && (
-        <div style={{ textAlign: 'center' }}>{header}</div>
-      )}
-
-      <StructuredBreadcrumbs breadcrumbs={breadcrumbs} />
-
-      {theMedia.type === 'short-video' && !theMedia.is_photos && (
-        <Script
-          id="tiktok-loader"
-          async
-          src="https://www.tiktok.com/embed.js"
-        ></Script>
-      )}
-      {(theMedia.type === 'post' || theMedia.type === 'story') && (
-        <Script src="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.6/viewer.min.js"></Script>
-      )}
-    </div>
+    </>
   );
 }

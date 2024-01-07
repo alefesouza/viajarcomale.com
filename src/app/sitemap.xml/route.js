@@ -10,11 +10,11 @@ import getMetadata from '../utils/get-metadata';
 customInitApp();
 
 export async function GET() {
-  // const host = (string = '') =>
-  //   new URL(string, 'https://viajarcomale.com/').toString();
-  const host = useHost();
+  const host = (string = '') =>
+    new URL(string, 'https://viajarcomale.com/').toString();
+  // const host = useHost();
   const isBR = host().includes('viajarcomale.com.br');
-  const lastmod = '2024-01-06';
+  const lastmod = '2024-01-07';
 
   const db = getFirestore();
   const reference = host('sitemap.xml')
@@ -329,6 +329,23 @@ export async function GET() {
                   city +
                   '/short-videos/' +
                   m.id.replace(city + '-short-video-', '')
+              ),
+              ...mediaProcessing(m, null),
+            };
+          }),
+        ...medias
+          .filter((m) => m.type === '360photo')
+          .map((m) => {
+            const [, country, , city] = m.path.split('/');
+
+            return {
+              ...makeLoc(
+                '/countries/' +
+                  country +
+                  '/cities/' +
+                  city +
+                  '/360-photos/' +
+                  m.id.replace(city + '-360photo-', '')
               ),
               ...mediaProcessing(m, null),
             };

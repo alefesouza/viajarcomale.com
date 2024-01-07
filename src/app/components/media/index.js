@@ -9,6 +9,7 @@ import expandDate from '@/app/utils/expand-date';
 import YouTubeEmbed from './youtube-embed';
 import TikTokEmbed from './tiktok-embed';
 import getTypePath from '@/app/utils/get-type-path';
+import Photo360 from '../photo-360';
 
 export default function Media({
   media,
@@ -28,7 +29,8 @@ export default function Media({
     .replace(city + '-post-', '')
     .replace(city + '-story-', '')
     .replace(city + '-youtube-', '')
-    .replace(city + '-short-video-', '');
+    .replace(city + '-short-video-', '')
+    .replace(city + '-360photo-', '');
 
   const isVideo =
     media.type === 'youtube' ||
@@ -80,8 +82,10 @@ export default function Media({
     ) : media.type === 'youtube' ||
       (media.type === 'short-video' && media.is_photos) ? (
       <YouTubeEmbed media={media} />
-    ) : (
+    ) : media.type === 'short-video' ? (
       <TikTokEmbed media={media} />
+    ) : (
+      <Photo360 media={media}></Photo360>
     );
 
   const link = host(
@@ -130,116 +134,124 @@ export default function Media({
         </Link>
       )}
 
-      <div className="instagram_media_external_links">
-        {(media.type === 'post' || media.type === 'story') && (
-          <a
-            href={
-              media.highlight
-                ? 'https://www.instagram.com/stories/highlights/' +
-                  media.original_id +
-                  '/'
-                : 'https://www.instagram.com/p/' +
-                  media.original_id +
-                  (media.img_index ? '?img_index=' + media.img_index : '')
-            }
-            target="_blank"
-          >
-            <img
-              src={host('/logos/instagram.png')}
-              alt={i18n('Instagram Icon')}
-            />
-          </a>
-        )}
+      <div className={withoutLink ? 'container' : null}>
+        <div className="instagram_media_external_links">
+          {(media.type === 'post' || media.type === 'story') && (
+            <a
+              href={
+                media.highlight
+                  ? 'https://www.instagram.com/stories/highlights/' +
+                    media.original_id +
+                    '/'
+                  : 'https://www.instagram.com/p/' +
+                    media.original_id +
+                    (media.img_index ? '?img_index=' + media.img_index : '')
+              }
+              target="_blank"
+            >
+              <img
+                src={host('/logos/instagram.png')}
+                alt={i18n('Instagram Icon')}
+              />
+            </a>
+          )}
 
-        {media.type === 'youtube' && (
-          <a href={media.link} target="_blank">
-            <img src={host('/logos/youtube.png')} alt={i18n('YouTube Icon')} />
-          </a>
-        )}
+          {media.type === 'youtube' && (
+            <a href={media.link} target="_blank">
+              <img
+                src={host('/logos/youtube.png')}
+                alt={i18n('YouTube Icon')}
+              />
+            </a>
+          )}
 
-        {media.type === 'short-video' && (
-          <>
-            {['tiktok', 'instagram', 'youtube', 'kwai'].map(
-              (item) =>
-                media[item + '_link'] && (
-                  <a href={media[item + '_link']} target="_blank" key={item}>
-                    <img
-                      src={host('/logos/' + item + '.png')}
-                      alt={item + 'Video'}
-                    />
-                  </a>
-                )
-            )}
-          </>
-        )}
-        <ShareButton
-          text={isBR ? media.description_pt : media.description}
-          url={link}
-        />
-      </div>
-
-      {media.title && (
-        <div style={{ fontWeight: 'bold' }}>
-          {isBR && media.title_pt ? media.title_pt : media.title}{' '}
-          {media.img_index ? '- Item ' + media.img_index : ''}
+          {media.type === 'short-video' && (
+            <>
+              {['tiktok', 'instagram', 'youtube', 'kwai'].map(
+                (item) =>
+                  media[item + '_link'] && (
+                    <a href={media[item + '_link']} target="_blank" key={item}>
+                      <img
+                        src={host('/logos/' + item + '.png')}
+                        alt={item + 'Video'}
+                      />
+                    </a>
+                  )
+              )}
+            </>
+          )}
+          <ShareButton
+            text={isBR ? media.description_pt : media.description}
+            url={link}
+          />
         </div>
-      )}
 
-      <div>
-        {isBR && media.description_pt
-          ? media.description_pt
-          : media.description}{' '}
-        {media.img_index ? '- Item ' + media.img_index : ''}
-      </div>
-
-      {media.type === 'story' && (
-        <div style={{ marginTop: 4 }}>{expandDate(media.date, isBR)}</div>
-      )}
-
-      {!media.is_gallery &&
-        media.locations &&
-        media.location_data &&
-        media.location_data[0] && (
-          <div style={{ marginTop: 4 }} className={'instagram_media_location'}>
-            {i18n(media.location_data.length > 1 ? 'Locations' : 'Location')}:{' '}
-            <span>
-              {media.location_data.map((location, i) => (
-                <>
-                  <Link
-                    href={
-                      '/countries/' +
-                      media.country +
-                      '/cities/' +
-                      media.city +
-                      '/locations/' +
-                      location.slug
-                    }
-                    key={location.slug}
-                    prefetch={false}
-                  >
-                    {isBR && location.name_pt
-                      ? location.name_pt
-                      : location.name}
-                    {location.alternative_names &&
-                      location.alternative_names.length > 0 &&
-                      ' (' + location.alternative_names.join(', ') + ')'}
-                  </Link>
-                  {i < media.location_data.length - 1 ? ', ' : ''}
-                </>
-              ))}
-            </span>
+        {media.title && (
+          <div style={{ fontWeight: 'bold' }}>
+            {isBR && media.title_pt ? media.title_pt : media.title}{' '}
+            {media.img_index ? '- Item ' + media.img_index : ''}
           </div>
         )}
 
-      {!media.is_gallery && media.hashtags && media.hashtags.length > 0 && (
-        <Hashtags item={media} isBR={isBR} />
-      )}
+        <div>
+          {isBR && media.description_pt
+            ? media.description_pt
+            : media.description}{' '}
+          {media.img_index ? '- Item ' + media.img_index : ''}
+        </div>
 
-      <SchemaData
-        media={media}
-        isExpand={expandGalleries && !isMain}
-        includeVideoTags={isVideo && !isListing}
-      />
+        {media.type === 'story' && (
+          <div style={{ marginTop: 4 }}>{expandDate(media.date, isBR)}</div>
+        )}
+
+        {!media.is_gallery &&
+          media.locations &&
+          media.location_data &&
+          media.location_data[0] && (
+            <div
+              style={{ marginTop: 4 }}
+              className={'instagram_media_location'}
+            >
+              {i18n(media.location_data.length > 1 ? 'Locations' : 'Location')}:{' '}
+              <span>
+                {media.location_data.map((location, i) => (
+                  <>
+                    <Link
+                      href={
+                        '/countries/' +
+                        media.country +
+                        '/cities/' +
+                        media.city +
+                        '/locations/' +
+                        location.slug
+                      }
+                      key={location.slug}
+                      prefetch={false}
+                    >
+                      {isBR && location.name_pt
+                        ? location.name_pt
+                        : location.name}
+                      {location.alternative_names &&
+                        location.alternative_names.length > 0 &&
+                        ' (' + location.alternative_names.join(', ') + ')'}
+                    </Link>
+                    {i < media.location_data.length - 1 ? ', ' : ''}
+                  </>
+                ))}
+              </span>
+            </div>
+          )}
+
+        {!media.is_gallery && media.hashtags && media.hashtags.length > 0 && (
+          <Hashtags item={media} isBR={isBR} />
+        )}
+
+        <SchemaData
+          media={media}
+          isExpand={expandGalleries && !isMain}
+          includeVideoTags={isVideo && !isListing}
+        />
+      </div>
     </div>
   );
 }

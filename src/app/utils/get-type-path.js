@@ -6,6 +6,8 @@ export default function getTypePath(type) {
       return 'videos';
     case 'short-video':
       return 'short-videos';
+    case '360photo':
+      return '360-photos';
     default:
       return 'posts';
   }

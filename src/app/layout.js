@@ -5,7 +5,7 @@ import Script from 'next/script';
 import useHost from './hooks/use-host';
 import useI18n from './hooks/use-i18n';
 import { SITE_NAME } from './utils/constants';
-import { headers, cookies } from 'next/headers';
+import { headers } from 'next/headers';
 import Top from './components/top';
 import Footer from './components/footer';
 import Autocomplete from './components/autocomplete';
@@ -33,11 +33,13 @@ export default function RootLayout({ children }) {
     (paths[5] === 'posts' ||
       paths[5] === 'stories' ||
       paths[5] === 'videos' ||
-      paths[5] === 'short-videos') &&
+      paths[5] === 'short-videos' ||
+      paths[5] === '360-photos') &&
     paths[6] &&
     (paths[5] === 'stories' ||
       paths[5] === 'videos' ||
       paths[5] === 'short-videos' ||
+      paths[5] === '360-photos' ||
       paths[7]);
 
   const ignoreAnalytics =
@@ -138,12 +140,22 @@ export default function RootLayout({ children }) {
         <head prefix={isMediaSingle ? 'video: https://ogp.me/ns/video#' : null}>
           <meta name="viewport" content="width=device-width, initial-scale=1" />
           {sharedTags}
+          {isMediaSingle &&
+            (paths[5] === 'stories' || paths[5] === 'posts') && (
+              <link
+                rel="stylesheet"
+                id="viewer-css"
+                href="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.6/viewer.min.css"
+              />
+            )}
 
-          <link
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.6/viewer.min.css"
-          />
-
+          {isMediaSingle && paths[5] === '360-photos' && (
+            <link
+              rel="stylesheet"
+              id="pannellum-css"
+              href="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.css"
+            />
+          )}
           {pathname === '/' && (
             <>
               <Script
@@ -198,7 +210,6 @@ export default function RootLayout({ children }) {
               ></Script>
             </>
           )}
-
           {!ignoreAnalytics && (
             <Script
               id="gtm"
@@ -353,12 +364,12 @@ export default function RootLayout({ children }) {
                 id="analytics"
                 dangerouslySetInnerHTML={{
                   __html: `
-              window.dataLayer = window.dataLayer || [];
-              function gtag() { dataLayer.push(arguments); }
-              gtag('js', new Date());
+                    window.dataLayer = window.dataLayer || [];
+                    function gtag() { dataLayer.push(arguments); }
+                    gtag('js', new Date());
 
-              gtag('config', '${process.env.NEXT_GA_TRACKING}');
-            `,
+                    gtag('config', '${process.env.NEXT_GA_TRACKING}');
+                  `,
                 }}
               ></Script>
             </>

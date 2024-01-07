@@ -2,7 +2,7 @@ import { parse } from 'js2xmlparser';
 import useHost from '@/app/hooks/use-host';
 import useI18n from '@/app/hooks/use-i18n';
 import { getFirestore } from 'firebase-admin/firestore';
-import { FILE_DOMAIN, FILE_DOMAIN_500, SITE_NAME } from '@/app/utils/constants';
+import { FILE_DOMAIN, SITE_NAME } from '@/app/utils/constants';
 import removeDiacritics from '@/app/utils/remove-diacritics';
 import getMetadata from '@/app/utils/get-metadata';
 import getTypePath from '@/app/utils/get-type-path';
@@ -186,7 +186,7 @@ export async function GET(req) {
             .replace(city + '-post-', '')
             .replace(city + '-youtube-', '')
             .replace(city + '-short-video-', '')
-            .replace(city + '-360video-', '');
+            .replace(city + '-360photo-', '');
 
           const link = host(
             `/countries/${country}/cities/${city}/${getTypePath(

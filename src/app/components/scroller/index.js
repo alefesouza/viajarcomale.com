@@ -30,20 +30,17 @@ export default function Scroller({
         <div
           style={{
             display: 'flex',
-            alignItems: is360Photos ? 'end' : 'center',
+            alignItems: 'center',
             gap: 10,
           }}
         >
-          <h3 style={{ marginBlockEnd: is360Photos ? '0em' : '' }}>
-            {i18n(title)}
-          </h3>
+          <h3>{i18n(title)}</h3>
           <a
             href="#"
             className="maximize-button"
             style={{
               textDecoration: 'underline',
               display: 'none',
-              paddingBottom: is360Photos ? 1 : null,
             }}
             data-maximize={styles.instagram_highlights_items}
             data-minimize={styles.scroller_items}
@@ -53,13 +50,6 @@ export default function Scroller({
             {i18n('Maximize')}
           </a>
         </div>
-        {is360Photos && (
-          <div style={{ marginBlockEnd: '1em' }}>
-            {i18n(
-              '360 photos are really cool but they are heavy too, it can take up to 1 minute to load.'
-            )}
-          </div>
-        )}
       </div>
 
       {isStories && (
@@ -90,7 +80,8 @@ export default function Scroller({
               .replace(city + '-post-', '')
               .replace(city + '-story-', '')
               .replace(city + '-youtube-', '')
-              .replace(city + '-short-video-', '');
+              .replace(city + '-short-video-', '')
+              .replace(city + '-360photo-', '');
 
             return (
               <div
@@ -115,8 +106,7 @@ export default function Scroller({
                             city +
                             '/stories'
                         )
-                      : isShortVideos || isStories || isYouTubeVideos
-                      ? host(
+                      : host(
                           '/countries/' +
                             country +
                             '/cities/' +
@@ -126,15 +116,6 @@ export default function Scroller({
                             '/' +
                             p.id
                         )
-                      : p.link
-                  }
-                  target={
-                    isInstagramHighlights ||
-                    isStories ||
-                    isYouTubeVideos ||
-                    isShortVideos
-                      ? '_self'
-                      : '_blank'
                   }
                   style={{ display: 'block', position: 'relative' }}
                   className={is360Photos ? styles.item_360_photo : ''}
