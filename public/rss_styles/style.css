@@ -45,6 +45,14 @@ header h2 {
     rgba(0, 0, 0, 0.09) 1px 2px 2px;
 }
 
+a {
+  color: #2096cc;
+}
+
+a:visited {
+  color: #2096cc;
+}
+
 ul {
   border-top: 1px solid #ccc;
   display: block;
@@ -64,10 +72,6 @@ p {
 
 .date {
   color: #777777;
-}
-
-li a {
-  color: #2096cc;
 }
 
 li h2 {

@@ -9,7 +9,21 @@
 
 		<header>
 			<a href="/" class="logo">Viajar com Alê</a>
-			<h1><xsl:value-of select="title" /></h1>
+			<h1>
+				<xsl:element name="a">
+					<xsl:attribute name="href">
+						<xsl:choose>
+							<xsl:when test="(language='pt-BR')">
+								https://viajarcomale.com.br/hashtags/<xsl:value-of select="categorySlug"/>
+							</xsl:when>
+							<xsl:otherwise>
+								https://viajarcomale.com/hashtags/<xsl:value-of select="categorySlug"/>
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:attribute>
+					<xsl:value-of select="title" />
+				</xsl:element>
+			</h1>
 			<h2>
 				<xsl:choose>
 					<xsl:when test="(language='pt-BR')">
@@ -80,6 +94,35 @@
 					<xsl:attribute name="height">12</xsl:attribute>
 				</xsl:element>
 				Feedly - RSS
+			</xsl:element>
+
+			<xsl:element name="a">
+				<xsl:attribute name="href" >
+					<xsl:choose>
+						<xsl:when test="(language='pt-BR')">
+							https://viajarcomale.com.br/hashtags/<xsl:value-of select="categorySlug"/>
+						</xsl:when>
+						<xsl:otherwise>
+							https://viajarcomale.com/hashtags/<xsl:value-of select="categorySlug"/>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:attribute>
+				<xsl:attribute name="class">
+					rss
+				</xsl:attribute>
+				<xsl:element name="img">
+					<xsl:attribute name="src">/icons/72x72.png</xsl:attribute>
+					<xsl:attribute name="width">34</xsl:attribute>
+					<xsl:attribute name="height">34</xsl:attribute>
+				</xsl:element>
+				<xsl:choose>
+					<xsl:when test="(language='pt-BR')">
+						Página original
+					</xsl:when>
+					<xsl:otherwise>
+						Original page
+					</xsl:otherwise>
+				</xsl:choose>
 			</xsl:element>
 		</header>
 		<ul>
