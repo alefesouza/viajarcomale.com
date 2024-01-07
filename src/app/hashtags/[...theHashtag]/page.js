@@ -477,6 +477,20 @@ export default async function Country({
                 ></img>
               </a>
             )}
+            <a
+              href={host(
+                '/rss/hashtags/' +
+                  (hashtagPt ? finalHashtag.name_pt : finalHashtag.name)
+              )}
+              target="_blank"
+            >
+              <img
+                src="/images/rss.svg"
+                alt={i18n('RSS Icon')}
+                width={32}
+                height={32}
+              ></img>
+            </a>
             <ShareButton />
           </div>
         </div>

@@ -82,6 +82,7 @@ const langs = {
     'YouTube Icon': 'Ícone do YouTube',
     'ASExplore Icon': 'Ícone do ASExplore',
     'Pinterest Icon': 'Ícone do Pinterest',
+    'RSS Icon': 'Ícone de RSS',
     Back: 'Voltar',
     Share: 'Compartilhar',
     'Profile Photo': 'Foto do perfil',

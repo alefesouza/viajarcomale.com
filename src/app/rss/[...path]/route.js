@@ -147,6 +147,7 @@ export async function GET(req) {
       copyright: SITE_NAME + ' - @viajarcomale',
       language: isBR ? 'pt-BR' : 'en-US',
       category: 'Travel',
+      categorySlug: hashtag,
       editor: 'contato@viajarcomale.com (Viajar com Alê)',
       webMaster: 'contact@alefesouza.com (Alefe Souza)',
       ['atom:link']: {
@@ -249,9 +250,12 @@ export async function GET(req) {
 
   logAccess(db, host('/rss/hashtags/') + hashtag);
 
-  obj = parse('rss', obj, { declaration: { encoding: 'UTF-8' } });
+  obj = parse('rss', obj, { declaration: { include: false } });
+  const declaration = `<?xml version="1.0" encoding="UTF-8" ?>
+<?xml-stylesheet type="text/xsl" href="${host('/rss_styles/style.xsl')}" ?>
+`;
 
-  return new Response(obj, {
+  return new Response(declaration + obj, {
     headers: { 'Content-Type': 'application/xml' },
   });
 }
