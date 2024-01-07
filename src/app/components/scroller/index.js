@@ -246,7 +246,7 @@ export default function Scroller({
                   </div>
                 )}
 
-                {(isStories || isYouTubeVideos) && (
+                {(isStories || isYouTubeVideos || is360Photos) && (
                   <div className={styles.external_links}>
                     {isStories && (
                       <a
