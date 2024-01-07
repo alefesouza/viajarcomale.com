@@ -81,6 +81,7 @@ const langs = {
     'TikTok Icon': 'Ícone do TikTok',
     'YouTube Icon': 'Ícone do YouTube',
     'ASExplore Icon': 'Ícone do ASExplore',
+    'Pinterest Icon': 'Ícone do Pinterest',
     Back: 'Voltar',
     Share: 'Compartilhar',
     'Profile Photo': 'Foto do perfil',

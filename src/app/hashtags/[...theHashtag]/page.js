@@ -213,14 +213,20 @@ export default async function Country({
     .where('name_pt', '==', hashtag)
     .get();
   let hashtagPt = null;
+  let hashtagEn = null;
 
   hashtagPtSnapshot.forEach((doc) => {
     hashtagPt = doc.data();
   });
 
-  if (hashtagPt) {
-    hashtag = hashtagPt.name;
+  if (!hashtagPt) {
+    const hashtagEnDoc = await db.collection('hashtags').doc(hashtag).get();
+    hashtagEn = hashtagEnDoc.data();
   }
+
+  const finalHashtag = hashtagPt || hashtagEn;
+
+  hashtag = finalHashtag.name;
 
   const expandGalleries = expand;
   let sort = getSort(searchParams);
@@ -436,17 +442,43 @@ export default async function Country({
   return (
     <div>
       <div className="container">
-        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
           <Link
             href="/hashtags"
             id="back-button"
             className={styles.history_back_button}
             scroll={false}
+            style={{ display: 'flex' }}
           >
-            <img src="/images/back.svg" alt={i18n('Back')} width="32px"></img>
+            <img src="/images/back.svg" alt={i18n('Back')} width={32}></img>
           </Link>
 
-          <ShareButton />
+          <div style={{ display: 'flex', gap: 16 }}>
+            {finalHashtag.pinterest_link && (
+              <a
+                href={
+                  hashtagPt
+                    ? finalHashtag.pinterest_link_pt
+                    : finalHashtag.pinterest_link
+                }
+                target="_blank"
+              >
+                <img
+                  src="/logos/pinterest.svg"
+                  alt={i18n('Pinterest Icon')}
+                  width={32}
+                  height={32}
+                ></img>
+              </a>
+            )}
+            <ShareButton />
+          </div>
         </div>
       </div>
 
