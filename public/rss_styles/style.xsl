@@ -31,6 +31,9 @@
 					<xsl:value-of select="title" />
 				</xsl:element>
 			</h1>
+			<span>
+				<xsl:value-of select="description" />
+			</span>
 			<h2>
 				<xsl:choose>
 					<xsl:when test="(language='pt-BR')">

@@ -187,7 +187,6 @@ export async function GET(req) {
       copyright: SITE_NAME + ' - @viajarcomale',
       language: isBR ? 'pt-BR' : 'en-US',
       category: 'Travel',
-      categorySlug: hashtag,
       editor: 'contato@viajarcomale.com (Viajar com Alê)',
       webMaster: 'contact@alefesouza.com (Alefe Souza)',
       ['atom:link']: {
