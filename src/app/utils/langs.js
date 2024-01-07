@@ -46,6 +46,7 @@ const langs = {
     City: 'Cidade',
     Maximize: 'Maximizar',
     Minimize: 'Minimizar',
+    Contact: 'Contato',
 
     // Map
     Map: 'Mapa',
