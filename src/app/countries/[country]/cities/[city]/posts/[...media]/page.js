@@ -381,11 +381,7 @@ export default async function Country({ params: { country, city, media } }) {
           <ShareButton />
         </div>
 
-        {!media[1] &&
-          theMedia.type !== 'story' &&
-          theMedia.type !== 'youtube' &&
-          theMedia.type !== 'short-video' &&
-          theMedia.type !== '360photo' && <div>{header}</div>}
+        {!isSingleMedia && <div>{header}</div>}
       </div>
 
       <div
@@ -395,6 +391,11 @@ export default async function Country({ params: { country, city, media } }) {
         style={{
           marginTop: media[1] || theMedia.type === 'story' ? 14 : null,
           maxWidth: isSingleMedia ? 1000 : null,
+          padding:
+            isSingleMedia &&
+            (theMedia.type === 'youtube' || theMedia.type === '360photo')
+              ? 0
+              : null,
         }}
       >
         <Media
