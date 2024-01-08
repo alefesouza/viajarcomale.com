@@ -42,6 +42,8 @@ export default function RootLayout({ children }) {
       paths[5] === '360-photos' ||
       paths[7]);
 
+  const isSubPage = pathname !== '/' && pathname !== 'countries';
+
   const ignoreAnalytics =
     getCookie('ignore_analytics') || host().includes('localhost');
 
@@ -266,6 +268,7 @@ export default function RootLayout({ children }) {
       {!isAMP && (
         <body
           className={[
+            isSubPage ? 'sub-page' : null,
             isMediaSingle ? 'single-media-page' : null,
             getCookie('window_controls_overlay')
               ? 'window-controls-overlay'
@@ -325,7 +328,7 @@ export default function RootLayout({ children }) {
                 alt={i18n('Viajar com Alê Icon')}
                 width={36}
                 height={36}
-              ></img>
+              />
 
               <span>{SITE_NAME}</span>
 

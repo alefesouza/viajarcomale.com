@@ -317,7 +317,9 @@
         .classList.add('active');
     }
 
-    const paths = window.location.pathname.split('/');
+    const { pathname } = window.location;
+
+    const paths = pathname.split('/');
     const isMediaSingle =
       paths[1] === 'countries' &&
       paths[3] === 'cities' &&
@@ -332,6 +334,12 @@
         paths[5] === 'short-videos' ||
         paths[5] === '360-photos' ||
         paths[7]);
+
+    if (pathname !== '/' && pathname !== '/countries') {
+      document.querySelector('body').classList.add('sub-page');
+    } else {
+      document.querySelector('body').classList.remove('sub-page');
+    }
 
     if (isMediaSingle) {
       document.querySelector('body').classList.add('single-media-page');
