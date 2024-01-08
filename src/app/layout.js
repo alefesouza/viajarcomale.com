@@ -220,7 +220,11 @@ export default function RootLayout({ children }) {
         new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
         j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-        })(window,document,'script','dataLayer','${process.env.NEXT_GTM_TRACKING}');`,
+        })(window,document,'script','dataLayer','${
+          isBR
+            ? process.env.NEXT_GTM_TRACKING_BR
+            : process.env.NEXT_GTM_TRACKING
+        }');`,
               }}
             ></Script>
           )}
@@ -281,8 +285,9 @@ export default function RootLayout({ children }) {
             <noscript>
               <iframe
                 src={
-                  'https://www.googletagmanager.com/ns.html?id=' +
-                  process.env.NEXT_GTM_TRACKING
+                  'https://www.googletagmanager.com/ns.html?id=' + isBR
+                    ? process.env.NEXT_GTM_TRACKING_BR
+                    : process.env.NEXT_GTM_TRACKING
                 }
                 height="0"
                 width="0"
@@ -360,7 +365,11 @@ export default function RootLayout({ children }) {
             <>
               <Script
                 async
-                src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_GA_TRACKING}`}
+                src={`https://www.googletagmanager.com/gtag/js?id=${
+                  isBR
+                    ? process.env.NEXT_GA_TRACKING_BR
+                    : process.env.NEXT_GA_TRACKING
+                }`}
               />
               <Script
                 async
@@ -371,7 +380,11 @@ export default function RootLayout({ children }) {
                     function gtag() { dataLayer.push(arguments); }
                     gtag('js', new Date());
 
-                    gtag('config', '${process.env.NEXT_GA_TRACKING}');
+                    gtag('config', '${
+                      isBR
+                        ? process.env.NEXT_GA_TRACKING_BR
+                        : process.env.NEXT_GA_TRACKING
+                    }');
                   `,
                 }}
               ></Script>

@@ -11,7 +11,6 @@ import SchemaData from '../schema-data';
 import getMetadata from '@/app/utils/get-metadata';
 import { headers } from 'next/headers';
 import { UAParser } from 'ua-parser-js';
-import Script from 'next/script';
 import expandDate from '@/app/utils/expand-date';
 
 export default async function WebStories({
@@ -232,7 +231,9 @@ export default async function WebStories({
         );
       })}
       <amp-story-auto-analytics
-        gtag-id={process.env.NEXT_GA_TRACKING}
+        gtag-id={
+          isBR ? process.env.NEXT_GA_TRACKING_BR : process.env.NEXT_GA_TRACKING
+        }
       ></amp-story-auto-analytics>
     </amp-story>
   );
